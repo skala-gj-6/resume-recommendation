@@ -76,14 +76,26 @@ class RestClientRecruitmentProviderClientTests {
                         """))
                 .andRespond(withSuccess("""
                         {
+                          "algorithmVersion": "mock-fixture-v1",
                           "recommendations": [
                             {
                               "externalPostingId": "POSTING-1",
                               "externalCompanyId": "CSN-1",
+                              "companyName": "Example Company",
                               "jobTitle": "Backend Developer",
+                              "jobCategory": "BACKEND",
+                              "industry": "IT",
+                              "region": "Seoul",
+                              "experienceLevel": "Entry",
+                              "employmentType": "FULL_TIME",
+                              "deadline": "2026-09-30",
+                              "active": true,
+                              "keywords": ["Java", "Spring Boot"],
+                              "sourceUrl": "https://example.com/postings/1",
                               "score": 93.88,
                               "rank": 1,
-                              "matchedKeywords": ["Java", "Spring Boot"]
+                              "matchedKeywords": ["Java", "Spring Boot"],
+                              "recommendationReason": "Relevant experience"
                             }
                           ]
                         }

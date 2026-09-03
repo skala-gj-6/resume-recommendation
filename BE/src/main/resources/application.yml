@@ -30,3 +30,11 @@ app:
     enabled: "${COMPANY_SEED_ENABLED:true}"
     companies: classpath:company_seed.json
     company-infos: classpath:company_info_seed.json
+  recommendation:
+    provider: "${RECOMMENDATION_PROVIDER:mock}"
+    result-limit: "${RECOMMENDATION_RESULT_LIMIT:10}"
+  ai:
+    draft-executor:
+      core-size: "${DRAFT_EXECUTOR_CORE_SIZE:2}"
+      max-size: "${DRAFT_EXECUTOR_MAX_SIZE:4}"
+      queue-capacity: "${DRAFT_EXECUTOR_QUEUE_CAPACITY:20}"

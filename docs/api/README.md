@@ -1,13 +1,13 @@
 # API 명세 개요
 
-> 이 문서는 목표 API 계약을 정의합니다. 현재 실행 가능한 범위는 Mock 공고·추천 후보 API, 기업정보 초기 적재, Spring의 Mock 제공자 클라이언트까지이며 로그인·경험·추천 저장·지원서·AI REST API는 아직 구현 전입니다. 실행 상태는 [로컬 Docker 실행](../architecture/local-docker.md#현재-구현-범위)을 기준으로 확인합니다.
+> 이 문서는 목표 API 계약을 정의합니다. 현재 Spring에는 데모 로그인, 경험, 추천 저장, 지원 프로젝트, 문항별 목 AI 초안·Polling·수정본 API가 구현되어 있습니다. 실제 인증·실제 LLM·프로필 선호 정보 API는 후속 범위입니다. 실행 상태는 [백엔드 구현 범위](../architecture/backend-implementation-scope.md)를 기준으로 확인합니다.
 
 ## 공통 규칙
 
 | 항목 | 규칙 |
 |---|---|
 | 기준 경로 | `/api/v1` |
-| 인증 | 공개 공고 API를 제외하고 `Authorization: Bearer {demoAccessToken}` |
+| 인증 | 프론트엔드는 `Authorization: Bearer {demoAccessToken}`을 전달. 현재 데모 서버는 토큰을 검증하지 않고 고정 사용자를 사용 |
 | 사용자 식별 | 데모 토큰에 연결된 고정 사용자를 사용하며 요청의 `userId`는 받지 않음 |
 | 요청·응답 | `application/json`, camelCase |
 | 날짜·시각 | UTC 기준 ISO-8601 |
@@ -43,6 +43,7 @@
 - [경험 API](02_experience.md)
 - [추천·지원서 API](03_recommendation_application.md)
 - [자기소개서 AI API](04_cover_letter_ai.md)
+- [백엔드 구현 범위와 합의 필요 사항](../architecture/backend-implementation-scope.md)
 
 ## 전체 엔드포인트
 
@@ -65,20 +66,19 @@
 | 경험 | GET | `/experiences/{experienceId}` | 경험 상세 |
 | 경험 | PATCH | `/experiences/{experienceId}` | 경험 수정 |
 | 기업 | GET | `/companies/{companyId}` | 기업과 유형별 정보 조회 |
-| 추천 | POST | `/recommendations` | 저장된 경험 기반 목 추천 결과 생성·교체 |
-| 추천 | GET | `/recommendations` | 추천 공고 목록 |
-| 추천 | GET | `/recommendations/{recommendationId}` | 공고 상세·문항·기업 정보 |
-| 지원서 | POST | `/job-applications` | 선택 공고로 지원서와 문항 스냅샷 생성 |
-| 지원서 | GET | `/job-applications` | 지원서 목록 |
-| 지원서 | GET | `/job-applications/{applicationId}` | 지원서 상세 |
-| 문항 | GET | `/cover-letter-items/{coverLetterId}` | 문항·요구사항·초안 조회 |
+| 추천 | POST | `/recommendations` | 새 추천 실행·입력·결과 저장 후 반환 |
+| 추천 | GET | `/recommendations/latest` | 가장 최근 완료 추천 조회 |
+| 추천 | GET | `/recommendations/runs/{recommendationRunId}` | 특정 추천 실행과 결과 조회 |
+| 추천 | GET | `/recommendations/items/{recommendationItemId}` | 추천 공고 상세·기업 정보 조회 |
+| 지원 프로젝트 | POST | `/job-applications` | 선택 공고로 새 프로젝트와 문항 스냅샷 생성 |
+| 지원 프로젝트 | GET | `/job-applications` | 프로젝트 목록·동일 공고 기존 프로젝트 조회 |
+| 지원 프로젝트 | GET | `/job-applications/{applicationId}` | 프로젝트 상세 |
+| 문항 | GET | `/cover-letter-items/{coverLetterId}` | 문항·초안 조회 |
 | 문항 | PUT | `/cover-letter-items/{coverLetterId}/selected-draft` | 사용할 초안 선택 |
 | 문항 | PATCH | `/cover-letter-items/{coverLetterId}/status` | 검토 상태 변경 |
 | 초안 | POST | `/cover-letter-items/{coverLetterId}/drafts` | 단일 문항 새 초안 생성 |
 | 초안 | GET | `/cover-letter-items/{coverLetterId}/drafts` | 문항별 초안 목록 |
 | 초안 | GET | `/cover-letter-drafts/{draftId}` | 초안 상태·본문·근거 |
-| 전체 생성 | POST | `/job-applications/{applicationId}/draft-generations` | 전체 또는 선택 문항 생성 |
-| 전체 생성 | GET | `/job-applications/{applicationId}/draft-generations/{groupId}` | 생성 진행률 |
 | 수정본 | PUT | `/cover-letter-drafts/{draftId}/edit` | 수정본 저장·갱신 |
 
 ### 선택 API
@@ -103,25 +103,26 @@ DELETE /cover-letter-drafts/{draftId}/edit
 | `404` | 리소스가 없거나 현재 사용자 소유가 아님 |
 | `409` | 중복 또는 잘못된 상태 전환 |
 | `422` | 업무 검증 실패 |
-| `429` | AI 요청 제한 초과 |
 | `502` | Mock Recruitment Provider 또는 동기 AI 호출 실패 |
 | `503` | AI 서비스 일시 장애 |
 
 주요 오류 코드:
 
 ```text
-APPLICATION_ALREADY_EXISTS
 EXPERIENCE_REQUIRED
 EXPERIENCE_NOT_OWNED
-DRAFT_NOT_OWNED_BY_ITEM
+RECOMMENDATION_ITEM_NOT_FOUND
+RECOMMENDATION_POSTING_MISMATCH
+DRAFT_ITEM_MISMATCH
 DRAFT_NOT_COMPLETED
 DRAFT_GENERATION_IN_PROGRESS
 INVALID_STATUS_TRANSITION
 RECRUITMENT_PROVIDER_UNAVAILABLE
+RECOMMENDATION_PROVIDER_UNAVAILABLE
 MANUAL_QUESTION_REQUIRED
 QUESTIONS_ALREADY_PROVIDED
 LLM_GENERATION_FAILED
-LLM_RESPONSE_INVALID
+REVIEW_REQUIREMENTS_NOT_MET
 ```
 
 ## 독립 API가 없는 테이블
@@ -133,17 +134,20 @@ USER_INDUSTRY
 USER_DESIRED_JOB
 USER_SKILL
 EXPERIENCE_KEYWORD
-COVER_LETTER_REQUIREMENT
+RECOMMENDATION_RUN
+RECOMMENDATION_INPUT_EXPERIENCE
+RECOMMENDATION_ITEM
 DRAFT_EXPERIENCE
 DRAFT_COMPANY_INFO_SNAPSHOT
 COVER_LETTER_EDIT
 ```
 
-기업·기업정보는 초기 SQL이나 개발용 시드로 적재합니다. 추천 행은 `POST /recommendations`의 목 처리 결과로 저장하며, 관리자 화면이 범위에 추가될 때만 관리 API를 만듭니다.
+기업·기업정보는 초기 SQL이나 개발용 시드로 적재합니다. 추천 실행·입력 경험·결과 행은 `POST /recommendations`가 하나의 서비스 흐름으로 관리하며 개별 테이블 CRUD API는 두지 않습니다. 관리자 화면이 범위에 추가될 때만 관리 API를 만듭니다.
 
 ## 서비스 경계
 
 - Mock Recruitment Provider API는 전체 공고 목록·상세와 경험 키워드에 대한 추천 후보를 제공합니다.
-- Spring API는 데모 로그인, 경험, 추천 후보 검증·저장, 지원서와 초안을 관리합니다.
+- Spring API는 데모 로그인, 경험, 추천 실행·결과 저장, 지원 프로젝트와 초안을 관리합니다.
+- Spring의 `RecommendationProvider` 구현체를 설정으로 교체해도 프론트엔드 API 계약과 저장 모델은 유지합니다.
 - 프론트엔드는 공고 탐색에는 Mock 서버 URL을, 사용자 데이터에는 Spring API URL을 사용합니다.
 - [MVP 사용자 흐름](../architecture/user-flow.md)에 호출 순서가 정리되어 있습니다.

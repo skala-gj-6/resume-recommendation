@@ -95,5 +95,6 @@ def create_recommendations(
     request: RecommendationRequest,
 ) -> RecommendationResponse:
     return RecommendationResponse(
+        algorithm_version="mock-fixture-v1",
         recommendations=service.recommend(limit=request.limit)
     )

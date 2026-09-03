@@ -80,13 +80,18 @@ def test_recommendations_are_limited_and_hide_internal_ids() -> None:
     )
 
     assert response.status_code == 200
-    recommendations = response.json()["recommendations"]
+    body = response.json()
+    assert body["algorithmVersion"] == "mock-fixture-v1"
+    recommendations = body["recommendations"]
     assert len(recommendations) == 5
     assert [item["rank"] for item in recommendations] == [1, 2, 3, 4, 5]
     forbidden = {"userId", "companyId", "recommendationId"}
     assert all(forbidden.isdisjoint(item) for item in recommendations)
     assert all("externalCompanyId" in item for item in recommendations)
     assert all(isinstance(item["matchedKeywords"], list) for item in recommendations)
+    assert all(item["companyName"] for item in recommendations)
+    assert all(item["recommendationReason"] for item in recommendations)
+    assert all(item["sourceUrl"] for item in recommendations)
 
     for item in recommendations:
         posting = client.get(

@@ -1,17 +1,24 @@
 # 기업·추천 도메인
 
-기업 마스터와 유형별 기업 정보를 관리하고, 저장된 경험을 기반으로 선별됐다고 가정한 사용자별 목 추천 결과를 저장합니다.
+기업 마스터와 유형별 기업 정보를 관리하고, 추천 요청 1회와 그 결과 목록을 분리해 저장합니다. 추천 결과를 만든 구현체는 `provider_key`로 기록하므로 현재 Mock 제공자를 향후 자체 알고리즘이나 제휴 제공자로 교체할 수 있습니다.
 
 ## ERD
 
 ```mermaid
 erDiagram
     COMPANY ||--o{ COMPANY_INFO : "정보 보유"
-    USERS ||--o{ RECOMMENDATION : "공고 추천받음"
-    COMPANY ||--o{ RECOMMENDATION : "추천 대상"
+    USERS ||--o{ RECOMMENDATION_RUN : "추천 요청"
+    RECOMMENDATION_RUN ||--o{ RECOMMENDATION_INPUT_EXPERIENCE : "입력 경험 보존"
+    EXPERIENCE o|--o{ RECOMMENDATION_INPUT_EXPERIENCE : "원본 경험 참조"
+    RECOMMENDATION_RUN ||--o{ RECOMMENDATION_ITEM : "추천 결과 포함"
+    COMPANY ||--o{ RECOMMENDATION_ITEM : "추천 기업 연결"
 
     USERS {
         bigint user_id PK
+    }
+
+    EXPERIENCE {
+        bigint experience_id PK
     }
 
     COMPANY {
@@ -33,16 +40,48 @@ erDiagram
         datetime collected_at "수집 시각"
     }
 
-    RECOMMENDATION {
-        bigint recommendation_id PK "추천 식별자"
+    RECOMMENDATION_RUN {
+        bigint recommendation_run_id PK "추천 실행 식별자"
         bigint user_id FK "추천 사용자"
-        bigint company_id FK "추천 기업"
+        string provider_key "추천 제공자 키"
+        string algorithm_version "알고리즘 버전"
+        string status "처리 상태"
+        int requested_limit "요청 결과 수"
+        string error_code "실패 코드"
+        text error_message "실패 메시지"
+        datetime requested_at "요청 시각"
+        datetime completed_at "완료 시각"
+    }
+
+    RECOMMENDATION_INPUT_EXPERIENCE {
+        bigint recommendation_input_id PK "추천 입력 식별자"
+        bigint recommendation_run_id FK "추천 실행"
+        bigint experience_id FK "원본 경험 nullable"
+        json input_snapshot "제공자 입력 스냅샷"
+    }
+
+    RECOMMENDATION_ITEM {
+        bigint recommendation_item_id PK "추천 결과 식별자"
+        bigint recommendation_run_id FK "추천 실행"
+        bigint company_id FK "내부 기업"
         string external_posting_id "외부 공고 식별자"
-        string job_title "공고 직무명"
+        string external_company_id "외부 기업 식별자"
+        string company_name_snapshot "기업명 스냅샷"
+        string job_title_snapshot "직무명 스냅샷"
+        string job_category "직무 분류 스냅샷"
+        string industry "산업 스냅샷"
+        string region "지역 스냅샷"
+        string experience_level "경력 조건 스냅샷"
+        string employment_type "고용 형태 스냅샷"
+        date deadline "마감일 스냅샷"
+        boolean active "활성 여부 스냅샷"
+        json keywords "공고 키워드 스냅샷"
+        string source_url "공고 원문 URL"
         decimal score "추천 점수"
         int rank "추천 순위"
-        json matched_keywords "추천 근거 표시값"
-        datetime recommended_at "추천 시각"
+        json matched_keywords "일치 키워드"
+        text recommendation_reason "추천 이유"
+        datetime created_at "저장 시각"
     }
 ```
 
@@ -52,11 +91,11 @@ erDiagram
 |---|---|---|---|
 | `company_id` | BIGINT | PK | 내부 기업 식별자 |
 | `company_name` | VARCHAR(200) | NOT NULL | 기업명 |
-| `external_company_id` | VARCHAR(100) | NOT NULL, UNIQUE | 외부 기업 식별자 |
+| `external_company_id` | VARCHAR(100) | NOT NULL, UNIQUE | 현재 Mock 공고의 기업 식별자 |
 | `created_at` | TIMESTAMP | NOT NULL | 등록 시각 |
 | `updated_at` | TIMESTAMP | NOT NULL | 수정 시각 |
 
-기업은 정보 수집 여부와 관계없이 존재할 수 있고, 하나의 기업이 여러 `COMPANY_INFO` 항목을 가집니다.
+기업은 정보 수집 여부와 관계없이 존재할 수 있고, 하나의 기업이 여러 `COMPANY_INFO` 항목을 가집니다. 현재는 공고 제공처가 하나라는 가정으로 외부 식별자를 직접 보관합니다. 여러 채용 플랫폼을 동시에 연결할 때는 제공처별 식별자를 관리하는 매핑 테이블이 추가로 필요합니다.
 
 ## COMPANY_INFO — 유형별 기업 정보
 
@@ -82,43 +121,99 @@ INDUSTRY_ISSUE
 
 동일 기업에 같은 유형의 정보가 여러 건 존재할 수 있으므로 `(company_id, info_type)` 고유 제약은 두지 않습니다. `source_url` 또는 `reference_date` 중 하나 이상을 갖도록 검증합니다.
 
-## RECOMMENDATION — 추천 공고 결과
+## RECOMMENDATION_RUN — 추천 실행
+
+추천 버튼을 한 번 누른 요청과 처리 상태를 나타냅니다. 새 추천을 요청해도 이전 결과를 덮어쓰지 않고 새 실행을 만듭니다.
 
 | 컬럼 | 타입 | 제약 | 용도 |
 |---|---|---|---|
-| `recommendation_id` | BIGINT | PK | 추천 식별자 |
+| `recommendation_run_id` | BIGINT | PK | 추천 실행 식별자 |
 | `user_id` | BIGINT | NOT NULL, FK → USERS | 추천 사용자 |
-| `company_id` | BIGINT | NOT NULL, FK → COMPANY | 추천 기업 |
+| `provider_key` | VARCHAR(50) | NOT NULL | `mock`, `internal-v1`, `partner-a` 같은 제공자 설정 키 |
+| `algorithm_version` | VARCHAR(100) | NULL 허용 | 제공자가 전달한 알고리즘·모델 버전 |
+| `status` | VARCHAR(30) | NOT NULL | `PROCESSING`, `COMPLETED`, `FAILED` |
+| `requested_limit` | INTEGER | NOT NULL | 요청한 최대 결과 수 |
+| `error_code` | VARCHAR(100) | NULL 허용 | 안전한 실패 코드 |
+| `error_message` | TEXT | NULL 허용 | 사용자 노출용 실패 메시지 |
+| `requested_at` | TIMESTAMP | NOT NULL | 추천 요청 시각 |
+| `completed_at` | TIMESTAMP | NULL 허용 | 성공 또는 실패 종료 시각 |
+
+검증: `requested_limit > 0`. 완료된 실행만 최신 추천 조회 대상으로 사용합니다.
+
+## RECOMMENDATION_INPUT_EXPERIENCE — 추천 입력 경험
+
+추천 실행에 어떤 경험과 키워드를 사용했는지 보존합니다.
+
+| 컬럼 | 타입 | 제약 | 용도 |
+|---|---|---|---|
+| `recommendation_input_id` | BIGINT | PK | 추천 입력 식별자 |
+| `recommendation_run_id` | BIGINT | NOT NULL, FK → RECOMMENDATION_RUN | 추천 실행 |
+| `experience_id` | BIGINT | NULL, FK → EXPERIENCE | 현재 원본 경험 참조 |
+| `input_snapshot` | JSON | NOT NULL | 해당 추천 제공자에 전달한 경험 입력 스냅샷 |
+
+원본 경험이 삭제되면 `experience_id`만 `SET NULL`로 바꾸고 당시 제공자 입력은 남깁니다. 현재 Mock에는 경험 ID와 키워드만 전달하지만 향후 제공자가 다른 필드를 사용해도 같은 컬럼에 당시 실제 입력을 보존할 수 있습니다. 원본이 존재하는 행에는 `UNIQUE(recommendation_run_id, experience_id)`를 적용합니다.
+
+## RECOMMENDATION_ITEM — 추천 공고 결과
+
+추천 실행 하나에 포함된 공고 한 건입니다. 공고 마스터는 저장하지 않지만, 추천 이력을 다시 표시할 수 있도록 카드 표시에 필요한 값은 스냅샷으로 보존합니다.
+
+| 컬럼 | 타입 | 제약 | 용도 |
+|---|---|---|---|
+| `recommendation_item_id` | BIGINT | PK | 추천 결과 식별자 |
+| `recommendation_run_id` | BIGINT | NOT NULL, FK → RECOMMENDATION_RUN | 소속 추천 실행 |
+| `company_id` | BIGINT | NOT NULL, FK → COMPANY | 매핑된 내부 기업 |
 | `external_posting_id` | VARCHAR(100) | NOT NULL | 외부 공고 식별자 |
-| `job_title` | VARCHAR(300) | NOT NULL | 직무명 |
-| `score` | DECIMAL(5,2) | NULL 허용 | 목 추천 점수 |
-| `rank` | INTEGER | NOT NULL | 사용자별 추천 순위 |
-| `matched_keywords` | JSON | NULL 허용 | 화면에 표시할 추천 근거 |
-| `recommended_at` | TIMESTAMP | NOT NULL | 추천 시각 |
+| `external_company_id` | VARCHAR(100) | NOT NULL | 외부 기업 식별자 |
+| `company_name_snapshot` | VARCHAR(200) | NOT NULL | 추천 당시 기업명 |
+| `job_title_snapshot` | VARCHAR(300) | NOT NULL | 추천 당시 직무명 |
+| `job_category` | VARCHAR(100) | NOT NULL | 직무 분류 스냅샷 |
+| `industry` | VARCHAR(200) | NOT NULL | 산업 스냅샷 |
+| `region` | VARCHAR(200) | NOT NULL | 지역 스냅샷 |
+| `experience_level` | VARCHAR(100) | NOT NULL | 경력 조건 스냅샷 |
+| `employment_type` | VARCHAR(100) | NOT NULL | 고용 형태 스냅샷 |
+| `deadline` | DATE | NOT NULL | 마감일 스냅샷 |
+| `active` | BOOLEAN | NOT NULL | 공고 활성 여부 스냅샷 |
+| `keywords_json` | JSON | NOT NULL | 공고 키워드 스냅샷 |
+| `source_url` | VARCHAR(1000) | NOT NULL | 공고 원문 URL |
+| `score` | DECIMAL(5,2) | NOT NULL | 제공자가 반환한 추천 점수 |
+| `rank` | INTEGER | NOT NULL | 실행 내 추천 순위 |
+| `matched_keywords_json` | JSON | NOT NULL | 제공자가 반환한 일치 키워드 |
+| `recommendation_reason` | TEXT | NOT NULL | 화면에 표시할 추천 이유 |
+| `created_at` | TIMESTAMP | NOT NULL | 저장 시각 |
 
-고유 제약: `UNIQUE(user_id, external_posting_id)`
-
-검증:
+고유 제약:
 
 ```text
-rank > 0
-score가 있으면 0 <= score <= 100
+UNIQUE(recommendation_run_id, external_posting_id)
+UNIQUE(recommendation_run_id, rank)
 ```
+
+검증: `rank > 0`, `0 <= score <= 100`. 현재 Mock 카탈로그의 모든 `external_company_id`는 시드 `COMPANY`에 대응해야 합니다. 매핑이 없으면 fixture/설정 오류로 간주해 해당 추천 실행 전체를 `FAILED(COMPANY_MAPPING_NOT_FOUND)`로 종료하며 불완전한 추천 행을 저장하지 않습니다.
+
+## 제공자 교체 경계
+
+DB는 특정 추천 구현체의 응답 형식에 의존하지 않습니다. Spring에서 제공자별 응답을 공통 추천 모델로 변환한 뒤 위 테이블에 저장합니다.
+
+```text
+RecommendationProvider
+├─ MockRecommendationProvider        현재 구현
+├─ InternalRecommendationProvider    향후 자체 추천 로직
+└─ PartnerRecommendationProvider     향후 제휴 추천 API
+
+제공자 응답
+→ 공통 모델로 변환·검증
+→ RECOMMENDATION_RUN / INPUT_EXPERIENCE / ITEM 저장
+→ 같은 Spring 응답 계약으로 반환
+```
+
+추천 제공자 교체와 공고 카탈로그 제공자 교체는 별개입니다. 이번 범위에서는 교체 추천 제공자도 현재 Mock 공고 카탈로그의 공고·기업 식별자를 반환한다는 계약을 지킵니다. 따라서 `postingProviderKey`나 별도 식별자 매핑 테이블은 두지 않습니다. 공고 카탈로그 자체를 바꿀 때만 식별자 매핑 범위를 다시 설계합니다.
 
 ## 데이터 출처와 범위
 
-- 비로그인 전체 공고 목록·상세는 별도 Mock Recruitment Provider API가 제공하며 DB에 저장하지 않습니다.
-- 저장된 경험이 한 건 이상인 로그인 사용자가 추천 생성을 요청하면 목 추천 결과를 `RECOMMENDATION`에 저장합니다.
-- 실제 추천 점수 계산은 구현하지 않으며 경험을 기반으로 선별된 결과라고 가정합니다.
-- `matched_keywords`도 목 추천 결과에 포함된 표시용 데이터입니다.
-- 공고의 담당 업무·자격요건·문항은 `RECOMMENDATION`에 저장하지 않습니다.
-- 추천 상세 조회 시 Mock Recruitment Provider API에서 공고 상세를 가져옵니다.
-- 사용자가 공고를 선택하면 필요한 공고 상세를 `JOB_APPLICATION`에 스냅샷으로 저장합니다.
+- 비로그인 전체 공고 목록·상세는 Mock Recruitment Provider API가 제공하며 DB에 공고 마스터로 저장하지 않습니다.
+- 저장된 경험이 한 건 이상인 사용자가 추천을 요청하면 추천 실행·입력 경험·결과를 저장합니다.
+- 현재 Mock은 실제 점수 계산 없이 고정 결과를 반환하지만 Spring의 저장·조회 계약은 실제 제공자와 동일합니다.
+- 추천 상세 화면은 저장된 추천 카드 값과 Mock 공고 상세, 내부 기업 정보를 조합합니다.
+- 사용자가 공고를 선택하면 최신 공고 상세를 다시 조회해 `JOB_APPLICATION.posting_snapshot`에 저장합니다.
 - 기업과 기업 정보는 초기 SQL 또는 개발용 시드로 적재합니다.
-
-전체 공고와 맞춤 추천은 다음처럼 구분합니다.
-
-```text
-전체 공고: 비로그인 가능, 모든 사용자에게 같은 Mock 공고 카탈로그
-맞춤 추천: 로그인 필요, 저장된 경험이 있는 사용자별 RECOMMENDATION
-```
+- 데모에서는 추천 실행과 입력·결과를 모두 보관합니다. 실제 운영 전 최근 N회 또는 기간 기반 만료 정책을 정합니다.

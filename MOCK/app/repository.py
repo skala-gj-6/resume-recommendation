@@ -5,7 +5,7 @@ from pathlib import Path
 
 from pydantic import TypeAdapter
 
-from app.models import Posting, Recommendation
+from app.models import Posting, RecommendationFixture
 
 
 class MockRecruitmentRepository:
@@ -69,7 +69,7 @@ class MockRecruitmentRepository:
         return tuple(adapter.validate_python(self._read_json("mock_postings.json")))
 
     def _load_recommendations(self) -> tuple[Recommendation, ...]:
-        adapter = TypeAdapter(list[Recommendation])
+        adapter = TypeAdapter(list[RecommendationFixture])
         return tuple(
             adapter.validate_python(self._read_json("mock_recommendations.json"))
         )
@@ -80,5 +80,5 @@ class MockRecruitmentRepository:
     def find_posting(self, external_posting_id: str) -> Posting | None:
         return self._postings_by_id.get(external_posting_id)
 
-    def list_recommendations(self) -> tuple[Recommendation, ...]:
+    def list_recommendations(self) -> tuple[RecommendationFixture, ...]:
         return self._recommendations
