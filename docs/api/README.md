@@ -5,8 +5,8 @@
 | 항목 | 규칙 |
 |---|---|
 | 기준 경로 | `/api/v1` |
-| 인증 | `Authorization: Bearer {accessToken}` |
-| 사용자 식별 | 요청의 `userId`를 신뢰하지 않고 인증 정보에서 추출 |
+| 인증 | 공개 공고 API를 제외하고 `Authorization: Bearer {demoAccessToken}` |
+| 사용자 식별 | 데모 토큰에 연결된 고정 사용자를 사용하며 요청의 `userId`는 받지 않음 |
 | 요청·응답 | `application/json`, camelCase |
 | 날짜·시각 | UTC 기준 ISO-8601 |
 | 페이지 | 0부터 시작, 기본 `size=20`, 최대 100 |
@@ -48,8 +48,9 @@
 
 | 도메인 | Method | Endpoint | 용도 |
 |---|---|---|---|
-| 인증 | POST | `/auth/signup` | 회원가입 |
-| 인증 | POST | `/auth/login` | 로그인 |
+| 공고 Mock | GET | `{MOCK_BASE_URL}/api/v1/postings` | 비로그인 전체 공고 검색·필터 |
+| 공고 Mock | GET | `{MOCK_BASE_URL}/api/v1/postings/{externalPostingId}` | 비로그인 공고 상세·문항 |
+| 인증 | POST | `/auth/demo-login` | 고정 데모 사용자 로그인 |
 | 프로필 | GET | `/users/me` | 내 프로필과 선호 정보 조회 |
 | 프로필 | PATCH | `/users/me` | 기본 정보 수정 |
 | 프로필 | PUT | `/users/me/preferences` | 희망 산업·직무·기술 교체 |
@@ -61,9 +62,10 @@
 | 경험 | GET | `/experiences/{experienceId}` | 경험 상세 |
 | 경험 | PATCH | `/experiences/{experienceId}` | 경험 수정 |
 | 기업 | GET | `/companies/{companyId}` | 기업과 유형별 정보 조회 |
+| 추천 | POST | `/recommendations` | 저장된 경험 기반 목 추천 결과 생성·교체 |
 | 추천 | GET | `/recommendations` | 추천 공고 목록 |
 | 추천 | GET | `/recommendations/{recommendationId}` | 공고 상세·문항·기업 정보 |
-| 지원서 | POST | `/job-applications` | 지원서와 문항 생성 |
+| 지원서 | POST | `/job-applications` | 선택 공고로 지원서와 문항 스냅샷 생성 |
 | 지원서 | GET | `/job-applications` | 지원서 목록 |
 | 지원서 | GET | `/job-applications/{applicationId}` | 지원서 상세 |
 | 문항 | GET | `/cover-letter-items/{coverLetterId}` | 문항·요구사항·초안 조회 |
@@ -99,20 +101,22 @@ DELETE /cover-letter-drafts/{draftId}/edit
 | `409` | 중복 또는 잘못된 상태 전환 |
 | `422` | 업무 검증 실패 |
 | `429` | AI 요청 제한 초과 |
-| `502` | 외부 공고 또는 동기 AI 호출 실패 |
+| `502` | Mock Posting API 또는 동기 AI 호출 실패 |
 | `503` | AI 서비스 일시 장애 |
 
 주요 오류 코드:
 
 ```text
-EMAIL_ALREADY_EXISTS
 APPLICATION_ALREADY_EXISTS
+EXPERIENCE_REQUIRED
 EXPERIENCE_NOT_OWNED
 DRAFT_NOT_OWNED_BY_ITEM
 DRAFT_NOT_COMPLETED
 DRAFT_GENERATION_IN_PROGRESS
 INVALID_STATUS_TRANSITION
-POSTING_DETAIL_UNAVAILABLE
+MOCK_POSTING_API_UNAVAILABLE
+MANUAL_QUESTION_REQUIRED
+QUESTIONS_ALREADY_PROVIDED
 LLM_GENERATION_FAILED
 LLM_RESPONSE_INVALID
 ```
@@ -132,4 +136,11 @@ DRAFT_COMPANY_INFO_SNAPSHOT
 COVER_LETTER_EDIT
 ```
 
-기업·기업정보·추천 목데이터는 초기 SQL이나 개발용 시드로 적재합니다. 관리자 화면이 범위에 추가될 때만 관리 API를 만듭니다.
+기업·기업정보는 초기 SQL이나 개발용 시드로 적재합니다. 추천 행은 `POST /recommendations`의 목 처리 결과로 저장하며, 관리자 화면이 범위에 추가될 때만 관리 API를 만듭니다.
+
+## 서비스 경계
+
+- Mock Posting API Server는 인증 없이 전체 공고 목록과 상세를 제공합니다.
+- Spring API는 데모 로그인, 경험, 맞춤 추천 결과, 지원서와 초안을 관리합니다.
+- 프론트엔드는 공고 탐색에는 Mock 서버 URL을, 사용자 데이터에는 Spring API URL을 사용합니다.
+- [MVP 사용자 흐름](../architecture/user-flow.md)에 호출 순서가 정리되어 있습니다.
