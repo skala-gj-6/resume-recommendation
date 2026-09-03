@@ -129,7 +129,7 @@ erDiagram
 
 고유 제약: `UNIQUE(user_id, external_posting_id)`
 
-`posting_snapshot`에는 Mock Posting API에서 조회한 기업명·직무·업종·키워드·담당 업무·자격요건·마감일·원문 URL을 저장합니다. 이 정보는 화면에서 조회만 가능하며 사용자 수정값으로 덮어쓰지 않습니다.
+`posting_snapshot`에는 Mock Recruitment Provider API에서 조회한 기업명·직무·업종·키워드·담당 업무·자격요건·마감일·원문 URL을 저장합니다. 이 정보는 화면에서 조회만 가능하며 사용자 수정값으로 덮어쓰지 않습니다.
 
 ## COVER_LETTER_ITEM — 자기소개서 문항
 

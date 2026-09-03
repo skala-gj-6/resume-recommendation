@@ -32,7 +32,7 @@ POST /api/v1/auth/demo-login
 - 서버는 항상 동일한 시드 사용자를 반환합니다.
 - 이후 보호 API에는 `Authorization: Bearer demo-user-token`을 전달합니다.
 - 비밀번호 해시 검증과 토큰 갱신은 하지 않습니다.
-- 비로그인 공고 목록·상세는 별도 Mock Posting API Server를 직접 호출하므로 토큰이 필요하지 않습니다.
+- 비로그인 공고 목록·상세는 별도 Mock Recruitment Provider API를 직접 호출하므로 토큰이 필요하지 않습니다.
 
 ## 내 프로필 조회
 
