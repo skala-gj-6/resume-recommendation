@@ -2,11 +2,13 @@ package com.be.be.experience;
 
 import com.be.be.experience.ExperienceDtos.KeywordResponse;
 import com.be.be.experience.ExperienceDtos.StructureResponse;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@ConditionalOnProperty(prefix = "app.ai", name = "mode", havingValue = "mock", matchIfMissing = true)
 public class MockExperienceStructurer implements ExperienceStructurer {
 
     @Override

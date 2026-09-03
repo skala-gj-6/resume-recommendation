@@ -34,6 +34,16 @@ app:
     provider: "${RECOMMENDATION_PROVIDER:mock}"
     result-limit: "${RECOMMENDATION_RESULT_LIMIT:10}"
   ai:
+    mode: "${AI_MODE:mock}"
+    base-url: "${LLM_BASE_URL:http://localhost:11434/v1}"
+    chat-completions-path: "${LLM_CHAT_COMPLETIONS_PATH:/chat/completions}"
+    api-key: "${LLM_API_KEY:}"
+    model: "${LLM_MODEL:}"
+    temperature: "${LLM_TEMPERATURE:0.2}"
+    connect-timeout: "${LLM_CONNECT_TIMEOUT:3s}"
+    read-timeout: "${LLM_READ_TIMEOUT:45s}"
+    max-attempts: "${LLM_MAX_ATTEMPTS:2}"
+    default-target-chars: "${LLM_DEFAULT_TARGET_CHARS:700}"
     draft-executor:
       core-size: "${DRAFT_EXECUTOR_CORE_SIZE:2}"
       max-size: "${DRAFT_EXECUTOR_MAX_SIZE:4}"

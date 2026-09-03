@@ -1,10 +1,12 @@
 package com.be.be.coverletter;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@ConditionalOnProperty(prefix = "app.ai", name = "mode", havingValue = "mock", matchIfMissing = true)
 public class MockCoverLetterGenerator implements CoverLetterGenerator {
 
     @Override

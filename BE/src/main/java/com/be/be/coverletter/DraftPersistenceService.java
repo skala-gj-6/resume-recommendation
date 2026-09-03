@@ -19,6 +19,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class DraftPersistenceService {
@@ -109,11 +111,23 @@ public class DraftPersistenceService {
     }
 
     @Transactional
-    public void complete(Long draftId, CoverLetterGenerator.GenerationResult result) {
+    public void complete(
+            Long draftId,
+            CoverLetterGenerator.GenerationContext context,
+            CoverLetterGenerator.GenerationResult result
+    ) {
         CoverLetterDraft draft = draftRepository.findById(draftId)
                 .orElseThrow(() -> new IllegalStateException("draft not found: " + draftId));
+        if (context == null || !draftId.equals(context.draftId())) {
+            throw new IllegalStateException("generation context does not match draft");
+        }
         Long userId = draft.getItem().getApplication().getUser().getId();
         Long companyId = draft.getItem().getApplication().getCompany().getId();
+        Map<Long, CoverLetterGenerator.ExperienceCandidate> experienceCandidates = context.experiences().stream()
+                .collect(Collectors.toMap(CoverLetterGenerator.ExperienceCandidate::experienceId, Function.identity()));
+        Set<Long> companyInfoCandidateIds = context.companyInformation().stream()
+                .map(CoverLetterGenerator.CompanyInfoCandidate::companyInfoId)
+                .collect(Collectors.toSet());
 
         if (result == null || result.selectedExperiences() == null || result.selectedExperiences().isEmpty()) {
             throw new IllegalStateException("generator did not select an experience");
@@ -124,17 +138,24 @@ public class DraftPersistenceService {
             if (selected.experienceId() == null || !selectedExperienceIds.add(selected.experienceId())) {
                 throw new IllegalStateException("generator returned an invalid experience selection");
             }
+            CoverLetterGenerator.ExperienceCandidate candidate = experienceCandidates.get(selected.experienceId());
+            if (candidate == null) {
+                throw new IllegalStateException("generator selected an experience outside the generation context");
+            }
             Experience experience = experienceRepository.findByIdAndUserId(selected.experienceId(), userId)
                     .orElseThrow(() -> new IllegalStateException("generator selected an unavailable experience"));
             draft.addExperience(new DraftExperience(
-                    draft, experience, priority++, selected.matchReason(), experienceSnapshot(experience)
+                    draft, experience, priority++, selected.matchReason(), experienceSnapshot(candidate)
             ));
         }
 
-        Set<Long> selectedCompanyInfoIds = new LinkedHashSet<>(
-                result.selectedCompanyInfoIds() == null ? List.of() : result.selectedCompanyInfoIds()
-        );
-        for (Long companyInfoId : selectedCompanyInfoIds) {
+        Set<Long> selectedCompanyInfoIds = new LinkedHashSet<>();
+        for (Long companyInfoId : result.selectedCompanyInfoIds() == null ? List.<Long>of() : result.selectedCompanyInfoIds()) {
+            if (companyInfoId == null
+                    || !selectedCompanyInfoIds.add(companyInfoId)
+                    || !companyInfoCandidateIds.contains(companyInfoId)) {
+                throw new IllegalStateException("generator returned an invalid company information selection");
+            }
             CompanyInfo info = companyInfoRepository.findByIdAndCompanyId(companyInfoId, companyId)
                     .orElseThrow(() -> new IllegalStateException("generator selected company information from another company"));
             draft.addCompanyInformation(new DraftCompanyInfoSnapshot(draft, info));
@@ -161,18 +182,18 @@ public class DraftPersistenceService {
         );
     }
 
-    private String experienceSnapshot(Experience experience) {
+    private String experienceSnapshot(CoverLetterGenerator.ExperienceCandidate experience) {
         try {
             return objectMapper.writeValueAsString(Map.ofEntries(
-                    Map.entry("experienceId", experience.getId()),
-                    Map.entry("title", experience.getTitle()),
-                    Map.entry("situation", experience.getSituation()),
-                    Map.entry("task", experience.getTask()),
-                    Map.entry("action", experience.getAction()),
-                    Map.entry("result", experience.getResult()),
-                    Map.entry("quantitativeResult", nullable(experience.getQuantitativeResult())),
-                    Map.entry("learning", nullable(experience.getLearning())),
-                    Map.entry("keywords", experience.getKeywords().stream().map(ExperienceKeyword::getKeyword).toList())
+                    Map.entry("experienceId", experience.experienceId()),
+                    Map.entry("title", experience.title()),
+                    Map.entry("situation", experience.situation()),
+                    Map.entry("task", experience.task()),
+                    Map.entry("action", experience.action()),
+                    Map.entry("result", experience.result()),
+                    Map.entry("quantitativeResult", nullable(experience.quantitativeResult())),
+                    Map.entry("learning", nullable(experience.learning())),
+                    Map.entry("keywords", experience.keywords())
             ));
         } catch (JacksonException exception) {
             throw new IllegalStateException("Could not serialize experience snapshot", exception);

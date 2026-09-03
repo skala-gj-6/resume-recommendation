@@ -28,7 +28,7 @@ public class OpenApiConfiguration {
                                 4. `POST /api/v1/job-applications`로 지원 프로젝트와 문항을 생성합니다.
                                 5. 문항별 초안 생성 API의 `statusUrl`을 조회해 `COMPLETED` 또는 `FAILED`까지 Polling합니다.
 
-                                현재 로그인 토큰은 실제로 검증하지 않으며 모든 사용자 API는 고정 데모 사용자로 동작합니다. 경험 구조화와 자기소개서 생성도 실제 LLM이 아닌 교체 가능한 목 구현입니다. 비로그인 공고 목록·상세는 `http://localhost:8000/docs`의 Mock Recruitment Provider API를 사용합니다.
+                                현재 로그인 토큰은 실제로 검증하지 않으며 모든 사용자 API는 고정 데모 사용자로 동작합니다. 경험 구조화와 자기소개서 생성은 설정에 따라 Mock 또는 OpenAI 호환 LLM 구현을 사용합니다. 비로그인 공고 목록·상세는 `http://localhost:8000/docs`의 Mock Recruitment Provider API를 사용합니다.
                                 """))
                 .servers(List.of(new Server().url("/").description("현재 실행 중인 Spring 백엔드")))
                 .tags(List.of(
