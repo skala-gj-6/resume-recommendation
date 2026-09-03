@@ -145,7 +145,7 @@ class RecommendationRequest(ApiModel):
     limit: int = Field(default=10, ge=1, le=30)
 
 
-class Recommendation(ApiModel):
+class RecommendationFixture(ApiModel):
     external_posting_id: str
     external_company_id: str
     job_title: str
@@ -154,5 +154,26 @@ class Recommendation(ApiModel):
     matched_keywords: list[str]
 
 
+class Recommendation(ApiModel):
+    external_posting_id: str
+    external_company_id: str
+    company_name: str
+    job_title: str
+    job_category: str
+    industry: str
+    region: str
+    experience_level: str
+    employment_type: str
+    deadline: date
+    active: bool
+    keywords: list[str]
+    source_url: str
+    score: float = Field(ge=0, le=100)
+    rank: int = Field(ge=1)
+    matched_keywords: list[str]
+    recommendation_reason: str = Field(min_length=1)
+
+
 class RecommendationResponse(ApiModel):
+    algorithm_version: str = Field(min_length=1)
     recommendations: list[Recommendation]

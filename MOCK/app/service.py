@@ -97,10 +97,39 @@ class RecruitmentService:
             is not None
             and posting.experience_level in ENTRY_LEVELS
         ]
-        return [
-            item.model_copy(update={"rank": rank})
-            for rank, item in enumerate(eligible[:limit], start=1)
-        ]
+        results: list[Recommendation] = []
+        for rank, item in enumerate(eligible[:limit], start=1):
+            posting = self._repository.find_posting(item.external_posting_id)
+            if posting is None:
+                continue
+            matched = list(item.matched_keywords)
+            reason = (
+                f"공고 키워드 {', '.join(matched[:3])}와 보유 경험의 연관성이 높습니다."
+                if matched
+                else "보유 경험과 직무 조건의 연관성이 높은 공고입니다."
+            )
+            results.append(
+                Recommendation(
+                    external_posting_id=posting.external_posting_id,
+                    external_company_id=posting.external_company_id,
+                    company_name=posting.company_name,
+                    job_title=posting.job_title,
+                    job_category=posting.job_category,
+                    industry=posting.industry,
+                    region=posting.region,
+                    experience_level=posting.experience_level,
+                    employment_type=posting.employment_type,
+                    deadline=posting.deadline,
+                    active=posting.active,
+                    keywords=list(posting.keywords),
+                    source_url=posting.source_url,
+                    score=item.score,
+                    rank=rank,
+                    matched_keywords=matched,
+                    recommendation_reason=reason,
+                )
+            )
+        return results
 
     @staticmethod
     def _search_text(posting: Posting) -> str:
