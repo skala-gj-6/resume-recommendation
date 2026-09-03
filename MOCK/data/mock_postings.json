@@ -1,0 +1,943 @@
+[
+  {
+    "externalPostingId": "POSTING-EXT-0001-5957",
+    "externalCompanyId": "CSN-SAMSUNG-001",
+    "companyName": "삼성전자",
+    "jobTitle": "Python Developer",
+    "jobCategory": "BACKEND",
+    "industry": "IT/웹/통신",
+    "region": "경기 성남시 분당구",
+    "experienceLevel": "경력 3년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "Kubernetes 활용 역량",
+      "Docker 활용 역량",
+      "REST API 활용 역량",
+      "AI/ML 활용 역량",
+      "C++ 활용 역량",
+      "Java 활용 역량"
+    ],
+    "keywords": [
+      "Kubernetes",
+      "Docker",
+      "REST API",
+      "AI/ML",
+      "C++",
+      "Java"
+    ],
+    "openingDate": "2026-08-28",
+    "deadline": "2026-09-23",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0001-5957",
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0002-5794",
+    "externalCompanyId": "CSN-HYUNDAI-002",
+    "companyName": "현대자동차",
+    "jobTitle": "Mobile App Developer(Android/iOS)",
+    "jobCategory": "MOBILE",
+    "industry": "IT/웹/통신",
+    "region": "경기 수원시",
+    "experienceLevel": "경력무관",
+    "employmentType": "정규직",
+    "requirements": [
+      "AWS 활용 역량",
+      "Data Analysis 활용 역량",
+      "Git 활용 역량",
+      "Spring Boot 활용 역량",
+      "REST API 활용 역량"
+    ],
+    "keywords": [
+      "AWS",
+      "Data Analysis",
+      "Git",
+      "Spring Boot",
+      "REST API"
+    ],
+    "openingDate": "2026-08-29",
+    "deadline": "2026-09-18",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0002-5794",
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0003-7176",
+    "externalCompanyId": "CSN-NAVER-003",
+    "companyName": "네이버",
+    "jobTitle": "AI/ML Engineer",
+    "jobCategory": "AI_ML",
+    "industry": "IT/웹/통신",
+    "region": "서울 중구",
+    "experienceLevel": "경력 3년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "Spring Boot 활용 역량",
+      "Data Analysis 활용 역량",
+      "Kubernetes 활용 역량",
+      "REST API 활용 역량",
+      "Problem Solving 활용 역량"
+    ],
+    "keywords": [
+      "Spring Boot",
+      "Data Analysis",
+      "Kubernetes",
+      "REST API",
+      "Problem Solving"
+    ],
+    "openingDate": "2026-08-27",
+    "deadline": "2026-10-02",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0003-7176",
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0004-6765",
+    "externalCompanyId": "CSN-KAKAO-004",
+    "companyName": "카카오",
+    "jobTitle": "Security Engineer",
+    "jobCategory": "SECURITY",
+    "industry": "IT/웹/통신",
+    "region": "경기 성남시 분당구",
+    "experienceLevel": "경력 5년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "AWS 활용 역량",
+      "Git 활용 역량",
+      "MySQL 활용 역량",
+      "AI/ML 활용 역량",
+      "Docker 활용 역량",
+      "Redis 활용 역량"
+    ],
+    "keywords": [
+      "AWS",
+      "Git",
+      "MySQL",
+      "AI/ML",
+      "Docker",
+      "Redis"
+    ],
+    "openingDate": "2026-09-01",
+    "deadline": "2026-09-25",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0004-6765",
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0005-2823",
+    "externalCompanyId": "CSN-SKHYNIX-005",
+    "companyName": "SK하이닉스",
+    "jobTitle": "C++ Developer",
+    "jobCategory": "SOFTWARE",
+    "industry": "IT/웹/통신",
+    "region": "경기 성남시 분당구",
+    "experienceLevel": "경력 3년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "Docker 활용 역량",
+      "AI/ML 활용 역량",
+      "Data Analysis 활용 역량"
+    ],
+    "keywords": [
+      "Docker",
+      "AI/ML",
+      "Data Analysis"
+    ],
+    "openingDate": "2026-08-27",
+    "deadline": "2026-09-30",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0005-2823",
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0006-5970",
+    "externalCompanyId": "CSN-LGE-006",
+    "companyName": "LG전자",
+    "jobTitle": "C++ Developer",
+    "jobCategory": "SOFTWARE",
+    "industry": "IT/웹/통신",
+    "region": "서울 중구",
+    "experienceLevel": "경력무관",
+    "employmentType": "정규직",
+    "requirements": [
+      "Problem Solving 활용 역량",
+      "Redis 활용 역량",
+      "JPA 활용 역량",
+      "Kubernetes 활용 역량",
+      "Spring Boot 활용 역량"
+    ],
+    "keywords": [
+      "Problem Solving",
+      "Redis",
+      "JPA",
+      "Kubernetes",
+      "Spring Boot"
+    ],
+    "openingDate": "2026-08-30",
+    "deadline": "2026-09-13",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0006-5970",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0007-8932",
+    "externalCompanyId": "CSN-COUPANG-007",
+    "companyName": "쿠팡",
+    "jobTitle": "Mobile App Developer(Android/iOS)",
+    "jobCategory": "MOBILE",
+    "industry": "IT/웹/통신",
+    "region": "경기 수원시",
+    "experienceLevel": "신입",
+    "employmentType": "정규직",
+    "requirements": [
+      "C++ 활용 역량",
+      "REST API 활용 역량",
+      "Python 활용 역량",
+      "Java 활용 역량"
+    ],
+    "keywords": [
+      "C++",
+      "REST API",
+      "Python",
+      "Java"
+    ],
+    "openingDate": "2026-08-24",
+    "deadline": "2026-09-13",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0007-8932",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0008-7828",
+    "externalCompanyId": "CSN-TOSS-008",
+    "companyName": "비바리퍼블리카(토스)",
+    "jobTitle": "DevOps Engineer",
+    "jobCategory": "DEVOPS",
+    "industry": "IT/웹/통신",
+    "region": "경기 성남시 분당구",
+    "experienceLevel": "신입",
+    "employmentType": "정규직",
+    "requirements": [
+      "AI/ML 활용 역량",
+      "Data Analysis 활용 역량",
+      "Problem Solving 활용 역량",
+      "Kubernetes 활용 역량",
+      "JPA 활용 역량",
+      "MySQL 활용 역량"
+    ],
+    "keywords": [
+      "AI/ML",
+      "Data Analysis",
+      "Problem Solving",
+      "Kubernetes",
+      "JPA",
+      "MySQL"
+    ],
+    "openingDate": "2026-09-01",
+    "deadline": "2026-09-14",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0008-7828",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0009-9338",
+    "externalCompanyId": "CSN-WOOWA-009",
+    "companyName": "우아한형제들",
+    "jobTitle": "Security Engineer",
+    "jobCategory": "SECURITY",
+    "industry": "IT/웹/통신",
+    "region": "경기 성남시 분당구",
+    "experienceLevel": "경력무관",
+    "employmentType": "정규직",
+    "requirements": [
+      "MySQL 활용 역량",
+      "Java 활용 역량",
+      "Kubernetes 활용 역량",
+      "C++ 활용 역량",
+      "AI/ML 활용 역량"
+    ],
+    "keywords": [
+      "MySQL",
+      "Java",
+      "Kubernetes",
+      "C++",
+      "AI/ML"
+    ],
+    "openingDate": "2026-08-30",
+    "deadline": "2026-09-17",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0009-9338",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0010-1020",
+    "externalCompanyId": "CSN-NCSOFT-010",
+    "companyName": "엔씨소프트",
+    "jobTitle": "Backend Developer",
+    "jobCategory": "BACKEND",
+    "industry": "IT/웹/통신",
+    "region": "서울 영등포구",
+    "experienceLevel": "신입",
+    "employmentType": "정규직",
+    "requirements": [
+      "AWS 활용 역량",
+      "Redis 활용 역량",
+      "Python 활용 역량",
+      "C++ 활용 역량",
+      "Java 활용 역량"
+    ],
+    "keywords": [
+      "AWS",
+      "Redis",
+      "Python",
+      "C++",
+      "Java"
+    ],
+    "openingDate": "2026-08-25",
+    "deadline": "2026-09-24",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0010-1020",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0011-4331",
+    "externalCompanyId": "CSN-POSCO-011",
+    "companyName": "포스코",
+    "jobTitle": "Full Stack Developer",
+    "jobCategory": "FULL_STACK",
+    "industry": "IT/웹/통신",
+    "region": "서울 서초구",
+    "experienceLevel": "경력 3년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "Java 활용 역량",
+      "MySQL 활용 역량",
+      "Problem Solving 활용 역량"
+    ],
+    "keywords": [
+      "Java",
+      "MySQL",
+      "Problem Solving"
+    ],
+    "openingDate": "2026-08-30",
+    "deadline": "2026-10-02",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0011-4331",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0012-7206",
+    "externalCompanyId": "CSN-KAL-012",
+    "companyName": "대한항공",
+    "jobTitle": "DevOps Engineer",
+    "jobCategory": "DEVOPS",
+    "industry": "IT/웹/통신",
+    "region": "서울 중구",
+    "experienceLevel": "경력 3년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "JPA 활용 역량",
+      "Problem Solving 활용 역량",
+      "AI/ML 활용 역량",
+      "Spring Boot 활용 역량",
+      "Data Analysis 활용 역량",
+      "Docker 활용 역량"
+    ],
+    "keywords": [
+      "JPA",
+      "Problem Solving",
+      "AI/ML",
+      "Spring Boot",
+      "Data Analysis",
+      "Docker"
+    ],
+    "openingDate": "2026-08-31",
+    "deadline": "2026-09-13",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0012-7206",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0013-7776",
+    "externalCompanyId": "CSN-SHINHAN-013",
+    "companyName": "신한은행",
+    "jobTitle": "AI/ML Engineer",
+    "jobCategory": "AI_ML",
+    "industry": "IT/웹/통신",
+    "region": "서울 영등포구",
+    "experienceLevel": "경력무관",
+    "employmentType": "정규직",
+    "requirements": [
+      "Python 활용 역량",
+      "Docker 활용 역량",
+      "Redis 활용 역량"
+    ],
+    "keywords": [
+      "Python",
+      "Docker",
+      "Redis"
+    ],
+    "openingDate": "2026-08-27",
+    "deadline": "2026-10-03",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0013-7776",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0014-5126",
+    "externalCompanyId": "CSN-CELL-014",
+    "companyName": "셀트리온",
+    "jobTitle": "Data Analyst",
+    "jobCategory": "DATA",
+    "industry": "IT/웹/통신",
+    "region": "경기 성남시 분당구",
+    "experienceLevel": "경력 5년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "JPA 활용 역량",
+      "Java 활용 역량",
+      "AI/ML 활용 역량",
+      "Redis 활용 역량"
+    ],
+    "keywords": [
+      "JPA",
+      "Java",
+      "AI/ML",
+      "Redis"
+    ],
+    "openingDate": "2026-08-27",
+    "deadline": "2026-10-02",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0014-5126",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0015-1487",
+    "externalCompanyId": "CSN-AMORE-015",
+    "companyName": "아모레퍼시픽",
+    "jobTitle": "Python Developer",
+    "jobCategory": "BACKEND",
+    "industry": "IT/웹/통신",
+    "region": "경기 성남시 분당구",
+    "experienceLevel": "신입",
+    "employmentType": "정규직",
+    "requirements": [
+      "Java 활용 역량",
+      "REST API 활용 역량",
+      "Redis 활용 역량",
+      "AI/ML 활용 역량",
+      "Spring Boot 활용 역량"
+    ],
+    "keywords": [
+      "Java",
+      "REST API",
+      "Redis",
+      "AI/ML",
+      "Spring Boot"
+    ],
+    "openingDate": "2026-08-31",
+    "deadline": "2026-10-03",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0015-1487",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0016-5891",
+    "externalCompanyId": "CSN-NEXON-016",
+    "companyName": "넥슨",
+    "jobTitle": "Data Analyst",
+    "jobCategory": "DATA",
+    "industry": "IT/웹/통신",
+    "region": "서울 서초구",
+    "experienceLevel": "신입",
+    "employmentType": "정규직",
+    "requirements": [
+      "Problem Solving 활용 역량",
+      "Kubernetes 활용 역량",
+      "AWS 활용 역량"
+    ],
+    "keywords": [
+      "Problem Solving",
+      "Kubernetes",
+      "AWS"
+    ],
+    "openingDate": "2026-09-02",
+    "deadline": "2026-10-03",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0016-5891",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0017-2946",
+    "externalCompanyId": "CSN-DAANGN-017",
+    "companyName": "당근마켓",
+    "jobTitle": "Backend Developer",
+    "jobCategory": "BACKEND",
+    "industry": "IT/웹/통신",
+    "region": "서울 강남구",
+    "experienceLevel": "경력무관",
+    "employmentType": "정규직",
+    "requirements": [
+      "Docker 활용 역량",
+      "Spring Boot 활용 역량",
+      "Data Analysis 활용 역량",
+      "REST API 활용 역량"
+    ],
+    "keywords": [
+      "Docker",
+      "Spring Boot",
+      "Data Analysis",
+      "REST API"
+    ],
+    "openingDate": "2026-08-30",
+    "deadline": "2026-09-20",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0017-2946",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0018-2665",
+    "externalCompanyId": "CSN-CJENM-018",
+    "companyName": "CJ ENM",
+    "jobTitle": "Mobile App Developer(Android/iOS)",
+    "jobCategory": "MOBILE",
+    "industry": "IT/웹/통신",
+    "region": "경기 성남시 분당구",
+    "experienceLevel": "신입",
+    "employmentType": "정규직",
+    "requirements": [
+      "JPA 활용 역량",
+      "C++ 활용 역량",
+      "MySQL 활용 역량",
+      "Problem Solving 활용 역량",
+      "REST API 활용 역량"
+    ],
+    "keywords": [
+      "JPA",
+      "C++",
+      "MySQL",
+      "Problem Solving",
+      "REST API"
+    ],
+    "openingDate": "2026-08-31",
+    "deadline": "2026-09-23",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0018-2665",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0019-4252",
+    "externalCompanyId": "CSN-KT-019",
+    "companyName": "KT",
+    "jobTitle": "Python Developer",
+    "jobCategory": "BACKEND",
+    "industry": "IT/웹/통신",
+    "region": "서울 영등포구",
+    "experienceLevel": "신입",
+    "employmentType": "정규직",
+    "requirements": [
+      "Spring Boot 활용 역량",
+      "C++ 활용 역량",
+      "Problem Solving 활용 역량",
+      "Java 활용 역량",
+      "Redis 활용 역량"
+    ],
+    "keywords": [
+      "Spring Boot",
+      "C++",
+      "Problem Solving",
+      "Java",
+      "Redis"
+    ],
+    "openingDate": "2026-09-02",
+    "deadline": "2026-09-16",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0019-4252",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0020-6068",
+    "externalCompanyId": "CSN-HANWHA-020",
+    "companyName": "한화솔루션",
+    "jobTitle": "Backend Developer",
+    "jobCategory": "BACKEND",
+    "industry": "IT/웹/통신",
+    "region": "서울 강남구",
+    "experienceLevel": "경력 5년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "REST API 활용 역량",
+      "Docker 활용 역량",
+      "Redis 활용 역량",
+      "AWS 활용 역량",
+      "Problem Solving 활용 역량",
+      "MySQL 활용 역량"
+    ],
+    "keywords": [
+      "REST API",
+      "Docker",
+      "Redis",
+      "AWS",
+      "Problem Solving",
+      "MySQL"
+    ],
+    "openingDate": "2026-08-25",
+    "deadline": "2026-09-24",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0020-6068",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0021-6638",
+    "externalCompanyId": "CSN-KB-021",
+    "companyName": "KB국민은행",
+    "jobTitle": "Software Engineer",
+    "jobCategory": "SOFTWARE",
+    "industry": "IT/웹/통신",
+    "region": "서울 강남구",
+    "experienceLevel": "경력 5년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "AI/ML 활용 역량",
+      "Problem Solving 활용 역량",
+      "MySQL 활용 역량",
+      "Data Analysis 활용 역량",
+      "REST API 활용 역량",
+      "JPA 활용 역량"
+    ],
+    "keywords": [
+      "AI/ML",
+      "Problem Solving",
+      "MySQL",
+      "Data Analysis",
+      "REST API",
+      "JPA"
+    ],
+    "openingDate": "2026-09-02",
+    "deadline": "2026-09-22",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0021-6638",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0022-9985",
+    "externalCompanyId": "CSN-KAKAO-BANK-022",
+    "companyName": "카카오뱅크",
+    "jobTitle": "IT Service Manager",
+    "jobCategory": "IT_SERVICE",
+    "industry": "IT/웹/통신",
+    "region": "서울 영등포구",
+    "experienceLevel": "경력 3년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "AI/ML 활용 역량",
+      "Java 활용 역량",
+      "JPA 활용 역량",
+      "Data Analysis 활용 역량",
+      "Git 활용 역량",
+      "Docker 활용 역량"
+    ],
+    "keywords": [
+      "AI/ML",
+      "Java",
+      "JPA",
+      "Data Analysis",
+      "Git",
+      "Docker"
+    ],
+    "openingDate": "2026-08-25",
+    "deadline": "2026-09-17",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0022-9985",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0023-8085",
+    "externalCompanyId": "CSN-SAMSUNG-SDS-023",
+    "companyName": "삼성SDS",
+    "jobTitle": "DBA (Database Administrator)",
+    "jobCategory": "DATABASE",
+    "industry": "IT/웹/통신",
+    "region": "경기 수원시",
+    "experienceLevel": "신입",
+    "employmentType": "정규직",
+    "requirements": [
+      "Java 활용 역량",
+      "Kubernetes 활용 역량",
+      "Python 활용 역량",
+      "AI/ML 활용 역량",
+      "REST API 활용 역량"
+    ],
+    "keywords": [
+      "Java",
+      "Kubernetes",
+      "Python",
+      "AI/ML",
+      "REST API"
+    ],
+    "openingDate": "2026-08-27",
+    "deadline": "2026-09-15",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0023-8085",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0024-3244",
+    "externalCompanyId": "CSN-LGCNS-024",
+    "companyName": "LG CNS",
+    "jobTitle": "Frontend Developer",
+    "jobCategory": "FRONTEND",
+    "industry": "IT/웹/통신",
+    "region": "서울 강남구",
+    "experienceLevel": "신입",
+    "employmentType": "정규직",
+    "requirements": [
+      "Java 활용 역량",
+      "Problem Solving 활용 역량",
+      "AWS 활용 역량",
+      "Data Analysis 활용 역량",
+      "MySQL 활용 역량"
+    ],
+    "keywords": [
+      "Java",
+      "Problem Solving",
+      "AWS",
+      "Data Analysis",
+      "MySQL"
+    ],
+    "openingDate": "2026-08-29",
+    "deadline": "2026-09-23",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0024-3244",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0025-3930",
+    "externalCompanyId": "CSN-SKT-025",
+    "companyName": "SK텔레콤",
+    "jobTitle": "Cloud Architect",
+    "jobCategory": "CLOUD",
+    "industry": "IT/웹/통신",
+    "region": "서울 중구",
+    "experienceLevel": "경력무관",
+    "employmentType": "정규직",
+    "requirements": [
+      "Spring Boot 활용 역량",
+      "REST API 활용 역량",
+      "Data Analysis 활용 역량",
+      "AWS 활용 역량",
+      "Docker 활용 역량"
+    ],
+    "keywords": [
+      "Spring Boot",
+      "REST API",
+      "Data Analysis",
+      "AWS",
+      "Docker"
+    ],
+    "openingDate": "2026-08-25",
+    "deadline": "2026-09-29",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0025-3930",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0026-3490",
+    "externalCompanyId": "CSN-DOOSAN-026",
+    "companyName": "두산에너빌리티",
+    "jobTitle": "Cloud Architect",
+    "jobCategory": "CLOUD",
+    "industry": "IT/웹/통신",
+    "region": "서울 강남구",
+    "experienceLevel": "경력 5년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "Docker 활용 역량",
+      "Redis 활용 역량",
+      "AI/ML 활용 역량"
+    ],
+    "keywords": [
+      "Docker",
+      "Redis",
+      "AI/ML"
+    ],
+    "openingDate": "2026-09-01",
+    "deadline": "2026-09-16",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0026-3490",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0027-6828",
+    "externalCompanyId": "CSN-LGCHEM-027",
+    "companyName": "LG화학",
+    "jobTitle": "DevOps Engineer",
+    "jobCategory": "DEVOPS",
+    "industry": "IT/웹/통신",
+    "region": "서울 영등포구",
+    "experienceLevel": "경력 3년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "Data Analysis 활용 역량",
+      "Java 활용 역량",
+      "Python 활용 역량",
+      "REST API 활용 역량"
+    ],
+    "keywords": [
+      "Data Analysis",
+      "Java",
+      "Python",
+      "REST API"
+    ],
+    "openingDate": "2026-08-28",
+    "deadline": "2026-09-20",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0027-6828",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0028-9194",
+    "externalCompanyId": "CSN-MOBIS-028",
+    "companyName": "현대모비스",
+    "jobTitle": "Security Engineer",
+    "jobCategory": "SECURITY",
+    "industry": "IT/웹/통신",
+    "region": "서울 영등포구",
+    "experienceLevel": "신입",
+    "employmentType": "정규직",
+    "requirements": [
+      "Data Analysis 활용 역량",
+      "Redis 활용 역량",
+      "MySQL 활용 역량",
+      "Docker 활용 역량",
+      "JPA 활용 역량",
+      "Git 활용 역량"
+    ],
+    "keywords": [
+      "Data Analysis",
+      "Redis",
+      "MySQL",
+      "Docker",
+      "JPA",
+      "Git"
+    ],
+    "openingDate": "2026-08-29",
+    "deadline": "2026-10-03",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0028-9194",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0029-6120",
+    "externalCompanyId": "CSN-WOORI-029",
+    "companyName": "우리은행",
+    "jobTitle": "Java Developer",
+    "jobCategory": "BACKEND",
+    "industry": "IT/웹/통신",
+    "region": "서울 서초구",
+    "experienceLevel": "경력 3년 이상",
+    "employmentType": "정규직",
+    "requirements": [
+      "Java 활용 역량",
+      "Python 활용 역량",
+      "AI/ML 활용 역량",
+      "C++ 활용 역량"
+    ],
+    "keywords": [
+      "Java",
+      "Python",
+      "AI/ML",
+      "C++"
+    ],
+    "openingDate": "2026-08-31",
+    "deadline": "2026-10-01",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0029-6120",
+    "questions": []
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0030-5701",
+    "externalCompanyId": "CSN-KRAFTON-030",
+    "companyName": "크래프톤",
+    "jobTitle": "DevOps Engineer",
+    "jobCategory": "DEVOPS",
+    "industry": "IT/웹/통신",
+    "region": "서울 서초구",
+    "experienceLevel": "경력무관",
+    "employmentType": "정규직",
+    "requirements": [
+      "Spring Boot 활용 역량",
+      "AWS 활용 역량",
+      "Docker 활용 역량",
+      "AI/ML 활용 역량",
+      "Kubernetes 활용 역량"
+    ],
+    "keywords": [
+      "Spring Boot",
+      "AWS",
+      "Docker",
+      "AI/ML",
+      "Kubernetes"
+    ],
+    "openingDate": "2026-08-30",
+    "deadline": "2026-09-26",
+    "active": true,
+    "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0030-5701",
+    "questions": []
+  }
+]
