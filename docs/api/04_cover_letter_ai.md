@@ -2,22 +2,23 @@
 
 ## 공통 생성 원칙
 
-- 이번 데모는 Spring의 AI 생성 인터페이스 뒤에서 목 결과를 사용할 수 있으며 HTTP 계약은 실제 LLM 연동 후에도 유지합니다.
-- 문항 요구사항 분석은 별도 사용자 API로 노출하지 않습니다.
-- 단일 문항은 정상 기준 LLM 1회에서 요구사항 분석·경험 선택·기업 정보 선택·본문 생성을 함께 수행합니다.
-- 전체 문항은 계획 LLM 1회와 문항별 생성 N회로 수행합니다.
-- 문항 요구사항이 이미 있으면 재분석하지 않고 기존 값을 사용합니다.
-- 새 초안 요청마다 새로운 `COVER_LETTER_DRAFT`를 만들고 기존 초안을 덮어쓰지 않습니다.
+- 문항별로 초안을 하나씩 요청합니다. 전체 문항 일괄 생성 API는 현재 범위에 포함하지 않습니다.
+- 정상 기준 한 번의 LLM 호출에서 문항 해석, 경험 선택, 기업 정보 선택, 본문 생성을 함께 수행합니다.
+- 별도의 사용자용 문항 분석 API와 사전 분석 저장 테이블은 두지 않습니다.
+- 새 초안 요청마다 새로운 `COVER_LETTER_DRAFT`를 만들고 기존 초안과 수정본을 덮어쓰지 않습니다.
+- 생성 완료 후 어떤 경험과 기업 정보를 실제로 사용했는지 초안별 스냅샷으로 저장합니다.
 - AI가 반환한 경험·기업 정보 ID는 서버가 소유권과 대상 기업을 재검증합니다.
 - 기업명·직무·업종·공고 키워드는 `JOB_APPLICATION.posting_snapshot`의 읽기 전용 값입니다.
 - SSE 스트리밍은 사용하지 않고 `202 Accepted` 후 상태 조회 Polling으로 완료 여부를 확인합니다.
+
+경험 후보를 LLM에 전달하는 구체적인 방식은 아직 합의 전입니다. API는 서버가 경험 후보를 선택하는 구조로 유지하고, 전략은 서버 내부 구현으로 교체할 수 있게 합니다.
 
 ## Polling 규칙
 
 ```text
 POST 초안 생성
 → draftId와 statusUrl 수신
-→ 1초 간격으로 GET statusUrl
+→ 약 1초 간격으로 GET statusUrl
 → COMPLETED 또는 FAILED이면 중단
 → 30초를 넘으면 화면에서 타임아웃 안내
 ```
@@ -36,17 +37,10 @@ GET /api/v1/cover-letter-items/{coverLetterId}
   "applicationId": 81,
   "questionOrder": 1,
   "questionText": "지원동기와 입사 후 포부를 작성해 주세요.",
+  "questionSource": "POSTING",
   "charLimit": 700,
   "status": "DRAFTING",
   "selectedDraftId": 201,
-  "requirements": [
-    {
-      "requirementType": "COMPETENCY",
-      "keyword": "직무적합성",
-      "weight": 1.0,
-      "reason": "지원 직무와 보유 경험의 연결을 요구함"
-    }
-  ],
   "drafts": [
     {
       "draftId": 202,
@@ -59,9 +53,7 @@ GET /api/v1/cover-letter-items/{coverLetterId}
 }
 ```
 
-첫 초안 생성 전에는 `requirements`가 빈 배열일 수 있습니다.
-
-## 단일 문항 초안 생성
+## 단일 문항 새 초안 생성
 
 ```http
 POST /api/v1/cover-letter-items/{coverLetterId}/drafts
@@ -71,23 +63,16 @@ POST /api/v1/cover-letter-items/{coverLetterId}/drafts
 
 ```json
 {
-  "experienceSelectionMode": "AUTO",
-  "experienceIds": [],
   "additionalInstruction": "직무 연관성과 정량 성과를 강조해 주세요."
 }
 ```
 
-| 필드 | 규칙 |
-|---|---|
-| `experienceSelectionMode` | `AUTO` 또는 `MANUAL` |
-| `experienceIds` | `MANUAL`이면 1개 이상 필수, `AUTO`이면 생략 가능 |
-| `additionalInstruction` | 선택값, 서버에서 최대 길이 제한 |
+`additionalInstruction`은 선택값이며 최대 500자입니다. 경험 ID를 클라이언트가 보내는 방식은 경험 선택 정책이 합의될 때 선택 필드로 확장할 수 있습니다.
 
 응답 `202 Accepted`:
 
 ```json
 {
-  "generationGroupId": "72afef94-0b26-4cf6-b37d-da20e2c235aa",
   "draftId": 203,
   "coverLetterId": 101,
   "draftNo": 3,
@@ -96,25 +81,28 @@ POST /api/v1/cover-letter-items/{coverLetterId}/drafts
 }
 ```
 
-동일 문항에 `PENDING` 또는 `GENERATING` 초안이 있으면 `409 DRAFT_GENERATION_IN_PROGRESS`로 차단합니다. `draft_no`는 문항 행 잠금이나 충돌 재시도로 원자적으로 할당합니다.
+동일 문항에 `PENDING` 또는 `GENERATING` 초안이 있으면 `409 DRAFT_GENERATION_IN_PROGRESS`로 차단합니다. `draft_no`는 문항 행 잠금이나 고유 제약 충돌 재시도로 원자적으로 할당합니다.
+
+정상 처리:
+
+```text
+PENDING 초안 저장
+→ 비동기 작업 시작 후 GENERATING 전환
+→ 문항·공고·기업 정보·경험 후보로 LLM 호출
+→ 선택된 경험·기업 정보 ID와 본문 검증
+→ 경험·기업 정보 스냅샷과 본문 저장
+→ COMPLETED 전환
+```
 
 내부 LLM 구조화 응답 예시:
 
 ```json
 {
-  "requirements": [
-    {
-      "requirementType": "COMPETENCY",
-      "keyword": "문제해결",
-      "weight": 0.9,
-      "reason": "문제 해결 과정과 행동을 요구함"
-    }
-  ],
   "selectedExperiences": [
     {
       "experienceId": 11,
       "priority": 1,
-      "matchReason": "문제 해결 과정과 정량 성과가 문항과 일치함"
+      "matchReason": "문제 해결 과정과 정량 성과가 문항 의도와 일치함"
     }
   ],
   "selectedCompanyInfoIds": [31],
@@ -122,88 +110,20 @@ POST /api/v1/cover-letter-items/{coverLetterId}/drafts
 }
 ```
 
-서버는 검증된 원본을 다시 조회하여 경험과 기업 정보 스냅샷을 저장합니다. 요구사항이 없는 문항에만 `COVER_LETTER_REQUIREMENT`를 최초 저장합니다.
+서버는 검증된 원본을 다시 조회하여 경험과 기업 정보 스냅샷을 저장합니다. 새 요청이 완료되어도 기존 `selectedDraftId`는 자동으로 변경하지 않습니다. 단, 아직 선택 초안이 없는 문항의 첫 성공 초안은 자동 선택할 수 있습니다.
 
-## 전체 또는 선택 문항 초안 생성
+오류:
 
-```http
-POST /api/v1/job-applications/{applicationId}/draft-generations
-```
+| 상태 | 코드 | 조건 |
+|---|---|---|
+| `404` | `COVER_LETTER_ITEM_NOT_FOUND` | 문항이 없거나 현재 사용자 소유가 아님 |
+| `409` | `DRAFT_GENERATION_IN_PROGRESS` | 같은 문항의 생성 작업이 이미 진행 중 |
+| `422` | `EXPERIENCE_REQUIRED` | 저장된 경험이 한 건도 없음 |
+| `503` | `LLM_UNAVAILABLE` | 생성 작업을 접수할 수 없음 |
 
-```json
-{
-  "coverLetterIds": [101, 102],
-  "avoidExperienceDuplication": true,
-  "additionalInstruction": "문항별로 서로 다른 역량을 강조해 주세요."
-}
-```
+`202`를 반환한 뒤 발생한 모델 오류·응답 검증 오류는 HTTP 오류로 다시 전달하지 않고 Polling 응답의 `FAILED` 상태와 안전한 오류 코드로 제공합니다. 현재 목 생성기 단계에는 별도 `429` 제한을 두지 않습니다.
 
-`coverLetterIds`를 생략하면 지원서 전체 문항을 생성합니다.
-
-응답 `202 Accepted`:
-
-```json
-{
-  "generationGroupId": "e47a59a6-f882-4397-a80a-48a93f101bed",
-  "applicationId": 81,
-  "drafts": [
-    {
-      "coverLetterId": 101,
-      "draftId": 204,
-      "draftNo": 4,
-      "generationStatus": "PENDING"
-    },
-    {
-      "coverLetterId": 102,
-      "draftId": 205,
-      "draftNo": 2,
-      "generationStatus": "PENDING"
-    }
-  ],
-  "statusUrl": "/api/v1/job-applications/81/draft-generations/e47a59a6-f882-4397-a80a-48a93f101bed"
-}
-```
-
-내부 처리:
-
-```text
-동일 generation_group_id로 PENDING 초안 N개 생성
-→ 전체 문항 요구사항 분석 및 경험·기업 정보 배치 LLM 1회
-→ 문항별 초안 생성 LLM N회
-→ 각 초안을 독립적으로 COMPLETED 또는 FAILED 처리
-```
-
-전체 계획에 실패하면 그룹의 모든 `PENDING` 초안을 `FAILED`로 바꾸고 같은 안전한 오류 코드를 기록합니다.
-
-## 전체 생성 상태 조회
-
-```http
-GET /api/v1/job-applications/{applicationId}/draft-generations/{groupId}
-```
-
-```json
-{
-  "generationGroupId": "e47a59a6-f882-4397-a80a-48a93f101bed",
-  "status": "IN_PROGRESS",
-  "totalCount": 2,
-  "completedCount": 1,
-  "failedCount": 0,
-  "drafts": [
-    {"coverLetterId": 101, "draftId": 204, "generationStatus": "COMPLETED"},
-    {"coverLetterId": 102, "draftId": 205, "generationStatus": "GENERATING"}
-  ]
-}
-```
-
-집계 규칙:
-
-```text
-모두 PENDING                                      → PENDING
-PENDING 또는 GENERATING이 하나라도 존재           → IN_PROGRESS
-미완료 없이 모두 COMPLETED                        → COMPLETED
-미완료 없이 COMPLETED와 FAILED가 함께 존재         → PARTIAL_FAILED
-미완료 없이 모두 FAILED                           → FAILED
-```
+비동기 처리 중 발생한 LLM 실패는 초안 행의 `FAILED` 상태로 기록합니다.
 
 ## 문항별 초안 목록
 
@@ -276,7 +196,7 @@ GET /api/v1/cover-letter-drafts/{draftId}
 }
 ```
 
-비동기 실패는 조회 API의 HTTP 500이 아니라 초안 상태로 반환합니다.
+비동기 실패는 조회 API 자체의 HTTP 500이 아니라 초안 상태로 반환합니다.
 
 ```json
 {
@@ -358,4 +278,4 @@ PATCH /api/v1/cover-letter-items/{coverLetterId}/status
 - 선택 초안이 `COMPLETED`입니다.
 - 최종 표시 본문이 비어 있지 않습니다.
 
-모든 문항이 `REVIEWED`이면 서버가 지원서도 `REVIEWED`로 갱신합니다. 새 초안을 선택하거나 선택 초안의 수정본을 변경하면 문항과 지원서를 다시 `DRAFTING`으로 변경합니다.
+모든 문항이 `REVIEWED`이면 서버가 지원 프로젝트도 `REVIEWED`로 갱신합니다. 새 초안을 선택하거나 선택 초안의 수정본을 변경하면 문항과 프로젝트를 다시 `DRAFTING`으로 변경합니다.

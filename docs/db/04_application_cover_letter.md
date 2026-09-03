@@ -1,6 +1,6 @@
 # 지원서·자기소개서 도메인
 
-선택한 공고의 자기소개서 문항을 하나의 지원서로 묶고, 문항 요구사항·AI 초안·사용자 수정본·생성 근거를 관리합니다. 공고에 문항이 없을 때만 사용자가 직접 입력한 문항을 사용합니다.
+선택한 공고의 자기소개서 문항을 하나의 지원 프로젝트로 묶고, 문항별 AI 초안·사용자 수정본·생성 근거를 관리합니다. 공고에 문항이 없을 때만 사용자가 직접 입력한 문항을 사용합니다. 같은 사용자가 같은 공고로 여러 프로젝트를 만들 수 있습니다.
 
 ## ERD
 
@@ -8,9 +8,9 @@
 erDiagram
     USERS ||--o{ JOB_APPLICATION : "지원서 작성"
     COMPANY ||--o{ JOB_APPLICATION : "지원 대상"
+    RECOMMENDATION_ITEM o|--o{ JOB_APPLICATION : "추천에서 시작"
     JOB_APPLICATION ||--|{ COVER_LETTER_ITEM : "문항 포함"
 
-    COVER_LETTER_ITEM ||--o{ COVER_LETTER_REQUIREMENT : "요구사항 보유"
     COVER_LETTER_ITEM ||--o{ COVER_LETTER_DRAFT : "초안 생성"
     COVER_LETTER_ITEM o|--o| COVER_LETTER_DRAFT : "현재 초안 선택"
     COVER_LETTER_DRAFT ||--o| COVER_LETTER_EDIT : "사용자 수정"
@@ -36,10 +36,15 @@ erDiagram
         bigint company_info_id PK
     }
 
+    RECOMMENDATION_ITEM {
+        bigint recommendation_item_id PK
+    }
+
     JOB_APPLICATION {
         bigint application_id PK "지원서 식별자"
         bigint user_id FK "지원 사용자"
         bigint company_id FK "지원 기업"
+        bigint source_recommendation_item_id FK "출발 추천 nullable"
         string external_posting_id "외부 공고 식별자"
         string company_name_snapshot "기업명 스냅샷"
         string job_title_snapshot "직무명 스냅샷"
@@ -55,26 +60,18 @@ erDiagram
         int question_order "문항 순서"
         text question_text "문항 스냅샷"
         int char_limit "글자 수 제한"
+        string question_source "POSTING/MANUAL"
         bigint selected_draft_id FK "선택 초안"
         string status "DRAFTING/REVIEWED"
         datetime created_at "생성 시각"
         datetime updated_at "수정 시각"
     }
 
-    COVER_LETTER_REQUIREMENT {
-        bigint requirement_id PK "요구사항 식별자"
-        bigint cover_letter_id FK "대상 문항"
-        string requirement_type "요구사항 유형"
-        string keyword "요구 역량 또는 의도"
-        decimal weight "중요도 0~1"
-        text reason "분석 근거"
-    }
-
     COVER_LETTER_DRAFT {
         bigint draft_id PK "AI 초안 식별자"
         bigint cover_letter_id FK "대상 문항"
-        uuid generation_group_id "생성 요청 그룹"
         int draft_no "문항 내 초안 번호"
+        string additional_instruction "추가 작성 지시 nullable"
         text content "AI 생성 본문"
         string generation_status "생성 상태"
         string error_code "실패 코드"
@@ -119,6 +116,7 @@ erDiagram
 | `application_id` | BIGINT | PK | 지원서 식별자 |
 | `user_id` | BIGINT | NOT NULL, FK → USERS | 지원 사용자 |
 | `company_id` | BIGINT | NOT NULL, FK → COMPANY | 지원 기업 |
+| `source_recommendation_item_id` | BIGINT | NULL, FK → RECOMMENDATION_ITEM | 추천 목록에서 시작했을 때 선택한 추천 결과 |
 | `external_posting_id` | VARCHAR(100) | NOT NULL | 외부 공고 식별자 |
 | `company_name_snapshot` | VARCHAR(200) | NOT NULL | 생성 당시 기업명 |
 | `job_title_snapshot` | VARCHAR(300) | NOT NULL | 생성 당시 직무명 |
@@ -127,7 +125,11 @@ erDiagram
 | `created_at` | TIMESTAMP | NOT NULL | 생성 시각 |
 | `updated_at` | TIMESTAMP | NOT NULL | 수정 시각 |
 
-고유 제약: `UNIQUE(user_id, external_posting_id)`
+동일 공고에 여러 지원 프로젝트를 만들 수 있으므로 `(user_id, external_posting_id)` 고유 제약을 두지 않습니다. 기존 프로젝트 선택 화면을 위한 조회 인덱스 `INDEX(user_id, external_posting_id, created_at)`를 둡니다.
+
+화면 제목은 별도 컬럼 없이 `company_name_snapshot · job_title_snapshot · created_at`으로 조합합니다.
+
+전체 공고에서 바로 시작한 프로젝트는 `source_recommendation_item_id`가 NULL입니다. 추천 결과에서 시작했다면 해당 결과가 현재 사용자 소유인지와 공고 ID가 일치하는지 검증합니다. 추천 이력이 정리되어도 지원 프로젝트를 보존할 수 있도록 추천 결과 삭제 시 이 FK는 `SET NULL`로 처리합니다.
 
 `posting_snapshot`에는 Mock Recruitment Provider API에서 조회한 기업명·직무·업종·키워드·담당 업무·자격요건·마감일·원문 URL을 저장합니다. 이 정보는 화면에서 조회만 가능하며 사용자 수정값으로 덮어쓰지 않습니다.
 
@@ -140,6 +142,7 @@ erDiagram
 | `question_order` | INTEGER | NOT NULL | 문항 순서 |
 | `question_text` | TEXT | NOT NULL | 작성 당시 문항 스냅샷 |
 | `char_limit` | INTEGER | NULL 허용 | 글자 수 제한 |
+| `question_source` | VARCHAR(20) | NOT NULL | 공고 문항 `POSTING` 또는 직접 입력 `MANUAL` |
 | `selected_draft_id` | BIGINT | NULL, FK → COVER_LETTER_DRAFT | 현재 선택 초안 |
 | `status` | VARCHAR(30) | NOT NULL | `DRAFTING`, `REVIEWED` |
 | `created_at` | TIMESTAMP | NOT NULL | 생성 시각 |
@@ -156,24 +159,7 @@ Mock 공고에 questions가 존재 → 공고 문항을 스냅샷 저장
 Mock 공고에 questions가 없음   → 사용자가 직접 입력한 문항을 스냅샷 저장
 ```
 
-지원서 생성 시 문항이 최소 한 건 존재하도록 검증하므로 `JOB_APPLICATION`과 `COVER_LETTER_ITEM`의 1:N 관계를 유지합니다.
-
-## COVER_LETTER_REQUIREMENT — 문항 분석 결과
-
-| 컬럼 | 타입 | 제약 | 용도 |
-|---|---|---|---|
-| `requirement_id` | BIGINT | PK | 요구사항 식별자 |
-| `cover_letter_id` | BIGINT | NOT NULL, FK → COVER_LETTER_ITEM | 대상 문항 |
-| `requirement_type` | VARCHAR(30) | NOT NULL | 요구사항 종류 |
-| `keyword` | VARCHAR(100) | NOT NULL | 요구 역량·특성·평가 의도 |
-| `weight` | DECIMAL(3,2) | NOT NULL | 중요도 0 이상 1 이하 |
-| `reason` | TEXT | NULL 허용 | 분석 근거 |
-
-`requirement_type`: `COMPETENCY`, `JOB`, `TRAIT`, `QUESTION_INTENT`
-
-고유 제약: `UNIQUE(cover_letter_id, requirement_type, keyword)`
-
-첫 초안 생성 또는 전체 생성 계획에서 요구사항이 없는 문항만 최초 분석합니다. 문항은 스냅샷으로 고정되므로 이후 초안에서 재사용하며 현재 범위에는 재분석 API를 두지 않습니다.
+지원서 생성 시 문항이 최소 한 건 존재하도록 검증하므로 `JOB_APPLICATION`과 `COVER_LETTER_ITEM`의 1:N 관계를 유지합니다. 별도의 문항 사전 분석 테이블은 두지 않습니다. 문항별 초안 생성 요청에서 LLM이 문항 해석·경험 선택·본문 생성을 함께 수행하고, 실제 선택 근거는 `DRAFT_EXPERIENCE`에 저장합니다.
 
 ## COVER_LETTER_DRAFT — AI 초안
 
@@ -181,8 +167,8 @@ Mock 공고에 questions가 없음   → 사용자가 직접 입력한 문항을
 |---|---|---|---|
 | `draft_id` | BIGINT | PK | AI 초안 식별자 |
 | `cover_letter_id` | BIGINT | NOT NULL, FK → COVER_LETTER_ITEM | 대상 문항 |
-| `generation_group_id` | UUID | NOT NULL, INDEX | 단일·전체 생성 요청 그룹 |
 | `draft_no` | INTEGER | NOT NULL | 문항 내 초안 번호 |
+| `additional_instruction` | VARCHAR(500) | NULL 허용 | 생성 요청 시 사용자가 전달한 추가 작성 지시 |
 | `content` | TEXT | NULL 허용 | AI 생성 본문 |
 | `generation_status` | VARCHAR(30) | NOT NULL | `PENDING`, `GENERATING`, `COMPLETED`, `FAILED` |
 | `error_code` | VARCHAR(100) | NULL 허용 | 안전한 실패 코드 |
