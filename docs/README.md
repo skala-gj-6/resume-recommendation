@@ -19,6 +19,7 @@
 | 아키텍처 | [MVP 사용자 흐름](architecture/user-flow.md) | 비로그인 공고 탐색부터 초안 저장까지의 화면·API 흐름 |
 | 아키텍처 | [AI 생성 흐름](architecture/ai-generation-flow.md) | LLM 호출, 비동기 상태, 권한, 트랜잭션 |
 | 아키텍처 | [백엔드 구현 범위](architecture/backend-implementation-scope.md) | 준비된 기반, 구현 항목, 합의 필요 사항, 권장 순서 |
+| 아키텍처 | [프론트엔드 구현 계획](architecture/frontend-implementation-plan.md) | F-A/F-B 기준 화면 목록, API·상태 관리, 라우팅·Pinia 설계, 예외 흐름 처리 위치 |
 | 아키텍처 | [로컬 Docker 실행](architecture/local-docker.md) | FE·BE·MOCK·PostgreSQL 기동과 데이터 초기화 |
 
 ## 공통 범위

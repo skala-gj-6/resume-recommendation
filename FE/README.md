@@ -42,3 +42,7 @@ npm run build
 ```sh
 npm run lint
 ```
+
+## Implementation Plan
+
+이 프로젝트의 화면 목록, API 연동, 라우팅·Pinia 상태 설계, 예외 흐름 처리 위치는 [docs/architecture/frontend-implementation-plan.md](../docs/architecture/frontend-implementation-plan.md)를 참고하세요.
