@@ -8,80 +8,115 @@
 
 ```mermaid
 erDiagram
-    USER ||--o| PROFILE : has
-    USER ||--o{ EXPERIENCE : owns
-    USER ||--o{ APPLICATION : applies
+    USER ||--o{ EXPERIENCE : "보유"
+    USER ||--o{ COVER_LETTER_ITEM : "소유"
+    USER ||--o{ RECOMMENDATION : "추천받음"
+    COMPANY_INFO ||--o{ COVER_LETTER_ITEM : "지원 기업"
+    COMPANY_INFO ||--o{ RECOMMENDATION : "추천 대상"
+    EXPERIENCE ||--o{ EXPERIENCE_KEYWORD : "매칭 키"
+    COMPANY_INFO ||--o{ COMPANY_KEYWORD : "매칭 키"
+    COVER_LETTER_ITEM ||--o{ COVER_LETTER_VERSION : "AI초안 / 최신수정본"
+    COVER_LETTER_ITEM ||--o{ COVER_LETTER_EXPERIENCE : "근거 경험"
+    EXPERIENCE ||--o{ COVER_LETTER_EXPERIENCE : "재사용"
+    COVER_LETTER_ITEM ||--o{ COVER_LETTER_COMPANY_INFO : "근거 기업정보"
+    COMPANY_INFO ||--o{ COVER_LETTER_COMPANY_INFO : "참조됨"
 
-    APPLICATION ||--o{ COVER_LETTER_ITEM : "has questions"
-    APPLICATION }o--|| JOB_ANALYSIS_SNAPSHOT : "analyzed from"
-    APPLICATION ||--o{ APPLICATION_STATUS_HISTORY : logs
-    JOB_ANALYSIS_SNAPSHOT }o--o| COMPANY_INFO_SNAPSHOT : enriches
-
-    COVER_LETTER_ITEM ||--o{ COVER_LETTER_VERSION : "versioned as"
-    COVER_LETTER_VERSION ||--o{ FEEDBACK : "analyzed by"
-    COVER_LETTER_VERSION ||--o{ EXPERIENCE_USAGE : cites
-    EXPERIENCE ||--o{ EXPERIENCE_USAGE : "reused in"
-    FEEDBACK ||--o{ FEEDBACK_ITEM : "scored by"
-
-    EXPERIENCE ||--o{ EXPERIENCE_COMPETENCY : extracts
-    COMPETENCY ||--o{ EXPERIENCE_COMPETENCY : "referenced by"
-    EXPERIENCE ||--o{ EXPERIENCE_METRIC : records
-
-    APPLICATION {
-        uuid id PK
-        uuid user_id FK
-        uuid job_snapshot_id FK "재현성 보장"
-        enum source "SARAMIN|JOBKOREA|USER_INPUT"
-        string external_job_id
-        string company_name_cache
-        string role_cache
-        enum status "WRITING|REVIEWED|SUBMITTED"
+    USER {
+        bigint user_id PK
+        string email UK
+        string password_hash
+        string name
+        string desired_jobs "희망 직무"
+        string industry "희망 산업"
+        string skills "보유 역량"
         datetime created_at
         datetime updated_at
     }
+
+    EXPERIENCE {
+        bigint experience_id PK
+        bigint user_id FK
+        string title
+        text situation "상황"
+        text task "과제/목표"
+        text action "행동"
+        text result "결과"
+        text quantitative_result "정량 성과"
+        text learning "배운 점"
+        date start_date "사용 시기 시작"
+        date end_date "종료 (NULL=진행중)"
+        datetime created_at
+        datetime updated_at
+    }
+
+    EXPERIENCE_KEYWORD {
+        bigint experience_keyword_id PK
+        bigint experience_id FK
+        string keyword_type "COMPETENCY / JOB / TAG"
+        string keyword "정규화된 단일 키워드"
+    }
+
+    COMPANY_INFO {
+        bigint company_info_id PK
+        string company_name
+        string external_company_id UK "사람인 기업 식별자(csn)"
+        text talent_profile "인재상"
+        text business_trend "최근 사업 동향"
+        string source_url
+        date reference_date "정보 기준 시점"
+        datetime collected_at
+    }
+
+    COMPANY_KEYWORD {
+        bigint company_keyword_id PK
+        bigint company_info_id FK
+        string keyword "정규화된 단일 키워드"
+    }
+
+    RECOMMENDATION {
+        bigint recommendation_id PK
+        bigint user_id FK
+        bigint company_info_id FK
+        string external_posting_id "UNIQUE(user,company,posting)"
+        string job_title "공고 직무명"
+        decimal score "5,2"
+        int rank
+        string matched_keywords "일치 키워드 요약"
+        datetime recommended_at
+    }
+
     COVER_LETTER_ITEM {
-        uuid id PK
-        uuid application_id FK
-        int question_no
-        text question
-        int char_limit
+        bigint cover_letter_id PK
+        bigint user_id FK
+        bigint company_info_id FK "NULL 허용"
+        string external_posting_id "IDX(user_id, posting)"
+        string company_name "작성 당시 스냅샷"
+        string job_title "작성 당시 스냅샷"
+        text question_text "문항 본문 스냅샷"
+        int char_limit "글자 수 조건"
+        string status "ENUM: DRAFTING / REVIEWED"
         datetime created_at
+        datetime updated_at
     }
+
     COVER_LETTER_VERSION {
-        uuid id PK
-        uuid cover_letter_item_id FK
-        int version_no "unique(item_id, version_no)"
-        text body
-        int char_count
-        enum origin "AI_GENERATED|USER_EDITED"
-        json generation_context "사용 시점 공고/기업 근거 스냅샷"
-        datetime created_at
+        bigint cover_letter_id PK,FK
+        string version_type PK "ENUM: AI_DRAFT / USER_EDIT"
+        text content "본문"
+        datetime saved_at
     }
-    FEEDBACK {
-        uuid id PK
-        uuid cover_letter_version_id FK
-        string model
-        string prompt_version
-        datetime analyzed_at
+
+    COVER_LETTER_EXPERIENCE {
+        bigint cover_letter_id PK,FK
+        bigint experience_id PK,FK
     }
-    FEEDBACK_ITEM {
-        uuid id PK
-        uuid feedback_id FK
-        enum criterion "문항적합성|직무연관성|기업맞춤성|구체성|논리흐름|두괄식|중복표현|근거부족|글자수"
-        int score
-        text comment
-        text evidence_quote
-    }
-    COMPETENCY {
-        uuid id PK
-        string normalized_name "매칭 기준"
-        string display_name
-        enum kind "COMPETENCY|JOB_KEYWORD"
-    }
-    EXPERIENCE_USAGE {
-        uuid id PK
-        uuid experience_id FK
-        uuid cover_letter_version_id FK
-        datetime created_at
+
+    COVER_LETTER_COMPANY_INFO {
+        bigint cover_letter_id PK,FK
+        bigint company_info_id PK,FK
+        text used_talent_profile "사용 당시 인재상 스냅샷"
+        text used_business_trend "사용 당시 사업동향 스냅샷"
+        string used_source_url "근거 출처"
+        date used_reference_date "근거 기준 시점"
     }
 ```
