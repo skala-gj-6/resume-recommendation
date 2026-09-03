@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: ./BE
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./FE
+    ports:
+      - "5173:5173"
+    environment:
+      API_PROXY_TARGET: http://backend:8080
+    depends_on:
+      - backend
