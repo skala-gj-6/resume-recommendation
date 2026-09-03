@@ -1,6 +1,10 @@
-# 📄 User ERD
+# 📄 User & Resume Domain ERD
+
+회원 계정과 다중 이력서 서브시스템 데이터 모델입니다.
 
 ---
+
+## 1. ERD (Entity Relationship Diagram)
 
 ```mermaid
 erDiagram
