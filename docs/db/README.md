@@ -1,122 +1,93 @@
-# 🗄️ Database Architecture (Overall ERD)
+# 데이터베이스 설계 개요
 
-경험 기반 기업·직무 추천 및 AI 자기소개서 작성 지원 서비스의 통합 데이터 모델 ERD
+전체 데이터 모델의 관계와 도메인별 상세 문서 링크를 제공합니다. 컬럼의 상세 정의는 각 도메인 문서를 기준으로 합니다.
 
----
+## 설계 가정
 
-## 1. 전체 도메인 ERD
+1. 모든 외부 기업·공고 식별자는 하나의 채용 플랫폼 기준입니다.
+2. 추천 결과는 목데이터로 적재하며 사용자 API에서는 읽기만 제공합니다.
+3. 공고 원문은 마스터 테이블로 저장하지 않고, 지원서 생성 시 `JOB_APPLICATION.posting_snapshot`에 보존합니다.
+4. 기업 정보는 `COMPANY_INFO`에 유형별 항목으로 저장합니다.
+5. `COMPANY_KEYWORD`, `JOB_POSTING`, `AI_JOB`은 현재 범위에 없습니다.
+6. 사용자당 동일 외부 공고의 지원서는 한 건만 허용합니다.
+7. 문항 요구사항은 `COVER_LETTER_REQUIREMENT`에 최초 분석 결과를 저장하고 재사용합니다.
+8. 생성 당시 경험과 기업 정보는 초안별 스냅샷으로 보존합니다.
+
+## 도메인 문서
+
+- [사용자·선호 도메인](01_user_profile.md)
+- [경험 도메인](02_experience.md)
+- [기업·추천 도메인](03_company_recommendation.md)
+- [지원서·자기소개서 도메인](04_application_cover_letter.md)
+
+## 전체 관계 ERD
 
 ```mermaid
 erDiagram
-    USER ||--o{ EXPERIENCE : "보유"
-    USER ||--o{ COVER_LETTER_ITEM : "소유"
-    USER ||--o{ RECOMMENDATION : "추천받음"
-    COMPANY_INFO ||--o{ COVER_LETTER_ITEM : "지원 기업"
-    COMPANY_INFO ||--o{ RECOMMENDATION : "추천 대상"
-    EXPERIENCE ||--o{ EXPERIENCE_KEYWORD : "매칭 키"
-    COMPANY_INFO ||--o{ COMPANY_KEYWORD : "매칭 키"
-    COVER_LETTER_ITEM ||--o{ COVER_LETTER_VERSION : "AI초안 / 최신수정본"
-    COVER_LETTER_ITEM ||--o{ COVER_LETTER_EXPERIENCE : "근거 경험"
-    EXPERIENCE ||--o{ COVER_LETTER_EXPERIENCE : "재사용"
-    COVER_LETTER_ITEM ||--o{ COVER_LETTER_COMPANY_INFO : "근거 기업정보"
-    COMPANY_INFO ||--o{ COVER_LETTER_COMPANY_INFO : "참조됨"
+    USERS ||--o{ USER_INDUSTRY : "희망 산업 선택"
+    INDUSTRY ||--o{ USER_INDUSTRY : "사용자에게 선택됨"
+    USERS ||--o{ USER_DESIRED_JOB : "희망 직무 선택"
+    JOB_CATEGORY ||--o{ USER_DESIRED_JOB : "사용자에게 선택됨"
+    USERS ||--o{ USER_SKILL : "기술 보유"
 
-    USER {
-        bigint user_id PK
-        string email UK
-        string password_hash
-        string name
-        string desired_jobs "희망 직무"
-        string industry "희망 산업"
-        string skills "보유 역량"
-        datetime created_at
-        datetime updated_at
-    }
+    USERS ||--o{ EXPERIENCE : "경험 보유"
+    EXPERIENCE ||--o{ EXPERIENCE_KEYWORD : "키워드 보유"
 
-    EXPERIENCE {
-        bigint experience_id PK
-        bigint user_id FK
-        string title
-        text situation "상황"
-        text task "과제/목표"
-        text action "행동"
-        text result "결과"
-        text quantitative_result "정량 성과"
-        text learning "배운 점"
-        date start_date "사용 시기 시작"
-        date end_date "종료 (NULL=진행중)"
-        datetime created_at
-        datetime updated_at
-    }
+    COMPANY ||--o{ COMPANY_INFO : "정보 보유"
+    USERS ||--o{ RECOMMENDATION : "공고 추천받음"
+    COMPANY ||--o{ RECOMMENDATION : "추천 대상"
 
-    EXPERIENCE_KEYWORD {
-        bigint experience_keyword_id PK
-        bigint experience_id FK
-        string keyword_type "COMPETENCY / JOB / TAG"
-        string keyword "정규화된 단일 키워드"
-    }
+    USERS ||--o{ JOB_APPLICATION : "지원서 작성"
+    COMPANY ||--o{ JOB_APPLICATION : "지원 대상"
+    JOB_APPLICATION ||--|{ COVER_LETTER_ITEM : "문항 포함"
 
-    COMPANY_INFO {
-        bigint company_info_id PK
-        string company_name
-        string external_company_id UK "사람인 기업 식별자(csn)"
-        text talent_profile "인재상"
-        text business_trend "최근 사업 동향"
-        string source_url
-        date reference_date "정보 기준 시점"
-        datetime collected_at
-    }
+    COVER_LETTER_ITEM ||--o{ COVER_LETTER_REQUIREMENT : "요구사항 보유"
+    COVER_LETTER_ITEM ||--o{ COVER_LETTER_DRAFT : "초안 생성"
+    COVER_LETTER_ITEM o|--o| COVER_LETTER_DRAFT : "현재 초안 선택"
+    COVER_LETTER_DRAFT ||--o| COVER_LETTER_EDIT : "사용자 수정"
 
-    COMPANY_KEYWORD {
-        bigint company_keyword_id PK
-        bigint company_info_id FK
-        string keyword "정규화된 단일 키워드"
-    }
-
-    RECOMMENDATION {
-        bigint recommendation_id PK
-        bigint user_id FK
-        bigint company_info_id FK
-        string external_posting_id "UNIQUE(user,company,posting)"
-        string job_title "공고 직무명"
-        decimal score "5,2"
-        int rank
-        string matched_keywords "일치 키워드 요약"
-        datetime recommended_at
-    }
-
-    COVER_LETTER_ITEM {
-        bigint cover_letter_id PK
-        bigint user_id FK
-        bigint company_info_id FK "NULL 허용"
-        string external_posting_id "IDX(user_id, posting)"
-        string company_name "작성 당시 스냅샷"
-        string job_title "작성 당시 스냅샷"
-        text question_text "문항 본문 스냅샷"
-        int char_limit "글자 수 조건"
-        string status "ENUM: DRAFTING / REVIEWED"
-        datetime created_at
-        datetime updated_at
-    }
-
-    COVER_LETTER_VERSION {
-        bigint cover_letter_id PK,FK
-        string version_type PK "ENUM: AI_DRAFT / USER_EDIT"
-        text content "본문"
-        datetime saved_at
-    }
-
-    COVER_LETTER_EXPERIENCE {
-        bigint cover_letter_id PK,FK
-        bigint experience_id PK,FK
-    }
-
-    COVER_LETTER_COMPANY_INFO {
-        bigint cover_letter_id PK,FK
-        bigint company_info_id PK,FK
-        text used_talent_profile "사용 당시 인재상 스냅샷"
-        text used_business_trend "사용 당시 사업동향 스냅샷"
-        string used_source_url "근거 출처"
-        date used_reference_date "근거 기준 시점"
-    }
+    COVER_LETTER_DRAFT ||--o{ DRAFT_EXPERIENCE : "경험 입력 사용"
+    EXPERIENCE o|--o{ DRAFT_EXPERIENCE : "원본으로 참조됨"
+    COVER_LETTER_DRAFT ||--o{ DRAFT_COMPANY_INFO_SNAPSHOT : "기업 정보 입력 사용"
+    COMPANY_INFO o|--o{ DRAFT_COMPANY_INFO_SNAPSHOT : "원본으로 참조됨"
 ```
+
+## 도메인 간 관계
+
+| 부모 | 자식 | 관계 | 삭제 정책 |
+|---|---|---|---|
+| `USERS` | `EXPERIENCE` | 1:N | 사용자 삭제 시 CASCADE |
+| `USERS` | `RECOMMENDATION` | 1:N | 사용자 삭제 시 CASCADE |
+| `USERS` | `JOB_APPLICATION` | 1:N | 사용자 삭제 시 CASCADE |
+| `COMPANY` | `COMPANY_INFO` | 1:N | 운영 정책상 삭제 제한 권장 |
+| `COMPANY` | `RECOMMENDATION` | 1:N | 참조 중 삭제 제한 |
+| `COMPANY` | `JOB_APPLICATION` | 1:N | 참조 중 삭제 제한 |
+| `JOB_APPLICATION` | `COVER_LETTER_ITEM` | 1:N | 지원서 삭제 시 CASCADE |
+| `COVER_LETTER_ITEM` | `COVER_LETTER_DRAFT` | 1:N | 문항 삭제 시 CASCADE |
+| `EXPERIENCE` | `DRAFT_EXPERIENCE` | 1:N | 경험 삭제 시 FK만 SET NULL, 스냅샷 유지 |
+| `COMPANY_INFO` | `DRAFT_COMPANY_INFO_SNAPSHOT` | 1:N | 원본 삭제 시 FK만 SET NULL, 스냅샷 유지 |
+
+## 핵심 고유 제약
+
+```text
+USERS(email)
+USER_INDUSTRY(user_id, industry_id)
+USER_DESIRED_JOB(user_id, job_category_id)
+USER_SKILL(user_id, skill_name)
+EXPERIENCE_KEYWORD(experience_id, keyword_type, keyword)
+COMPANY(external_company_id)
+RECOMMENDATION(user_id, external_posting_id)
+JOB_APPLICATION(user_id, external_posting_id)
+COVER_LETTER_ITEM(application_id, question_order)
+COVER_LETTER_REQUIREMENT(cover_letter_id, requirement_type, keyword)
+COVER_LETTER_DRAFT(cover_letter_id, draft_no)
+DRAFT_EXPERIENCE(draft_id, priority)
+```
+
+## 선택 초안 무결성
+
+`COVER_LETTER_ITEM.selected_draft_id`는 조회 편의를 위한 참조입니다.
+
+- 초안 삭제 시 `ON DELETE SET NULL`을 적용합니다.
+- 선택 초안은 반드시 같은 문항 소속이고 `COMPLETED` 상태여야 합니다.
+- 동일 문항 소속 여부는 서비스 계층에서 추가 검증합니다.
