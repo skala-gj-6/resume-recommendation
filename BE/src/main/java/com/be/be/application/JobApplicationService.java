@@ -131,14 +131,14 @@ public class JobApplicationService {
         boolean hasManualQuestions = manualQuestions != null && !manualQuestions.isEmpty();
         if (hasPostingQuestions && hasManualQuestions) {
             throw new ApiException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    HttpStatus.UNPROCESSABLE_CONTENT,
                     "QUESTIONS_ALREADY_PROVIDED",
                     "공고 문항이 있는 경우 직접 입력 문항을 함께 보낼 수 없습니다."
             );
         }
         if (!hasPostingQuestions && !hasManualQuestions) {
             throw new ApiException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    HttpStatus.UNPROCESSABLE_CONTENT,
                     "MANUAL_QUESTION_REQUIRED",
                     "공고에 자기소개서 문항이 없어 직접 입력 문항이 필요합니다."
             );

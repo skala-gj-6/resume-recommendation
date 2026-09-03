@@ -59,7 +59,7 @@ public class DraftPersistenceService {
                 ));
         if (experienceRepository.findAllByUserIdOrderByUpdatedAtDesc(userId).isEmpty()) {
             throw new ApiException(
-                    HttpStatus.UNPROCESSABLE_ENTITY, "EXPERIENCE_REQUIRED", "초안을 생성하려면 경험을 한 건 이상 저장해야 합니다."
+                    HttpStatus.UNPROCESSABLE_CONTENT, "EXPERIENCE_REQUIRED", "초안을 생성하려면 경험을 한 건 이상 저장해야 합니다."
             );
         }
         if (draftRepository.existsByItemIdAndGenerationStatusIn(item.getId(), ACTIVE_STATUSES)) {

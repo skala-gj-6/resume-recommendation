@@ -160,7 +160,7 @@ public class CoverLetterService {
                 item.review();
             } catch (IllegalStateException exception) {
                 throw new ApiException(
-                        HttpStatus.UNPROCESSABLE_ENTITY,
+                        HttpStatus.UNPROCESSABLE_CONTENT,
                         "REVIEW_REQUIREMENTS_NOT_MET",
                         "완료된 초안을 선택해야 검토 완료로 변경할 수 있습니다."
                 );
