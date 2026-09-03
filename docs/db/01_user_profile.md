@@ -1,24 +1,18 @@
-# 사용자·선호 도메인
+# 사용자 도메인
 
-회원 계정과 복수 희망 산업·직무·보유 기술을 관리합니다.
+현재 백엔드에 구현된 데모 사용자 계정 구조를 설명합니다. 희망 산업·희망 직무·보유 기술은 초기 논리 설계에는 있었지만 아직 JPA 엔티티와 API가 구현되지 않았으므로 현재 ERD에서 제외합니다.
 
-## 데모 인증 범위
+## 구현 범위
 
 - 실제 회원가입과 비밀번호 검증은 구현하지 않습니다.
-- 로그인 버튼을 누르면 시드로 등록된 고정 사용자를 반환합니다.
-- `USERS.password_hash`를 포함한 회원 구조는 향후 실제 인증 확장을 위해 유지합니다.
-- 보호 리소스의 소유자 관계와 사용자별 데이터 분리는 ERD 그대로 적용합니다.
+- 로그인 버튼을 누르면 시드로 등록된 고정 사용자 한 명을 반환합니다.
+- `USERS.password_hash`는 향후 인증 확장을 위한 컬럼이며 데모 로그인에서는 검증하지 않습니다.
+- 경험, 추천 실행, 지원 프로젝트는 모두 이 사용자와 연결됩니다.
 
 ## ERD
 
 ```mermaid
 erDiagram
-    USERS ||--o{ USER_INDUSTRY : "희망 산업 선택"
-    INDUSTRY ||--o{ USER_INDUSTRY : "사용자에게 선택됨"
-    USERS ||--o{ USER_DESIRED_JOB : "희망 직무 선택"
-    JOB_CATEGORY ||--o{ USER_DESIRED_JOB : "사용자에게 선택됨"
-    USERS ||--o{ USER_SKILL : "기술 보유"
-
     USERS {
         bigint user_id PK "사용자 식별자"
         string email UK "로그인 이메일"
@@ -27,94 +21,41 @@ erDiagram
         datetime created_at "가입 시각"
         datetime updated_at "수정 시각"
     }
-
-    INDUSTRY {
-        bigint industry_id PK "산업 식별자"
-        string industry_name UK "산업명"
-    }
-
-    USER_INDUSTRY {
-        bigint user_id PK, FK "사용자"
-        bigint industry_id PK, FK "희망 산업"
-    }
-
-    JOB_CATEGORY {
-        bigint job_category_id PK "직무 식별자"
-        string job_name UK "직무명"
-    }
-
-    USER_DESIRED_JOB {
-        bigint user_id PK, FK "사용자"
-        bigint job_category_id PK, FK "희망 직무"
-    }
-
-    USER_SKILL {
-        bigint user_skill_id PK "보유 기술 식별자"
-        bigint user_id FK "사용자"
-        string skill_name "기술명"
-    }
 ```
 
 ## USERS — 회원 계정
+
+실제 테이블명은 예약어 충돌을 피하기 위해 `USER`가 아닌 `USERS`를 사용합니다.
 
 | 컬럼 | 타입 | 제약 | 용도 |
 |---|---|---|---|
 | `user_id` | BIGINT | PK | 사용자 식별자 |
 | `email` | VARCHAR(255) | NOT NULL, UNIQUE | 로그인 이메일 |
-| `password_hash` | VARCHAR(255) | NOT NULL | 비밀번호 해시 |
+| `password_hash` | VARCHAR(255) | NOT NULL | 비밀번호 해시. 현재 데모에서는 검증하지 않음 |
 | `name` | VARCHAR(100) | NOT NULL | 사용자 이름 |
 | `created_at` | TIMESTAMP | NOT NULL | 가입 시각 |
 | `updated_at` | TIMESTAMP | NOT NULL | 수정 시각 |
 
-실제 테이블명은 예약어 충돌을 피하기 위해 `USER`가 아닌 `USERS`를 사용합니다.
+## 다른 도메인과의 관계
 
-## INDUSTRY — 산업 기준 정보
+| 자식 테이블 | 관계 | 의미 |
+|---|---|---|
+| `EXPERIENCE` | 1:N | 사용자가 저장한 경험 |
+| `RECOMMENDATION_RUN` | 1:N | 사용자가 실행한 맞춤 추천 이력 |
+| `JOB_APPLICATION` | 1:N | 사용자가 만든 지원 프로젝트 |
 
-| 컬럼 | 타입 | 제약 | 용도 |
-|---|---|---|---|
-| `industry_id` | BIGINT | PK | 산업 식별자 |
-| `industry_name` | VARCHAR(100) | NOT NULL, UNIQUE | 산업명 |
+현재 데이터베이스 FK의 삭제 규칙은 모두 `NO ACTION`입니다. 사용자 삭제 API도 구현되어 있지 않으므로 사용자 탈퇴와 연쇄 삭제는 현재 범위에 포함되지 않습니다.
 
-## USER_INDUSTRY — 사용자 희망 산업
+## 아직 구현하지 않은 선호 정보
 
-| 컬럼 | 타입 | 제약 | 용도 |
-|---|---|---|---|
-| `user_id` | BIGINT | PK, FK → USERS | 사용자 |
-| `industry_id` | BIGINT | PK, FK → INDUSTRY | 희망 산업 |
+다음 테이블은 이전 설계안에만 있었고 현재 코드와 PostgreSQL에는 존재하지 않습니다.
 
-한 사용자가 여러 산업을 선택할 수 있는 N:M 연결 테이블입니다.
+```text
+INDUSTRY
+USER_INDUSTRY
+JOB_CATEGORY
+USER_DESIRED_JOB
+USER_SKILL
+```
 
-## JOB_CATEGORY — 직무 기준 정보
-
-| 컬럼 | 타입 | 제약 | 용도 |
-|---|---|---|---|
-| `job_category_id` | BIGINT | PK | 직무 식별자 |
-| `job_name` | VARCHAR(100) | NOT NULL, UNIQUE | 직무명 |
-
-## USER_DESIRED_JOB — 사용자 희망 직무
-
-| 컬럼 | 타입 | 제약 | 용도 |
-|---|---|---|---|
-| `user_id` | BIGINT | PK, FK → USERS | 사용자 |
-| `job_category_id` | BIGINT | PK, FK → JOB_CATEGORY | 희망 직무 |
-
-한 사용자가 여러 직무를 선택할 수 있는 N:M 연결 테이블입니다.
-
-## USER_SKILL — 사용자 보유 기술
-
-| 컬럼 | 타입 | 제약 | 용도 |
-|---|---|---|---|
-| `user_skill_id` | BIGINT | PK | 보유 기술 식별자 |
-| `user_id` | BIGINT | NOT NULL, FK → USERS | 사용자 |
-| `skill_name` | VARCHAR(100) | NOT NULL | 기술명 |
-
-고유 제약: `UNIQUE(user_id, skill_name)`
-
-기술은 현재 자유 입력으로 관리합니다. 향후 표준 기술 목록이 필요할 때만 `SKILL` 마스터 테이블로 분리합니다.
-
-## 관리 규칙
-
-- 프로필 API에서 사용자 ID를 요청받지 않고 인증 정보에서 가져옵니다.
-- 희망 산업·직무·기술 교체는 하나의 트랜잭션으로 처리합니다.
-- 산업·직무 기준 데이터는 시드로 관리하며 사용자 쓰기 API를 제공하지 않습니다.
-- 사용자 삭제 시 연결 테이블과 기술을 함께 삭제합니다.
+맞춤 추천은 현재 프로필 선호 정보가 아니라 저장된 `EXPERIENCE_KEYWORD`를 입력으로 사용합니다. 이후 희망 산업·직무·기술 기반 필터링이 실제 요구사항에 포함될 때 위 테이블과 프로필 수정 API를 함께 추가합니다.

@@ -2,6 +2,8 @@
 
 기업 마스터와 유형별 기업 정보를 관리하고, 추천 요청 1회와 그 결과 목록을 분리해 저장합니다. 추천 결과를 만든 구현체는 `provider_key`로 기록하므로 현재 Mock 제공자를 향후 자체 알고리즘이나 제휴 제공자로 교체할 수 있습니다.
 
+이 문서의 타입과 제약조건은 현재 JPA 엔티티가 생성한 PostgreSQL 물리 스키마를 기준으로 합니다. 이름에 `_json` 또는 `_snapshot`이 포함돼도 현재 구현은 JSON 문자열을 `TEXT`에 저장합니다.
+
 ## ERD
 
 ```mermaid
@@ -57,7 +59,7 @@ erDiagram
         bigint recommendation_input_id PK "추천 입력 식별자"
         bigint recommendation_run_id FK "추천 실행"
         bigint experience_id FK "원본 경험 nullable"
-        json input_snapshot "제공자 입력 스냅샷"
+        text input_snapshot "JSON 문자열 입력 스냅샷"
     }
 
     RECOMMENDATION_ITEM {
@@ -75,11 +77,11 @@ erDiagram
         string employment_type "고용 형태 스냅샷"
         date deadline "마감일 스냅샷"
         boolean active "활성 여부 스냅샷"
-        json keywords "공고 키워드 스냅샷"
+        text keywords_json "JSON 문자열 키워드 스냅샷"
         string source_url "공고 원문 URL"
         decimal score "추천 점수"
-        int rank "추천 순위"
-        json matched_keywords "일치 키워드"
+        int ranking "추천 순위"
+        text matched_keywords_json "JSON 문자열 일치 키워드"
         text recommendation_reason "추천 이유"
         datetime created_at "저장 시각"
     }
@@ -119,7 +121,13 @@ BUSINESS_TREND
 INDUSTRY_ISSUE
 ```
 
-동일 기업에 같은 유형의 정보가 여러 건 존재할 수 있으므로 `(company_id, info_type)` 고유 제약은 두지 않습니다. `source_url` 또는 `reference_date` 중 하나 이상을 갖도록 검증합니다.
+동일 기업에 같은 유형의 정보가 여러 건 존재할 수 있으므로 `(company_id, info_type)` 고유 제약은 두지 않습니다. 애플리케이션에서 `source_url` 또는 `reference_date` 중 하나 이상을 갖도록 검증합니다.
+
+조회 인덱스:
+
+```text
+INDEX idx_company_info_company_id(company_id)
+```
 
 ## RECOMMENDATION_RUN — 추천 실행
 
@@ -138,7 +146,13 @@ INDUSTRY_ISSUE
 | `requested_at` | TIMESTAMP | NOT NULL | 추천 요청 시각 |
 | `completed_at` | TIMESTAMP | NULL 허용 | 성공 또는 실패 종료 시각 |
 
-검증: `requested_limit > 0`. 완료된 실행만 최신 추천 조회 대상으로 사용합니다.
+현재 `requested_limit`은 `app.recommendation.result-limit` 설정값을 저장하며 기본값은 10입니다. 완료된 실행만 최신 추천 조회 대상으로 사용합니다.
+
+조회 인덱스:
+
+```text
+INDEX idx_recommendation_run_user_requested(user_id, requested_at)
+```
 
 ## RECOMMENDATION_INPUT_EXPERIENCE — 추천 입력 경험
 
@@ -149,9 +163,9 @@ INDUSTRY_ISSUE
 | `recommendation_input_id` | BIGINT | PK | 추천 입력 식별자 |
 | `recommendation_run_id` | BIGINT | NOT NULL, FK → RECOMMENDATION_RUN | 추천 실행 |
 | `experience_id` | BIGINT | NULL, FK → EXPERIENCE | 현재 원본 경험 참조 |
-| `input_snapshot` | JSON | NOT NULL | 해당 추천 제공자에 전달한 경험 입력 스냅샷 |
+| `input_snapshot` | TEXT | NOT NULL | 해당 추천 제공자에 전달한 경험 입력을 직렬화한 JSON 문자열 |
 
-원본 경험이 삭제되면 `experience_id`만 `SET NULL`로 바꾸고 당시 제공자 입력은 남깁니다. 현재 Mock에는 경험 ID와 키워드만 전달하지만 향후 제공자가 다른 필드를 사용해도 같은 컬럼에 당시 실제 입력을 보존할 수 있습니다. 원본이 존재하는 행에는 `UNIQUE(recommendation_run_id, experience_id)`를 적용합니다.
+현재 Mock에는 경험 ID와 키워드만 전달하지만 향후 제공자가 다른 필드를 사용해도 같은 컬럼에 당시 실제 입력을 보존할 수 있습니다. `experience_id`는 nullable이지만 FK 삭제 규칙은 `NO ACTION`이므로 원본 경험 삭제 시 자동으로 NULL이 되지는 않습니다. 고유 제약은 `UNIQUE(recommendation_run_id, experience_id)`입니다.
 
 ## RECOMMENDATION_ITEM — 추천 공고 결과
 
@@ -173,19 +187,19 @@ INDUSTRY_ISSUE
 | `employment_type` | VARCHAR(100) | NOT NULL | 고용 형태 스냅샷 |
 | `deadline` | DATE | NOT NULL | 마감일 스냅샷 |
 | `active` | BOOLEAN | NOT NULL | 공고 활성 여부 스냅샷 |
-| `keywords_json` | JSON | NOT NULL | 공고 키워드 스냅샷 |
+| `keywords_json` | TEXT | NOT NULL | 공고 키워드를 직렬화한 JSON 문자열 |
 | `source_url` | VARCHAR(1000) | NOT NULL | 공고 원문 URL |
 | `score` | DECIMAL(5,2) | NOT NULL | 제공자가 반환한 추천 점수 |
-| `rank` | INTEGER | NOT NULL | 실행 내 추천 순위 |
-| `matched_keywords_json` | JSON | NOT NULL | 제공자가 반환한 일치 키워드 |
+| `ranking` | INTEGER | NOT NULL | 실행 내 추천 순위. Java/API 필드명은 `rank` |
+| `matched_keywords_json` | TEXT | NOT NULL | 제공자가 반환한 일치 키워드를 직렬화한 JSON 문자열 |
 | `recommendation_reason` | TEXT | NOT NULL | 화면에 표시할 추천 이유 |
 | `created_at` | TIMESTAMP | NOT NULL | 저장 시각 |
 
 고유 제약:
 
 ```text
-UNIQUE(recommendation_run_id, external_posting_id)
-UNIQUE(recommendation_run_id, rank)
+UNIQUE uk_recommendation_item_posting(recommendation_run_id, external_posting_id)
+UNIQUE uk_recommendation_item_rank(recommendation_run_id, ranking)
 ```
 
 검증: `rank > 0`, `0 <= score <= 100`. 현재 Mock 카탈로그의 모든 `external_company_id`는 시드 `COMPANY`에 대응해야 합니다. 매핑이 없으면 fixture/설정 오류로 간주해 해당 추천 실행 전체를 `FAILED(COMPANY_MAPPING_NOT_FOUND)`로 종료하며 불완전한 추천 행을 저장하지 않습니다.
@@ -215,5 +229,14 @@ RecommendationProvider
 - 현재 Mock은 실제 점수 계산 없이 고정 결과를 반환하지만 Spring의 저장·조회 계약은 실제 제공자와 동일합니다.
 - 추천 상세 화면은 저장된 추천 카드 값과 Mock 공고 상세, 내부 기업 정보를 조합합니다.
 - 사용자가 공고를 선택하면 최신 공고 상세를 다시 조회해 `JOB_APPLICATION.posting_snapshot`에 저장합니다.
-- 기업과 기업 정보는 초기 SQL 또는 개발용 시드로 적재합니다.
+- 기업과 기업 정보는 `company_seed.json`, `company_info_seed.json`을 읽는 개발용 시드 로직으로 적재합니다.
 - 데모에서는 추천 실행과 입력·결과를 모두 보관합니다. 실제 운영 전 최근 N회 또는 기간 기반 만료 정책을 정합니다.
+
+## 현재 삭제 규칙
+
+이 도메인의 모든 데이터베이스 FK는 현재 `NO ACTION`입니다. 삭제 API도 구현되어 있지 않습니다.
+
+- `RECOMMENDATION_RUN`을 삭제하려면 연결된 입력 경험과 추천 결과를 먼저 정리해야 합니다.
+- `EXPERIENCE`를 삭제하려면 `RECOMMENDATION_INPUT_EXPERIENCE.experience_id` 참조를 먼저 정리해야 합니다.
+- `COMPANY`를 삭제하려면 기업 정보, 추천 결과, 지원 프로젝트 참조를 먼저 정리해야 합니다.
+- 과거 이력을 보존하면서 원본만 삭제하려면 이후 마이그레이션에서 nullable FK에 `ON DELETE SET NULL`을 명시해야 합니다.
