@@ -12,11 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 @ActiveProfiles("test")
-@SpringBootTest(properties = {
-        "app.ai.mode=llm",
-        "app.ai.base-url=http://localhost:11434/v1",
-        "app.ai.model=test-model"
-})
+@SpringBootTest
 class LlmModeConfigurationTests {
 
     @Autowired
@@ -26,7 +22,7 @@ class LlmModeConfigurationTests {
     private CoverLetterGenerator coverLetterGenerator;
 
     @Test
-    void selectsLlmImplementationsWhenConfigured() {
+    void alwaysSelectsLlmImplementations() {
         assertInstanceOf(LlmExperienceStructurer.class, experienceStructurer);
         assertInstanceOf(LlmCoverLetterGenerator.class, coverLetterGenerator);
     }

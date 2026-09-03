@@ -18,4 +18,6 @@ public interface ExperienceRepository extends JpaRepository<Experience, Long> {
 
     @EntityGraph(attributePaths = "keywords")
     Optional<Experience> findByIdAndUserId(Long id, Long userId);
+
+    boolean existsByUserIdAndTitle(Long userId, String title);
 }

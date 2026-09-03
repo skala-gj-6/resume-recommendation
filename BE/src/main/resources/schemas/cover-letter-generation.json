@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "string",
+      "description": "현재 문항에 대한 한국어 자기소개서 본문"
+    },
+    "selectedExperiences": {
+      "type": "array",
+      "description": "본문에 실제 사용한 경험을 중요도 순으로 정리한 목록",
+      "items": {
+        "type": "object",
+        "properties": {
+          "experienceId": {
+            "type": "integer"
+          },
+          "matchReason": {
+            "type": "string"
+          }
+        },
+        "required": ["experienceId", "matchReason"],
+        "additionalProperties": false
+      }
+    },
+    "selectedCompanyInfoIds": {
+      "type": "array",
+      "description": "본문에 실제 사용한 기업 정보 ID 목록",
+      "items": {
+        "type": "integer"
+      }
+    }
+  },
+  "required": ["content", "selectedExperiences", "selectedCompanyInfoIds"],
+  "additionalProperties": false
+}

@@ -1,0 +1,77 @@
+{
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "경험의 상황과 핵심 행동을 요약한 제목"
+    },
+    "situation": {
+      "type": ["string", "null"],
+      "description": "원문에서 확인되는 배경과 문제 상황"
+    },
+    "task": {
+      "type": ["string", "null"],
+      "description": "원문에서 확인되는 사용자의 역할이나 목표"
+    },
+    "action": {
+      "type": ["string", "null"],
+      "description": "원문에서 확인되는 사용자의 구체적인 행동"
+    },
+    "result": {
+      "type": ["string", "null"],
+      "description": "원문에서 확인되는 정량 또는 정성 결과"
+    },
+    "quantitativeResult": {
+      "type": ["string", "null"],
+      "description": "원문에 명시된 수치 성과"
+    },
+    "learning": {
+      "type": ["string", "null"],
+      "description": "원문에서 확인되는 배움이나 태도 변화"
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "keywordType": {
+            "type": "string",
+            "enum": ["COMPETENCY", "JOB", "TAG"]
+          },
+          "keyword": {
+            "type": "string"
+          }
+        },
+        "required": ["keywordType", "keyword"],
+        "additionalProperties": false
+      }
+    },
+    "missingFields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "situation",
+          "task",
+          "action",
+          "result",
+          "quantitativeResult",
+          "learning",
+          "keywords"
+        ]
+      }
+    }
+  },
+  "required": [
+    "title",
+    "situation",
+    "task",
+    "action",
+    "result",
+    "quantitativeResult",
+    "learning",
+    "keywords",
+    "missingFields"
+  ],
+  "additionalProperties": false
+}

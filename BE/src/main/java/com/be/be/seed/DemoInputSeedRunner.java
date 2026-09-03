@@ -7,22 +7,22 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
-@Order(10)
+@Order(30)
 @ConditionalOnProperty(
-        name = "app.company-seed.enabled",
+        name = {"app.company-seed.enabled", "app.demo-data.enabled"},
         havingValue = "true",
         matchIfMissing = true
 )
-public class CompanySeedRunner implements ApplicationRunner {
+public class DemoInputSeedRunner implements ApplicationRunner {
 
-    private final CompanySeedService companySeedService;
+    private final DemoInputSeedService seedService;
 
-    public CompanySeedRunner(CompanySeedService companySeedService) {
-        this.companySeedService = companySeedService;
+    public DemoInputSeedRunner(DemoInputSeedService seedService) {
+        this.seedService = seedService;
     }
 
     @Override
     public void run(ApplicationArguments args) {
-        companySeedService.seed();
+        seedService.seed();
     }
 }

@@ -1,25 +1,23 @@
 package com.be.be.coverletter;
 
 import com.be.be.ai.AiProperties;
-import com.be.be.ai.JsonLlmResponseParser;
+import com.be.be.ai.LlmInvocationContext;
 import com.be.be.ai.LlmException;
 import com.be.be.ai.LlmInvoker;
+import com.be.be.ai.LlmOperationType;
 import com.be.be.ai.PromptTemplateLoader;
 import com.be.be.recruitment.dto.PostingDetail;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnProperty(prefix = "app.ai", name = "mode", havingValue = "llm")
 public class LlmCoverLetterGenerator implements CoverLetterGenerator {
 
-    private static final String PROMPT_LOCATION = "classpath:prompts/cover-letter-generation.st";
+    private static final String PROMPT_VERSION = "cover-letter-generation-v1";
 
     private final LlmInvoker invoker;
     private final PromptTemplateLoader promptLoader;
-    private final JsonLlmResponseParser responseParser;
     private final CoverLetterGenerationValidator validator;
     private final AiProperties properties;
     private final ObjectMapper objectMapper;
@@ -27,14 +25,12 @@ public class LlmCoverLetterGenerator implements CoverLetterGenerator {
     public LlmCoverLetterGenerator(
             LlmInvoker invoker,
             PromptTemplateLoader promptLoader,
-            JsonLlmResponseParser responseParser,
             CoverLetterGenerationValidator validator,
             AiProperties properties,
             ObjectMapper objectMapper
     ) {
         this.invoker = invoker;
         this.promptLoader = promptLoader;
-        this.responseParser = responseParser;
         this.validator = validator;
         this.properties = properties;
         this.objectMapper = objectMapper;
@@ -44,12 +40,12 @@ public class LlmCoverLetterGenerator implements CoverLetterGenerator {
     public GenerationResult generate(GenerationContext context) {
         String inputJson = inputJson(context);
         return invoker.invoke(
-                promptLoader.load(PROMPT_LOCATION),
+                new LlmInvocationContext(LlmOperationType.COVER_LETTER_DRAFT, context.draftId(), PROMPT_VERSION),
+                promptLoader.load(properties.getCoverLetterPromptLocation()),
                 inputJson,
-                response -> validator.validate(
-                        context,
-                        responseParser.parse(response, GenerationResult.class)
-                )
+                promptLoader.load(properties.getCoverLetterSchemaLocation()),
+                GenerationResult.class,
+                response -> validator.validate(context, response)
         );
     }
 
@@ -57,12 +53,13 @@ public class LlmCoverLetterGenerator implements CoverLetterGenerator {
         try {
             PostingDetail posting = objectMapper.readValue(context.postingSnapshot(), PostingDetail.class);
             PromptInput input = new PromptInput(
-                    "cover-letter-generation-v1",
+                    PROMPT_VERSION,
                     "ko-KR",
                     new QuestionInput(
                             context.questionText(),
                             context.charLimit(),
-                            context.charLimit() == null ? properties.getDefaultTargetChars() : context.charLimit()
+                            targetChars(context.charLimit()),
+                            minimumChars(context.charLimit())
                     ),
                     new ApplicationInput(context.companyName(), context.jobTitle(), posting),
                     context.additionalInstruction(),
@@ -81,6 +78,16 @@ public class LlmCoverLetterGenerator implements CoverLetterGenerator {
         }
     }
 
+    private int targetChars(Integer charLimit) {
+        int base = charLimit == null ? properties.getDefaultTargetChars() : charLimit;
+        return Math.max(1, (int) Math.floor(base * properties.getTargetRatio()));
+    }
+
+    private int minimumChars(Integer charLimit) {
+        int base = charLimit == null ? properties.getDefaultTargetChars() : charLimit;
+        return Math.max(1, (int) Math.ceil(base * properties.getMinimumRatio()));
+    }
+
     private record PromptInput(
             String schemaVersion,
             String language,
@@ -92,7 +99,7 @@ public class LlmCoverLetterGenerator implements CoverLetterGenerator {
     ) {
     }
 
-    private record QuestionInput(String text, Integer charLimit, int targetChars) {
+    private record QuestionInput(String text, Integer charLimit, int targetChars, int minimumChars) {
     }
 
     private record ApplicationInput(String companyName, String jobTitle, PostingDetail posting) {

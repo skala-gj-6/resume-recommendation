@@ -9,15 +9,19 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class ExperienceStructureValidator {
+
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+(?:[.,]\\d+)*");
 
     private static final Set<String> ALLOWED_MISSING_FIELDS = Set.of(
             "situation", "task", "action", "result", "quantitativeResult", "learning", "keywords"
     );
 
-    public StructureResponse validate(StructureResponse response) {
+    public StructureResponse validate(String originalText, StructureResponse response) {
         try {
             if (response == null) {
                 throw new IllegalArgumentException("response must not be null");
@@ -33,6 +37,17 @@ public class ExperienceStructureValidator {
             List<String> missingFields = validateMissingFields(
                     response.missingFields(), situation, task, action, result, quantitativeResult, learning, keywords
             );
+            validateNumericClaims(
+                    originalText,
+                    title,
+                    situation,
+                    task,
+                    action,
+                    result,
+                    quantitativeResult,
+                    learning,
+                    keywords
+            );
             return new StructureResponse(
                     title, situation, task, action, result, quantitativeResult, learning, keywords, missingFields
             );
@@ -41,12 +56,57 @@ public class ExperienceStructureValidator {
         }
     }
 
+    private static void validateNumericClaims(
+            String originalText,
+            String title,
+            String situation,
+            String task,
+            String action,
+            String result,
+            String quantitativeResult,
+            String learning,
+            List<KeywordResponse> keywords
+    ) {
+        Set<String> allowedNumbers = extractNumbers(originalText);
+        StringBuilder generated = new StringBuilder(title);
+        append(generated, situation);
+        append(generated, task);
+        append(generated, action);
+        append(generated, result);
+        append(generated, quantitativeResult);
+        append(generated, learning);
+        keywords.forEach(keyword -> append(generated, keyword.keyword()));
+        Set<String> generatedNumbers = extractNumbers(generated.toString());
+        if (!allowedNumbers.containsAll(generatedNumbers)) {
+            generatedNumbers.removeAll(allowedNumbers);
+            throw new IllegalArgumentException("structured response contains unsupported numbers: " + generatedNumbers);
+        }
+    }
+
+    private static void append(StringBuilder target, String value) {
+        if (value != null) {
+            target.append('\n').append(value);
+        }
+    }
+
+    private static Set<String> extractNumbers(String value) {
+        Set<String> numbers = new HashSet<>();
+        if (value == null) {
+            return numbers;
+        }
+        Matcher matcher = NUMBER_PATTERN.matcher(value);
+        while (matcher.find()) {
+            numbers.add(matcher.group().replace(",", ""));
+        }
+        return numbers;
+    }
+
     private static List<KeywordResponse> validateKeywords(List<KeywordResponse> keywords) {
         if (keywords == null || keywords.size() > 20) {
             throw new IllegalArgumentException("keywords must contain at most 20 values");
         }
         Set<String> unique = new HashSet<>();
-        return keywords.stream().map(keyword -> {
+        List<KeywordResponse> validated = keywords.stream().map(keyword -> {
             if (keyword == null || keyword.keywordType() == null) {
                 throw new IllegalArgumentException("keyword and keywordType must not be null");
             }
@@ -57,6 +117,12 @@ public class ExperienceStructureValidator {
             }
             return new KeywordResponse(keyword.keywordType(), value);
         }).toList();
+        if (!validated.isEmpty() && validated.stream().noneMatch(keyword ->
+                keyword.keywordType() == ExperienceKeywordType.COMPETENCY
+                        || keyword.keywordType() == ExperienceKeywordType.JOB)) {
+            throw new IllegalArgumentException("keywords must contain a COMPETENCY or JOB value");
+        }
+        return validated;
     }
 
     private static List<String> validateMissingFields(

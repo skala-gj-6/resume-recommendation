@@ -47,16 +47,21 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-resume_password}
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO:-update}
       RECRUITMENT_PROVIDER_BASE_URL: http://mock-api:8000
-      AI_MODE: ${AI_MODE:-mock}
-      LLM_BASE_URL: ${LLM_BASE_URL:-http://host.docker.internal:11434/v1}
-      LLM_CHAT_COMPLETIONS_PATH: ${LLM_CHAT_COMPLETIONS_PATH:-/chat/completions}
-      LLM_API_KEY: ${LLM_API_KEY:-}
-      LLM_MODEL: ${LLM_MODEL:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com}
+      OPENAI_TIMEOUT: ${OPENAI_TIMEOUT:-45s}
+      LLM_MODEL: ${LLM_MODEL:-gpt-4o}
       LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0.2}
-      LLM_CONNECT_TIMEOUT: ${LLM_CONNECT_TIMEOUT:-3s}
-      LLM_READ_TIMEOUT: ${LLM_READ_TIMEOUT:-45s}
+      LLM_MAX_TOKENS: ${LLM_MAX_TOKENS:-8000}
       LLM_MAX_ATTEMPTS: ${LLM_MAX_ATTEMPTS:-2}
       LLM_DEFAULT_TARGET_CHARS: ${LLM_DEFAULT_TARGET_CHARS:-700}
+      LLM_TARGET_RATIO: ${LLM_TARGET_RATIO:-0.9}
+      LLM_MINIMUM_RATIO: ${LLM_MINIMUM_RATIO:-0.7}
+      LLM_EXPERIENCE_PROMPT_LOCATION: ${LLM_EXPERIENCE_PROMPT_LOCATION:-classpath:prompts/experience-structure.st}
+      LLM_COVER_LETTER_PROMPT_LOCATION: ${LLM_COVER_LETTER_PROMPT_LOCATION:-classpath:prompts/cover-letter-generation.st}
+      LLM_EXPERIENCE_SCHEMA_LOCATION: ${LLM_EXPERIENCE_SCHEMA_LOCATION:-classpath:schemas/experience-structure.json}
+      LLM_COVER_LETTER_SCHEMA_LOCATION: ${LLM_COVER_LETTER_SCHEMA_LOCATION:-classpath:schemas/cover-letter-generation.json}
+      DEMO_DATA_ENABLED: ${DEMO_DATA_ENABLED:-true}
     depends_on:
       postgres:
         condition: service_healthy

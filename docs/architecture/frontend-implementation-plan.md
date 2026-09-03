@@ -2,7 +2,7 @@
 
 ## Context
 
-`docs/`에 DB·API·사용자 흐름 설계가 확정되어 있고 BE(Spring)와 MOCK(공고·추천 제공자)은 데모 로그인, 경험, 추천 저장, 지원 프로젝트, 문항별 목 AI 초안·Polling·수정본까지 구현이 끝난 상태다. 반면 `FE/`는 `create-vue` 스캐폴딩 그대로이고 라우트가 비어 있다(`FE/src/router/index.js`의 `routes: []`).
+`docs/`에 DB·API·사용자 흐름 설계가 확정되어 있고 BE(Spring)와 MOCK(공고·추천 제공자)은 데모 로그인, 경험, 추천 저장, 지원 프로젝트, 문항별 OpenAI 초안·Polling·수정본까지 구현된 상태다. 반면 `FE/`는 `create-vue` 스캐폴딩 그대로이고 라우트가 비어 있다(`FE/src/router/index.js`의 `routes: []`).
 
 이 계획의 목표는 [user-flow.md](docs/architecture/user-flow.md)의 **F-A(신규 사용자: 전체 공고 탐색 → 로그인 → 경험 등록 → 초안 생성)**와 **F-B(재방문 사용자: 맞춤 추천 → 초안 생성)**를 끝까지 돌릴 수 있는 Vue 3 프론트엔드를 만드는 것이다. 화면 디자인은 `FE/design/디자인2/자소서 프로토타입.dc.html` 프로토타입(list / detail / login / create / result / docs / expList / expEdit)을 기준으로 한다.
 

@@ -109,6 +109,26 @@ erDiagram
         date used_reference_date "사용 당시 기준일"
         datetime created_at "스냅샷 생성 시각"
     }
+
+    LLM_CALL_LOG {
+        bigint llm_call_id PK "호출 시도 식별자"
+        string operation_type "호출 용도"
+        bigint reference_id "초안 ID 등 논리 참조"
+        int attempt_no "호출 시도 번호"
+        string provider "공급자"
+        string requested_model "요청 모델"
+        string actual_model "응답 모델"
+        string prompt_version "프롬프트 버전"
+        string provider_request_id "공급자 요청 ID"
+        int prompt_tokens "입력 토큰"
+        int completion_tokens "출력 토큰"
+        int total_tokens "전체 토큰"
+        string finish_reason "종료 사유"
+        bigint latency_ms "호출 지연 시간"
+        string status "성공 또는 실패"
+        string error_code "안전한 오류 코드"
+        datetime created_at "기록 시각"
+    }
 ```
 
 ## JOB_APPLICATION — 공고별 지원서
@@ -234,6 +254,30 @@ Mock 공고에 questions가 없음   → 사용자가 직접 입력한 문항을
 | `created_at` | TIMESTAMP | NOT NULL | 스냅샷 생성 시각 |
 
 고유 제약은 `UNIQUE(draft_id, company_info_id)`입니다. `company_info_id` 컬럼은 nullable이지만 현재 생성 로직은 항상 존재하는 기업 정보를 연결하며, FK 삭제 규칙은 `NO ACTION`입니다.
+
+## LLM_CALL_LOG — 호출 메타데이터와 사용량
+
+| 컬럼 | 타입 | 제약 | 용도 |
+|---|---|---|---|
+| `llm_call_id` | BIGINT | PK | 호출 시도 식별자 |
+| `operation_type` | VARCHAR(40) | NOT NULL | `EXPERIENCE_STRUCTURE`, `COVER_LETTER_DRAFT` |
+| `reference_id` | BIGINT | NULL 허용 | 초안 생성이면 `draft_id`, 미리보기 구조화면 NULL |
+| `attempt_no` | INTEGER | NOT NULL | 같은 작업 내 시도 번호 |
+| `provider` | VARCHAR(30) | NOT NULL | 현재 `OPENAI` |
+| `requested_model` | VARCHAR(100) | NOT NULL | 서버가 요청한 모델 |
+| `actual_model` | VARCHAR(100) | NULL 허용 | 공급자 응답 메타데이터의 실제 모델 |
+| `prompt_version` | VARCHAR(100) | NOT NULL | 적용한 프롬프트 계약 버전 |
+| `provider_request_id` | VARCHAR(200) | NULL 허용 | 공급자 요청 식별자 |
+| `prompt_tokens` | INTEGER | NULL 허용 | 입력 토큰 사용량 |
+| `completion_tokens` | INTEGER | NULL 허용 | 출력 토큰 사용량 |
+| `total_tokens` | INTEGER | NULL 허용 | 전체 토큰 사용량 |
+| `finish_reason` | VARCHAR(50) | NULL 허용 | 공급자 종료 사유 |
+| `latency_ms` | BIGINT | NOT NULL | 해당 시도 소요 시간 |
+| `status` | VARCHAR(20) | NOT NULL | `SUCCEEDED`, `FAILED` |
+| `error_code` | VARCHAR(100) | NULL 허용 | 실패 시 안전한 내부 코드 |
+| `created_at` | TIMESTAMP | NOT NULL | 기록 시각 |
+
+`reference_id`는 여러 작업 유형을 수용하기 위한 논리 참조이므로 물리 FK가 아닙니다. `INDEX idx_llm_call_log_reference(operation_type, reference_id, created_at)`로 초안의 최신 성공 호출을 찾습니다. API 키, 프롬프트 원문, 사용자 입력과 응답 본문은 이 테이블에 저장하지 않습니다.
 
 ## 상태 규칙
 

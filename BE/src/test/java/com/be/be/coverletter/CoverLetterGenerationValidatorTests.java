@@ -1,5 +1,6 @@
 package com.be.be.coverletter;
 
+import com.be.be.ai.AiProperties;
 import com.be.be.ai.LlmException;
 import com.be.be.coverletter.CoverLetterGenerator.CompanyInfoCandidate;
 import com.be.be.coverletter.CoverLetterGenerator.ExperienceCandidate;
@@ -7,6 +8,7 @@ import com.be.be.coverletter.CoverLetterGenerator.GenerationContext;
 import com.be.be.coverletter.CoverLetterGenerator.GenerationResult;
 import com.be.be.coverletter.CoverLetterGenerator.SelectedExperience;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -15,17 +17,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CoverLetterGenerationValidatorTests {
 
-    private final CoverLetterGenerationValidator validator = new CoverLetterGenerationValidator();
+    private final CoverLetterGenerationValidator validator = new CoverLetterGenerationValidator(
+            new AiProperties(),
+            new ObjectMapper()
+    );
 
     @Test
     void acceptsOneCallResultThatSelectsCandidateIds() {
         GenerationResult result = new GenerationResult(
-                "문제를 분석한 뒤 쿼리를 개선해 응답 시간을 단축했습니다.",
+                longContent("문제를 분석한 뒤 쿼리를 개선해 응답 시간을 단축했습니다."),
                 List.of(new SelectedExperience(11L, "문제 해결 과정을 보여주는 경험")),
                 List.of(31L)
         );
 
-        GenerationResult validated = validator.validate(context(100), result);
+        GenerationResult validated = validator.validate(context(120), result);
 
         assertEquals(11L, validated.selectedExperiences().getFirst().experienceId());
         assertEquals(List.of(31L), validated.selectedCompanyInfoIds());
@@ -34,14 +39,14 @@ class CoverLetterGenerationValidatorTests {
     @Test
     void rejectsExperienceThatWasNotInPromptCandidates() {
         GenerationResult result = new GenerationResult(
-                "문제를 해결했습니다.",
+                longContent("문제를 해결했습니다."),
                 List.of(new SelectedExperience(99L, "알 수 없는 경험")),
                 List.of()
         );
 
         LlmException exception = assertThrows(
                 LlmException.class,
-                () -> validator.validate(context(100), result)
+                () -> validator.validate(context(120), result)
         );
 
         assertEquals("LLM_RESPONSE_INVALID", exception.getCode());
@@ -55,13 +60,35 @@ class CoverLetterGenerationValidatorTests {
                 List.of()
         );
         GenerationResult middleDot = new GenerationResult(
-                "Java·Spring 경험을 활용했습니다.",
+                longContent("Java·Spring 경험을 활용했습니다."),
                 List.of(new SelectedExperience(11L, "적합한 경험")),
                 List.of()
         );
 
         assertThrows(LlmException.class, () -> validator.validate(context(5), overLimit));
-        assertThrows(LlmException.class, () -> validator.validate(context(100), middleDot));
+        assertThrows(LlmException.class, () -> validator.validate(context(120), middleDot));
+    }
+
+    @Test
+    void rejectsTooShortContentAndUnsupportedNumericClaim() {
+        GenerationResult tooShort = new GenerationResult(
+                "짧은 본문입니다.",
+                List.of(new SelectedExperience(11L, "적합한 경험")),
+                List.of()
+        );
+        GenerationResult unsupportedNumber = new GenerationResult(
+                longContent("성과를 99% 개선했습니다."),
+                List.of(new SelectedExperience(11L, "적합한 경험")),
+                List.of()
+        );
+
+        assertThrows(LlmException.class, () -> validator.validate(context(120), tooShort));
+        assertThrows(LlmException.class, () -> validator.validate(context(120), unsupportedNumber));
+    }
+
+    private static String longContent(String value) {
+        return value + " 문제의 원인을 측정하고 판단 근거를 세운 뒤 실행 결과를 확인했습니다."
+                + " 이 경험을 바탕으로 맡은 업무에서도 근거 있게 개선하겠습니다.";
     }
 
     private static GenerationContext context(int charLimit) {

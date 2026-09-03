@@ -28,7 +28,7 @@ class ExperienceStructureValidatorTests {
                 List.of("learning")
         );
 
-        StructureResponse validated = validator.validate(response);
+        StructureResponse validated = validator.validate("API 응답 시간을 40% 단축했습니다.", response);
 
         assertEquals("API 성능 개선", validated.title());
         assertEquals("문제 해결", validated.keywords().getFirst().keyword());
@@ -49,7 +49,10 @@ class ExperienceStructureValidatorTests {
                 List.of("learning")
         );
 
-        LlmException exception = assertThrows(LlmException.class, () -> validator.validate(response));
+        LlmException exception = assertThrows(
+                LlmException.class,
+                () -> validator.validate("API 응답 시간을 줄였습니다.", response)
+        );
 
         assertEquals("LLM_RESPONSE_INVALID", exception.getCode());
     }
@@ -69,6 +72,43 @@ class ExperienceStructureValidatorTests {
                 List.of("quantitativeResult", "learning")
         );
 
-        assertThrows(LlmException.class, () -> validator.validate(response));
+        assertThrows(LlmException.class, () -> validator.validate("API 개발 경험", response));
+    }
+
+    @Test
+    void rejectsNumericClaimThatWasNotInOriginalText() {
+        StructureResponse response = new StructureResponse(
+                "API 성능 개선",
+                "응답 지연이 발생했다.",
+                "성능을 개선해야 했다.",
+                "쿼리를 분석했다.",
+                "응답 시간을 줄였다.",
+                "40% 단축",
+                null,
+                List.of(new KeywordResponse(ExperienceKeywordType.COMPETENCY, "문제 해결")),
+                List.of("learning")
+        );
+
+        assertThrows(
+                LlmException.class,
+                () -> validator.validate("API 응답 시간을 개선했습니다.", response)
+        );
+    }
+
+    @Test
+    void rejectsPreviewWithOnlyTagKeywordsBecauseItCannotBeSavedAsIs() {
+        StructureResponse response = new StructureResponse(
+                "API 개발",
+                "상황",
+                "과제",
+                "행동",
+                "결과",
+                null,
+                null,
+                List.of(new KeywordResponse(ExperienceKeywordType.TAG, "Spring Boot")),
+                List.of("quantitativeResult", "learning")
+        );
+
+        assertThrows(LlmException.class, () -> validator.validate("Spring Boot API 개발 경험", response));
     }
 }

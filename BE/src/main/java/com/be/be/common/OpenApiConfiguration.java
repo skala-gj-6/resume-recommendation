@@ -23,12 +23,12 @@ public class OpenApiConfiguration {
 
                                 권장 호출 흐름:
                                 1. `POST /api/v1/auth/demo-login`으로 고정 데모 사용자를 확인합니다.
-                                2. 경험이 없다면 `POST /api/v1/experiences/structure`로 미리보기를 만든 뒤 `POST /api/v1/experiences`로 저장합니다.
+                                2. 기본 시드 경험을 사용하거나 `POST /api/v1/experiences/structure`로 미리보기를 만든 뒤 `POST /api/v1/experiences`로 저장합니다.
                                 3. `POST /api/v1/recommendations`로 추천을 생성하거나 Mock 공고에서 직접 공고를 선택합니다.
                                 4. `POST /api/v1/job-applications`로 지원 프로젝트와 문항을 생성합니다.
                                 5. 문항별 초안 생성 API의 `statusUrl`을 조회해 `COMPLETED` 또는 `FAILED`까지 Polling합니다.
 
-                                현재 로그인 토큰은 실제로 검증하지 않으며 모든 사용자 API는 고정 데모 사용자로 동작합니다. 경험 구조화와 자기소개서 생성은 설정에 따라 Mock 또는 OpenAI 호환 LLM 구현을 사용합니다. 비로그인 공고 목록·상세는 `http://localhost:8000/docs`의 Mock Recruitment Provider API를 사용합니다.
+                                현재 로그인 토큰은 실제로 검증하지 않으며 모든 사용자 API는 고정 데모 사용자로 동작합니다. 경험 구조화와 자기소개서 생성은 Spring AI가 OpenAI GPT-4o를 직접 호출합니다. 비로그인 공고 목록·상세는 `http://localhost:8000/docs`의 Mock Recruitment Provider API를 사용합니다.
                                 """))
                 .servers(List.of(new Server().url("/").description("현재 실행 중인 Spring 백엔드")))
                 .tags(List.of(

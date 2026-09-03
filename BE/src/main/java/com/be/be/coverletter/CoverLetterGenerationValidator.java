@@ -1,19 +1,35 @@
 package com.be.be.coverletter;
 
+import com.be.be.ai.AiProperties;
 import com.be.be.ai.LlmException;
 import com.be.be.coverletter.CoverLetterGenerator.CompanyInfoCandidate;
 import com.be.be.coverletter.CoverLetterGenerator.ExperienceCandidate;
 import com.be.be.coverletter.CoverLetterGenerator.GenerationContext;
 import com.be.be.coverletter.CoverLetterGenerator.GenerationResult;
 import com.be.be.coverletter.CoverLetterGenerator.SelectedExperience;
+import com.be.be.recruitment.dto.PostingDetail;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class CoverLetterGenerationValidator {
+
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+(?:[.,]\\d+)*");
+
+    private final AiProperties properties;
+    private final ObjectMapper objectMapper;
+
+    public CoverLetterGenerationValidator(AiProperties properties, ObjectMapper objectMapper) {
+        this.properties = properties;
+        this.objectMapper = objectMapper;
+    }
 
     public GenerationResult validate(GenerationContext context, GenerationResult result) {
         try {
@@ -24,6 +40,13 @@ public class CoverLetterGenerationValidator {
             int characterCount = content.codePointCount(0, content.length());
             if (context.charLimit() != null && characterCount > context.charLimit()) {
                 throw new IllegalArgumentException("content exceeds charLimit");
+            }
+            int baseLength = context.charLimit() == null
+                    ? properties.getDefaultTargetChars()
+                    : context.charLimit();
+            int minimumLength = Math.max(1, (int) Math.ceil(baseLength * properties.getMinimumRatio()));
+            if (characterCount < minimumLength) {
+                throw new IllegalArgumentException("content is shorter than minimumChars");
             }
             if (content.indexOf('·') >= 0) {
                 throw new IllegalArgumentException("content must not contain a middle dot");
@@ -42,10 +65,90 @@ public class CoverLetterGenerationValidator {
             List<Long> selectedCompanyInfoIds = validateCompanyInformation(
                     result.selectedCompanyInfoIds(), candidateCompanyInfoIds
             );
+            validateNumericClaims(context, content, selectedExperiences, selectedCompanyInfoIds);
             return new GenerationResult(content, selectedExperiences, selectedCompanyInfoIds);
         } catch (IllegalArgumentException exception) {
             throw LlmException.invalidResponse(exception);
         }
+    }
+
+    private void validateNumericClaims(
+            GenerationContext context,
+            String content,
+            List<SelectedExperience> selectedExperiences,
+            List<Long> selectedCompanyInfoIds
+    ) {
+        Set<Long> selectedExperienceIds = selectedExperiences.stream()
+                .map(SelectedExperience::experienceId)
+                .collect(java.util.stream.Collectors.toSet());
+        StringBuilder evidence = new StringBuilder();
+        append(evidence, context.questionText());
+        append(evidence, context.companyName());
+        append(evidence, context.jobTitle());
+        appendPostingEvidence(evidence, context.postingSnapshot());
+        context.experiences().stream()
+                .filter(candidate -> selectedExperienceIds.contains(candidate.experienceId()))
+                .forEach(candidate -> {
+                    append(evidence, candidate.title());
+                    append(evidence, candidate.situation());
+                    append(evidence, candidate.task());
+                    append(evidence, candidate.action());
+                    append(evidence, candidate.result());
+                    append(evidence, candidate.quantitativeResult());
+                    append(evidence, candidate.learning());
+                });
+        context.companyInformation().stream()
+                .filter(candidate -> selectedCompanyInfoIds.contains(candidate.companyInfoId()))
+                .forEach(candidate -> {
+                    append(evidence, candidate.title());
+                    append(evidence, candidate.content());
+                });
+
+        Set<String> allowedNumbers = extractNumbers(evidence.toString());
+        Set<String> generatedNumbers = extractNumbers(content);
+        if (!allowedNumbers.containsAll(generatedNumbers)) {
+            generatedNumbers.removeAll(allowedNumbers);
+            throw new IllegalArgumentException("content contains unsupported numeric claims: " + generatedNumbers);
+        }
+    }
+
+    private void appendPostingEvidence(StringBuilder evidence, String snapshot) {
+        try {
+            PostingDetail posting = objectMapper.readValue(snapshot, PostingDetail.class);
+            append(evidence, posting.jobCategory());
+            append(evidence, posting.industry());
+            append(evidence, posting.region());
+            append(evidence, posting.experienceLevel());
+            append(evidence, posting.educationLevel());
+            append(evidence, posting.employmentType());
+            appendAll(evidence, posting.responsibilities());
+            appendAll(evidence, posting.requirements());
+            appendAll(evidence, posting.preferredQualifications());
+            appendAll(evidence, posting.keywords());
+        } catch (JacksonException exception) {
+            throw new IllegalArgumentException("postingSnapshot is invalid", exception);
+        }
+    }
+
+    private static void appendAll(StringBuilder target, List<String> values) {
+        if (values != null) {
+            values.forEach(value -> append(target, value));
+        }
+    }
+
+    private static void append(StringBuilder target, String value) {
+        if (value != null) {
+            target.append(value).append('\n');
+        }
+    }
+
+    private static Set<String> extractNumbers(String value) {
+        Set<String> numbers = new HashSet<>();
+        Matcher matcher = NUMBER_PATTERN.matcher(value);
+        while (matcher.find()) {
+            numbers.add(matcher.group().replace(",", ""));
+        }
+        return numbers;
     }
 
     private static List<SelectedExperience> validateExperiences(

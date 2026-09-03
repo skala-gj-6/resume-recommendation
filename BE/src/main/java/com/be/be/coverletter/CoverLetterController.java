@@ -91,7 +91,7 @@ public class CoverLetterController {
     @GetMapping("/cover-letter-drafts/{draftId}")
     @Operation(
             summary = "초안 생성 상태·본문·근거 조회",
-            description = "Polling에 사용하는 API입니다. 비동기 처리 실패도 HTTP 500이 아니라 200 응답의 generationStatus=FAILED와 errorCode로 확인합니다. displayContent는 수정본이 있으면 수정본, 없으면 AI 원문입니다."
+            description = "Polling에 사용하는 API입니다. 비동기 처리 실패도 HTTP 500이 아니라 200 응답의 generationStatus=FAILED와 errorCode로 확인합니다. displayContent는 수정본이 있으면 수정본, 없으면 AI 원문입니다. 완료된 호출은 llmCall에서 실제 모델과 토큰 사용량을 확인할 수 있습니다."
     )
     public CoverLetterDtos.DraftDetailResponse getDraft(
             @Parameter(description = "조회할 초안 ID", example = "1") @PathVariable Long draftId

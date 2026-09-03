@@ -44,7 +44,7 @@ public class ExperienceController {
     @PostMapping("/structure")
     @Operation(
             summary = "자유서술 경험을 STAR로 구조화",
-            description = "최대 5,000자의 경험 원문을 STAR 항목과 키워드로 변환해 미리보기만 반환합니다. 이 호출만으로 DB에 저장되지 않으며, 사용자가 확인·수정한 결과를 경험 저장 API로 보내야 합니다. AI 구현은 app.ai.mode 설정으로 전환합니다."
+            description = "최대 5,000자의 경험 원문을 OpenAI GPT-4o로 STAR 항목과 키워드로 변환해 미리보기만 반환합니다. 이 호출만으로 DB에 저장되지 않으며, 사용자가 확인·수정한 결과를 경험 저장 API로 보내야 합니다."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "구조화 미리보기 생성 성공"),
