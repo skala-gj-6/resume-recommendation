@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { createRecommendation, getLatestRecommendation, getRecommendationItem } from '@/api/recommendations'
+import {
+  createRecommendation,
+  getLatestRecommendation,
+  getRecommendationItem,
+} from '@/api/recommendations'
 
 // F-B 맞춤 추천. 로그인/화면 진입만으로 자동 호출하지 않고, 버튼 클릭 시에만 generate()를 호출합니다.
 export const useRecommendationStore = defineStore('recommendation', () => {
@@ -52,5 +56,15 @@ export const useRecommendationStore = defineStore('recommendation', () => {
     return detail
   }
 
-  return { latestRun, items, loading, generating, errorCode, itemDetailCache, loadLatest, generate, loadItem }
+  return {
+    latestRun,
+    items,
+    loading,
+    generating,
+    errorCode,
+    itemDetailCache,
+    loadLatest,
+    generate,
+    loadItem,
+  }
 })

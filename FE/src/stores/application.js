@@ -44,7 +44,12 @@ export const useApplicationStore = defineStore('application', () => {
   async function fetchList({ page = 0, size = 20, sort = 'updatedAt,desc' } = {}) {
     const res = await listApplications({ page, size, sort })
     list.value = res.content
-    listPageMeta.value = { page: res.page, size: res.size, totalElements: res.totalElements, totalPages: res.totalPages }
+    listPageMeta.value = {
+      page: res.page,
+      size: res.size,
+      totalElements: res.totalElements,
+      totalPages: res.totalPages,
+    }
     return res
   }
 

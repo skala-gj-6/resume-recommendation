@@ -13,7 +13,12 @@ watch(
   (length) => {
     if (length === 0) return
     for (const item of ui.consumeToasts()) {
-      toast.add({ severity: item.severity, summary: item.summary, detail: item.detail, life: item.life })
+      toast.add({
+        severity: item.severity,
+        summary: item.summary,
+        detail: item.detail,
+        life: item.life,
+      })
     }
   },
 )

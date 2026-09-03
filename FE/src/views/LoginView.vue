@@ -40,11 +40,13 @@ async function doLogin() {
       <div class="text-xs text-ink-muted">이어서 진행하려면 로그인</div>
       <h2 class="text-xl font-semibold m-0">{{ loginContext }}</h2>
       <p class="text-sm text-ink-muted leading-relaxed m-0">
-        로그인하면 방금 보던 공고의 작성 화면으로 그대로 돌아갑니다. 공고 열람에는 로그인이 필요하지 않습니다.
+        로그인하면 방금 보던 공고의 작성 화면으로 그대로 돌아갑니다. 공고 열람에는 로그인이 필요하지
+        않습니다.
       </p>
       <Button label="데모 계정으로 계속하기" :loading="loading" class="w-full" @click="doLogin" />
       <div class="text-xs text-ink-faint">
-        이 버튼은 시드로 등록된 고정 데모 사용자 세션을 만듭니다. 실제 회원가입·비밀번호 인증은 제공하지 않습니다.
+        이 버튼은 시드로 등록된 고정 데모 사용자 세션을 만듭니다. 실제 회원가입·비밀번호 인증은
+        제공하지 않습니다.
       </div>
       <RouterLink
         :to="{ name: 'posting-list' }"

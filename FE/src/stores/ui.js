@@ -6,7 +6,13 @@ export const useUiStore = defineStore('ui', () => {
   const pendingToasts = ref([])
 
   function notify({ severity = 'info', summary, detail, life = 4000 }) {
-    pendingToasts.value.push({ id: `${Date.now()}-${Math.random()}`, severity, summary, detail, life })
+    pendingToasts.value.push({
+      id: `${Date.now()}-${Math.random()}`,
+      severity,
+      summary,
+      detail,
+      life,
+    })
   }
 
   function consumeToasts() {

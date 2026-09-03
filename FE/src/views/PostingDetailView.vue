@@ -56,7 +56,9 @@ const fields = computed(() => {
 function startCreate() {
   enter({
     externalPostingId: props.externalPostingId,
-    postingLabel: detail.value ? `${detail.value.companyName} · ${detail.value.jobTitle}` : undefined,
+    postingLabel: detail.value
+      ? `${detail.value.companyName} · ${detail.value.jobTitle}`
+      : undefined,
   })
 }
 </script>
@@ -77,7 +79,9 @@ function startCreate() {
     <div v-else-if="detail" class="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-10">
       <div class="flex flex-col gap-8">
         <div>
-          <div class="text-sm text-ink-muted mb-1">{{ detail.companyName }} · {{ detail.industry }}</div>
+          <div class="text-sm text-ink-muted mb-1">
+            {{ detail.companyName }} · {{ detail.industry }}
+          </div>
           <h1 class="text-2xl font-semibold m-0 mb-4">{{ detail.jobTitle }}</h1>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
             <MetaField v-for="f in fields" :key="f.label" :label="f.label" :value="f.value" />
@@ -88,21 +92,30 @@ function startCreate() {
           </div>
         </div>
 
-        <div v-if="detail.responsibilities?.length" class="bg-surface border border-line rounded-lg p-6">
+        <div
+          v-if="detail.responsibilities?.length"
+          class="bg-surface border border-line rounded-lg p-6"
+        >
           <h3 class="text-sm font-semibold m-0 mb-3">주요 업무</h3>
           <ul class="m-0 pl-4 flex flex-col gap-1.5 text-sm text-ink-sub">
             <li v-for="(item, i) in detail.responsibilities" :key="i">{{ item }}</li>
           </ul>
         </div>
 
-        <div v-if="detail.requirements?.length" class="bg-surface border border-line rounded-lg p-6">
+        <div
+          v-if="detail.requirements?.length"
+          class="bg-surface border border-line rounded-lg p-6"
+        >
           <h3 class="text-sm font-semibold m-0 mb-3">자격 요건</h3>
           <ul class="m-0 pl-4 flex flex-col gap-1.5 text-sm text-ink-sub">
             <li v-for="(item, i) in detail.requirements" :key="i">{{ item }}</li>
           </ul>
         </div>
 
-        <div v-if="detail.preferredQualifications?.length" class="bg-surface border border-line rounded-lg p-6">
+        <div
+          v-if="detail.preferredQualifications?.length"
+          class="bg-surface border border-line rounded-lg p-6"
+        >
           <h3 class="text-sm font-semibold m-0 mb-3">우대 사항</h3>
           <ul class="m-0 pl-4 flex flex-col gap-1.5 text-sm text-ink-sub">
             <li v-for="(item, i) in detail.preferredQualifications" :key="i">{{ item }}</li>
@@ -112,11 +125,13 @@ function startCreate() {
         <div class="bg-surface border border-line rounded-lg p-6">
           <div class="flex items-center justify-between mb-1">
             <h2 class="text-base font-semibold m-0">
-              자기소개서 문항 <span class="text-ink-muted font-normal">{{ detail.questions?.length ?? 0 }}개</span>
+              자기소개서 문항
+              <span class="text-ink-muted font-normal">{{ detail.questions?.length ?? 0 }}개</span>
             </h2>
           </div>
           <p class="text-xs text-ink-muted mb-4">
-            공고에 문항이 있으면 그대로 사용합니다. 문항이 없으면 초안 생성 화면에서 직접 입력합니다.
+            공고에 문항이 있으면 그대로 사용합니다. 문항이 없으면 초안 생성 화면에서 직접
+            입력합니다.
           </p>
           <div v-if="detail.questions?.length" class="flex flex-col gap-4">
             <div v-for="q in detail.questions" :key="q.questionOrder" class="flex gap-3">
@@ -128,7 +143,8 @@ function startCreate() {
             </div>
           </div>
           <div v-else class="text-sm text-ink-muted">
-            이 공고에는 문항이 등록돼 있지 않습니다. 초안 생성 화면에서 문항을 직접 입력할 수 있습니다.
+            이 공고에는 문항이 등록돼 있지 않습니다. 초안 생성 화면에서 문항을 직접 입력할 수
+            있습니다.
           </div>
         </div>
       </div>

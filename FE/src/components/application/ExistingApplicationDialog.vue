@@ -33,7 +33,8 @@ const emit = defineEmits(['update:visible', 'select', 'create-new'])
       >
         <div class="text-sm font-medium text-ink">{{ app.displayTitle }}</div>
         <div class="text-xs text-ink-muted mt-1">
-          문항 {{ app.reviewedQuestionCount }}/{{ app.totalQuestionCount }} 검토 · {{ formatDateTime(app.updatedAt) }}
+          문항 {{ app.reviewedQuestionCount }}/{{ app.totalQuestionCount }} 검토 ·
+          {{ formatDateTime(app.updatedAt) }}
         </div>
       </button>
     </div>

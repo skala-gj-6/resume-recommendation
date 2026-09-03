@@ -28,7 +28,12 @@ export const useExperienceStore = defineStore('experience', () => {
     try {
       const res = await listExperiences({ page, size, sort })
       list.value = res.content
-      pageMeta.value = { page: res.page, size: res.size, totalElements: res.totalElements, totalPages: res.totalPages }
+      pageMeta.value = {
+        page: res.page,
+        size: res.size,
+        totalElements: res.totalElements,
+        totalPages: res.totalPages,
+      }
       return res
     } finally {
       loading.value = false

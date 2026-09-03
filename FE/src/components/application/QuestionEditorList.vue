@@ -60,7 +60,9 @@ function remove(index) {
           :key="preset"
           type="button"
           class="px-2 py-1 rounded-md text-xs border cursor-pointer bg-transparent"
-          :class="q.charLimit === preset ? 'border-accent text-accent' : 'border-line text-ink-muted'"
+          :class="
+            q.charLimit === preset ? 'border-accent text-accent' : 'border-line text-ink-muted'
+          "
           @click="update(i, { charLimit: preset })"
         >
           {{ preset }}
