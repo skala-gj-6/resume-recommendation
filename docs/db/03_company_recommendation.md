@@ -107,12 +107,12 @@ score가 있으면 0 <= score <= 100
 
 ## 데이터 출처와 범위
 
-- 비로그인 전체 공고 목록·상세는 별도 Mock Posting API Server가 제공하며 DB에 저장하지 않습니다.
+- 비로그인 전체 공고 목록·상세는 별도 Mock Recruitment Provider API가 제공하며 DB에 저장하지 않습니다.
 - 저장된 경험이 한 건 이상인 로그인 사용자가 추천 생성을 요청하면 목 추천 결과를 `RECOMMENDATION`에 저장합니다.
 - 실제 추천 점수 계산은 구현하지 않으며 경험을 기반으로 선별된 결과라고 가정합니다.
 - `matched_keywords`도 목 추천 결과에 포함된 표시용 데이터입니다.
 - 공고의 담당 업무·자격요건·문항은 `RECOMMENDATION`에 저장하지 않습니다.
-- 추천 상세 조회 시 Mock Posting API Server에서 공고 상세를 가져옵니다.
+- 추천 상세 조회 시 Mock Recruitment Provider API에서 공고 상세를 가져옵니다.
 - 사용자가 공고를 선택하면 필요한 공고 상세를 `JOB_APPLICATION`에 스냅샷으로 저장합니다.
 - 기업과 기업 정보는 초기 SQL 또는 개발용 시드로 적재합니다.
 

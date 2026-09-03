@@ -1,5 +1,7 @@
 # API 명세 개요
 
+> 이 문서는 목표 API 계약을 정의합니다. 현재 실행 가능한 범위는 Mock 공고·추천 후보 API, 기업정보 초기 적재, Spring의 Mock 제공자 클라이언트까지이며 로그인·경험·추천 저장·지원서·AI REST API는 아직 구현 전입니다. 실행 상태는 [로컬 Docker 실행](../architecture/local-docker.md#현재-구현-범위)을 기준으로 확인합니다.
+
 ## 공통 규칙
 
 | 항목 | 규칙 |
@@ -48,8 +50,9 @@
 
 | 도메인 | Method | Endpoint | 용도 |
 |---|---|---|---|
-| 공고 Mock | GET | `{MOCK_BASE_URL}/api/v1/postings` | 비로그인 전체 공고 검색·필터 |
-| 공고 Mock | GET | `{MOCK_BASE_URL}/api/v1/postings/{externalPostingId}` | 비로그인 공고 상세·문항 |
+| 공고 Mock | GET | `{RECRUITMENT_PROVIDER_BASE_URL}/api/v1/postings` | 비로그인 전체 공고 검색·필터 |
+| 공고 Mock | GET | `{RECRUITMENT_PROVIDER_BASE_URL}/api/v1/postings/{externalPostingId}` | 비로그인 공고 상세·문항 |
+| 추천 Mock | POST | `{RECRUITMENT_PROVIDER_BASE_URL}/api/v1/recommendations` | 경험 키워드에 대한 목 추천 후보 반환 |
 | 인증 | POST | `/auth/demo-login` | 고정 데모 사용자 로그인 |
 | 프로필 | GET | `/users/me` | 내 프로필과 선호 정보 조회 |
 | 프로필 | PATCH | `/users/me` | 기본 정보 수정 |
@@ -101,7 +104,7 @@ DELETE /cover-letter-drafts/{draftId}/edit
 | `409` | 중복 또는 잘못된 상태 전환 |
 | `422` | 업무 검증 실패 |
 | `429` | AI 요청 제한 초과 |
-| `502` | Mock Posting API 또는 동기 AI 호출 실패 |
+| `502` | Mock Recruitment Provider 또는 동기 AI 호출 실패 |
 | `503` | AI 서비스 일시 장애 |
 
 주요 오류 코드:
@@ -114,7 +117,7 @@ DRAFT_NOT_OWNED_BY_ITEM
 DRAFT_NOT_COMPLETED
 DRAFT_GENERATION_IN_PROGRESS
 INVALID_STATUS_TRANSITION
-MOCK_POSTING_API_UNAVAILABLE
+RECRUITMENT_PROVIDER_UNAVAILABLE
 MANUAL_QUESTION_REQUIRED
 QUESTIONS_ALREADY_PROVIDED
 LLM_GENERATION_FAILED
@@ -140,7 +143,7 @@ COVER_LETTER_EDIT
 
 ## 서비스 경계
 
-- Mock Posting API Server는 인증 없이 전체 공고 목록과 상세를 제공합니다.
-- Spring API는 데모 로그인, 경험, 맞춤 추천 결과, 지원서와 초안을 관리합니다.
+- Mock Recruitment Provider API는 전체 공고 목록·상세와 경험 키워드에 대한 추천 후보를 제공합니다.
+- Spring API는 데모 로그인, 경험, 추천 후보 검증·저장, 지원서와 초안을 관리합니다.
 - 프론트엔드는 공고 탐색에는 Mock 서버 URL을, 사용자 데이터에는 Spring API URL을 사용합니다.
 - [MVP 사용자 흐름](../architecture/user-flow.md)에 호출 순서가 정리되어 있습니다.

@@ -5,13 +5,14 @@
 ## 1. 시스템 경계
 
 ```text
-Mock Posting API Server
-└─ 비로그인 공고 목록·상세와 공고에 포함된 자기소개서 문항 제공
+Mock Recruitment Provider API
+├─ 비로그인 공고 목록·상세와 공고에 포함된 자기소개서 문항 제공
+└─ 경험 키워드에 대한 맞춤 추천 목 결과 제공
 
 Spring Boot API
 ├─ 데모 로그인과 사용자 식별
 ├─ 경험 구조화·저장
-├─ 저장된 경험 기반 맞춤 추천 결과 제공
+├─ 저장된 경험을 Mock 제공자에 전달하고 맞춤 추천 결과 저장·제공
 ├─ 지원서·문항 스냅샷 저장
 └─ AI 초안 생성 상태·수정본 저장
 ```
@@ -24,7 +25,7 @@ Spring Boot API
 ## 2. F-A — 신규 사용자: 전체 공고에서 첫 초안 생성
 
 1. 비로그인 사용자가 서비스에 접속합니다.
-2. 프론트엔드는 Mock Posting API의 전체 공고 목록을 호출합니다.
+2. 프론트엔드는 Mock Recruitment Provider API의 전체 공고 목록을 호출합니다.
 3. 사용자가 검색·필터 후 공고 상세를 확인합니다.
 4. 사용자가 `[지원하기]` 또는 `[자소서 작성]`을 누릅니다.
 5. 비로그인 상태이면 프론트엔드가 `externalPostingId`를 세션에 보관하고 로그인 화면을 표시합니다.
@@ -57,8 +58,8 @@ Spring Boot API
 ### 비로그인 공고 탐색
 
 ```text
-GET {MOCK_POSTING_API_BASE_URL}/api/v1/postings
-→ GET {MOCK_POSTING_API_BASE_URL}/api/v1/postings/{externalPostingId}
+GET {RECRUITMENT_PROVIDER_BASE_URL}/api/v1/postings
+→ GET {RECRUITMENT_PROVIDER_BASE_URL}/api/v1/postings/{externalPostingId}
 ```
 
 ### 로그인과 경험 등록
@@ -110,7 +111,7 @@ POST /api/v1/job-applications
 | 초안 생성 중 | 버튼 비활성화, 상태 Polling |
 | 초안 생성 실패 | 입력값 보존, 새 초안으로 재시도 |
 | 글자 수 초과 | 경고하되 수정본 저장 허용 |
-| Mock Posting API 장애 | 오류 안내 후 재시도 |
+| Mock Recruitment Provider 장애 | 오류 안내 후 재시도 |
 
 ## 7. 범위 밖 기능
 

@@ -4,9 +4,9 @@
 
 ## 설계 가정
 
-1. 비로그인 전체 공고 목록·상세는 별도 Mock Posting API Server가 제공합니다.
+1. 비로그인 전체 공고 목록·상세는 별도 Mock Recruitment Provider API가 제공합니다.
 2. 저장된 경험이 있는 로그인 사용자가 추천 생성을 요청하면 사용자별 목 추천 결과를 `RECOMMENDATION`에 저장합니다.
-3. 공고 원문은 마스터 테이블로 저장하지 않고, Mock Posting API에서 조회한 뒤 지원서 생성 시 `JOB_APPLICATION.posting_snapshot`에 보존합니다.
+3. 공고 원문은 마스터 테이블로 저장하지 않고, Mock Recruitment Provider에서 조회한 뒤 지원서 생성 시 `JOB_APPLICATION.posting_snapshot`에 보존합니다.
 4. 기업 정보는 `COMPANY_INFO`에 유형별 항목으로 저장합니다.
 5. `COMPANY_KEYWORD`, `JOB_POSTING`, `AI_JOB`은 현재 범위에 없습니다.
 6. 사용자당 동일 외부 공고의 지원서는 한 건만 허용합니다.

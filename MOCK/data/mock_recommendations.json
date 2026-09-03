@@ -1,0 +1,415 @@
+[
+  {
+    "externalPostingId": "POSTING-EXT-0026-3490",
+    "externalCompanyId": "CSN-DOOSAN-026",
+    "jobTitle": "Cloud Architect",
+    "score": 99.34,
+    "rank": 1,
+    "matchedKeywords": [
+      "Docker",
+      "Redis",
+      "AI/ML"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0024-3244",
+    "externalCompanyId": "CSN-LGCNS-024",
+    "jobTitle": "Frontend Developer",
+    "score": 97.47,
+    "rank": 2,
+    "matchedKeywords": [
+      "Java",
+      "Problem Solving",
+      "AWS",
+      "Data Analysis",
+      "MySQL"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0027-6828",
+    "externalCompanyId": "CSN-LGCHEM-027",
+    "jobTitle": "DevOps Engineer",
+    "score": 97.32,
+    "rank": 3,
+    "matchedKeywords": [
+      "Data Analysis",
+      "Java",
+      "Python",
+      "REST API"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0020-6068",
+    "externalCompanyId": "CSN-HANWHA-020",
+    "jobTitle": "Backend Developer",
+    "score": 93.88,
+    "rank": 4,
+    "matchedKeywords": [
+      "REST API",
+      "Docker",
+      "Redis",
+      "AWS",
+      "Problem Solving",
+      "MySQL"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0018-2665",
+    "externalCompanyId": "CSN-CJENM-018",
+    "jobTitle": "Mobile App Developer(Android/iOS)",
+    "score": 93.06,
+    "rank": 5,
+    "matchedKeywords": [
+      "JPA",
+      "C++",
+      "MySQL",
+      "Problem Solving",
+      "REST API"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0011-4331",
+    "externalCompanyId": "CSN-POSCO-011",
+    "jobTitle": "Full Stack Developer",
+    "score": 91.14,
+    "rank": 6,
+    "matchedKeywords": [
+      "Java",
+      "MySQL",
+      "Problem Solving"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0017-2946",
+    "externalCompanyId": "CSN-DAANGN-017",
+    "jobTitle": "Backend Developer",
+    "score": 91.09,
+    "rank": 7,
+    "matchedKeywords": [
+      "Docker",
+      "Spring Boot",
+      "Data Analysis",
+      "REST API"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0001-5957",
+    "externalCompanyId": "CSN-SAMSUNG-001",
+    "jobTitle": "Python Developer",
+    "score": 90.14,
+    "rank": 8,
+    "matchedKeywords": [
+      "Kubernetes",
+      "Docker",
+      "REST API",
+      "AI/ML",
+      "C++",
+      "Java"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0030-5701",
+    "externalCompanyId": "CSN-KRAFTON-030",
+    "jobTitle": "DevOps Engineer",
+    "score": 88.86,
+    "rank": 9,
+    "matchedKeywords": [
+      "Spring Boot",
+      "AWS",
+      "Docker",
+      "AI/ML",
+      "Kubernetes"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0009-9338",
+    "externalCompanyId": "CSN-WOOWA-009",
+    "jobTitle": "Security Engineer",
+    "score": 88.84,
+    "rank": 10,
+    "matchedKeywords": [
+      "MySQL",
+      "Java",
+      "Kubernetes",
+      "C++",
+      "AI/ML"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0012-7206",
+    "externalCompanyId": "CSN-KAL-012",
+    "jobTitle": "DevOps Engineer",
+    "score": 88.66,
+    "rank": 11,
+    "matchedKeywords": [
+      "JPA",
+      "Problem Solving",
+      "AI/ML",
+      "Spring Boot",
+      "Data Analysis",
+      "Docker"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0019-4252",
+    "externalCompanyId": "CSN-KT-019",
+    "jobTitle": "Python Developer",
+    "score": 87.63,
+    "rank": 12,
+    "matchedKeywords": [
+      "Spring Boot",
+      "C++",
+      "Problem Solving",
+      "Java",
+      "Redis"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0023-8085",
+    "externalCompanyId": "CSN-SAMSUNG-SDS-023",
+    "jobTitle": "DBA (Database Administrator)",
+    "score": 86.03,
+    "rank": 13,
+    "matchedKeywords": [
+      "Java",
+      "Kubernetes",
+      "Python",
+      "AI/ML",
+      "REST API"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0006-5970",
+    "externalCompanyId": "CSN-LGE-006",
+    "jobTitle": "C++ Developer",
+    "score": 84.15,
+    "rank": 14,
+    "matchedKeywords": [
+      "Problem Solving",
+      "Redis",
+      "JPA",
+      "Kubernetes",
+      "Spring Boot"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0010-1020",
+    "externalCompanyId": "CSN-NCSOFT-010",
+    "jobTitle": "Backend Developer",
+    "score": 84.11,
+    "rank": 15,
+    "matchedKeywords": [
+      "AWS",
+      "Redis",
+      "Python",
+      "C++",
+      "Java"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0004-6765",
+    "externalCompanyId": "CSN-KAKAO-004",
+    "jobTitle": "Security Engineer",
+    "score": 83.81,
+    "rank": 16,
+    "matchedKeywords": [
+      "AWS",
+      "Git",
+      "MySQL",
+      "AI/ML",
+      "Docker",
+      "Redis"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0005-2823",
+    "externalCompanyId": "CSN-SKHYNIX-005",
+    "jobTitle": "C++ Developer",
+    "score": 82.78,
+    "rank": 17,
+    "matchedKeywords": [
+      "Docker",
+      "AI/ML",
+      "Data Analysis"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0021-6638",
+    "externalCompanyId": "CSN-KB-021",
+    "jobTitle": "Software Engineer",
+    "score": 82.46,
+    "rank": 18,
+    "matchedKeywords": [
+      "AI/ML",
+      "Problem Solving",
+      "MySQL",
+      "Data Analysis",
+      "REST API",
+      "JPA"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0016-5891",
+    "externalCompanyId": "CSN-NEXON-016",
+    "jobTitle": "Data Analyst",
+    "score": 81.28,
+    "rank": 19,
+    "matchedKeywords": [
+      "Problem Solving",
+      "Kubernetes",
+      "AWS"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0002-5794",
+    "externalCompanyId": "CSN-HYUNDAI-002",
+    "jobTitle": "Mobile App Developer(Android/iOS)",
+    "score": 80.98,
+    "rank": 20,
+    "matchedKeywords": [
+      "AWS",
+      "Data Analysis",
+      "Git",
+      "Spring Boot",
+      "REST API"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0013-7776",
+    "externalCompanyId": "CSN-SHINHAN-013",
+    "jobTitle": "AI/ML Engineer",
+    "score": 79.37,
+    "rank": 21,
+    "matchedKeywords": [
+      "Python",
+      "Docker",
+      "Redis"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0014-5126",
+    "externalCompanyId": "CSN-CELL-014",
+    "jobTitle": "Data Analyst",
+    "score": 79.1,
+    "rank": 22,
+    "matchedKeywords": [
+      "JPA",
+      "Java",
+      "AI/ML",
+      "Redis"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0015-1487",
+    "externalCompanyId": "CSN-AMORE-015",
+    "jobTitle": "Python Developer",
+    "score": 77.27,
+    "rank": 23,
+    "matchedKeywords": [
+      "Java",
+      "REST API",
+      "Redis",
+      "AI/ML",
+      "Spring Boot"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0025-3930",
+    "externalCompanyId": "CSN-SKT-025",
+    "jobTitle": "Cloud Architect",
+    "score": 76.92,
+    "rank": 24,
+    "matchedKeywords": [
+      "Spring Boot",
+      "REST API",
+      "Data Analysis",
+      "AWS",
+      "Docker"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0003-7176",
+    "externalCompanyId": "CSN-NAVER-003",
+    "jobTitle": "AI/ML Engineer",
+    "score": 76.37,
+    "rank": 25,
+    "matchedKeywords": [
+      "Spring Boot",
+      "Data Analysis",
+      "Kubernetes",
+      "REST API",
+      "Problem Solving"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0007-8932",
+    "externalCompanyId": "CSN-COUPANG-007",
+    "jobTitle": "Mobile App Developer(Android/iOS)",
+    "score": 76.11,
+    "rank": 26,
+    "matchedKeywords": [
+      "C++",
+      "REST API",
+      "Python",
+      "Java"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0008-7828",
+    "externalCompanyId": "CSN-TOSS-008",
+    "jobTitle": "DevOps Engineer",
+    "score": 75.75,
+    "rank": 27,
+    "matchedKeywords": [
+      "AI/ML",
+      "Data Analysis",
+      "Problem Solving",
+      "Kubernetes",
+      "JPA",
+      "MySQL"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0022-9985",
+    "externalCompanyId": "CSN-KAKAO-BANK-022",
+    "jobTitle": "IT Service Manager",
+    "score": 75.43,
+    "rank": 28,
+    "matchedKeywords": [
+      "AI/ML",
+      "Java",
+      "JPA",
+      "Data Analysis",
+      "Git",
+      "Docker"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0028-9194",
+    "externalCompanyId": "CSN-MOBIS-028",
+    "jobTitle": "Security Engineer",
+    "score": 72.41,
+    "rank": 29,
+    "matchedKeywords": [
+      "Data Analysis",
+      "Redis",
+      "MySQL",
+      "Docker",
+      "JPA",
+      "Git"
+    ]
+  },
+  {
+    "externalPostingId": "POSTING-EXT-0029-6120",
+    "externalCompanyId": "CSN-WOORI-029",
+    "jobTitle": "Java Developer",
+    "score": 72.38,
+    "rank": 30,
+    "matchedKeywords": [
+      "Java",
+      "Python",
+      "AI/ML",
+      "C++"
+    ]
+  }
+]

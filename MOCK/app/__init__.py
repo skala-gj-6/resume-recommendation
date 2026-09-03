@@ -1,0 +1,1 @@
+"""Mock recruitment provider package."""

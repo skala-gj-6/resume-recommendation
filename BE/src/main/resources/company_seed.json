@@ -1,0 +1,152 @@
+[
+  {
+    "company_id": 1,
+    "company_name": "삼성전자",
+    "external_company_id": "CSN-SAMSUNG-001"
+  },
+  {
+    "company_id": 2,
+    "company_name": "현대자동차",
+    "external_company_id": "CSN-HYUNDAI-002"
+  },
+  {
+    "company_id": 3,
+    "company_name": "네이버",
+    "external_company_id": "CSN-NAVER-003"
+  },
+  {
+    "company_id": 4,
+    "company_name": "카카오",
+    "external_company_id": "CSN-KAKAO-004"
+  },
+  {
+    "company_id": 5,
+    "company_name": "SK하이닉스",
+    "external_company_id": "CSN-SKHYNIX-005"
+  },
+  {
+    "company_id": 6,
+    "company_name": "LG전자",
+    "external_company_id": "CSN-LGE-006"
+  },
+  {
+    "company_id": 7,
+    "company_name": "쿠팡",
+    "external_company_id": "CSN-COUPANG-007"
+  },
+  {
+    "company_id": 8,
+    "company_name": "비바리퍼블리카(토스)",
+    "external_company_id": "CSN-TOSS-008"
+  },
+  {
+    "company_id": 9,
+    "company_name": "우아한형제들",
+    "external_company_id": "CSN-WOOWA-009"
+  },
+  {
+    "company_id": 10,
+    "company_name": "엔씨소프트",
+    "external_company_id": "CSN-NCSOFT-010"
+  },
+  {
+    "company_id": 11,
+    "company_name": "포스코",
+    "external_company_id": "CSN-POSCO-011"
+  },
+  {
+    "company_id": 12,
+    "company_name": "대한항공",
+    "external_company_id": "CSN-KAL-012"
+  },
+  {
+    "company_id": 13,
+    "company_name": "신한은행",
+    "external_company_id": "CSN-SHINHAN-013"
+  },
+  {
+    "company_id": 14,
+    "company_name": "셀트리온",
+    "external_company_id": "CSN-CELL-014"
+  },
+  {
+    "company_id": 15,
+    "company_name": "아모레퍼시픽",
+    "external_company_id": "CSN-AMORE-015"
+  },
+  {
+    "company_id": 16,
+    "company_name": "넥슨",
+    "external_company_id": "CSN-NEXON-016"
+  },
+  {
+    "company_id": 17,
+    "company_name": "당근마켓",
+    "external_company_id": "CSN-DAANGN-017"
+  },
+  {
+    "company_id": 18,
+    "company_name": "CJ ENM",
+    "external_company_id": "CSN-CJENM-018"
+  },
+  {
+    "company_id": 19,
+    "company_name": "KT",
+    "external_company_id": "CSN-KT-019"
+  },
+  {
+    "company_id": 20,
+    "company_name": "한화솔루션",
+    "external_company_id": "CSN-HANWHA-020"
+  },
+  {
+    "company_id": 21,
+    "company_name": "KB국민은행",
+    "external_company_id": "CSN-KB-021"
+  },
+  {
+    "company_id": 22,
+    "company_name": "카카오뱅크",
+    "external_company_id": "CSN-KAKAO-BANK-022"
+  },
+  {
+    "company_id": 23,
+    "company_name": "삼성SDS",
+    "external_company_id": "CSN-SAMSUNG-SDS-023"
+  },
+  {
+    "company_id": 24,
+    "company_name": "LG CNS",
+    "external_company_id": "CSN-LGCNS-024"
+  },
+  {
+    "company_id": 25,
+    "company_name": "SK텔레콤",
+    "external_company_id": "CSN-SKT-025"
+  },
+  {
+    "company_id": 26,
+    "company_name": "두산에너빌리티",
+    "external_company_id": "CSN-DOOSAN-026"
+  },
+  {
+    "company_id": 27,
+    "company_name": "LG화학",
+    "external_company_id": "CSN-LGCHEM-027"
+  },
+  {
+    "company_id": 28,
+    "company_name": "현대모비스",
+    "external_company_id": "CSN-MOBIS-028"
+  },
+  {
+    "company_id": 29,
+    "company_name": "우리은행",
+    "external_company_id": "CSN-WOORI-029"
+  },
+  {
+    "company_id": 30,
+    "company_name": "크래프톤",
+    "external_company_id": "CSN-KRAFTON-030"
+  }
+]

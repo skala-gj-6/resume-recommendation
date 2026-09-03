@@ -18,10 +18,11 @@
 | API | [자기소개서 AI API](api/04_cover_letter_ai.md) | 문항 분석, 초안 생성, 상태, 선택, 수정 |
 | 아키텍처 | [MVP 사용자 흐름](architecture/user-flow.md) | 비로그인 공고 탐색부터 초안 저장까지의 화면·API 흐름 |
 | 아키텍처 | [AI 생성 흐름](architecture/ai-generation-flow.md) | LLM 호출, 비동기 상태, 권한, 트랜잭션 |
+| 아키텍처 | [로컬 Docker 실행](architecture/local-docker.md) | FE·BE·MOCK·PostgreSQL 기동과 데이터 초기화 |
 
 ## 공통 범위
 
-- 비로그인 전체 공고 목록·상세는 별도 Mock Posting API Server가 제공합니다.
+- 비로그인 전체 공고 목록·상세는 별도 Mock Recruitment Provider API가 제공합니다.
 - 로그인 사용자의 맞춤 추천은 저장된 경험을 기반으로 구성된 목 결과를 Spring API가 제공합니다.
 - 채용공고 마스터 테이블과 공고 수집 배치는 구축하지 않습니다.
 - 기업 인재상·핵심가치·동향은 자체 DB에 정보 유형별로 저장합니다.

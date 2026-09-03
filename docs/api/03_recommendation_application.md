@@ -3,8 +3,8 @@
 ## 서비스 경계
 
 ```text
-비로그인 전체 공고 탐색
-→ 별도 Mock Posting API Server
+비로그인 전체 공고 탐색·맞춤 추천 후보 생성
+→ 별도 Mock Recruitment Provider API
 
 로그인·경험·맞춤 추천 결과·지원서
 → Spring Boot API
@@ -12,18 +12,18 @@
 
 - 전체 공고와 맞춤 추천은 다른 리소스입니다.
 - 전체 공고는 모든 사용자에게 같은 목 카탈로그를 보여줍니다.
-- 맞춤 추천은 로그인 사용자가 저장한 경험이 있을 때만 Spring API가 제공합니다.
-- 실제 추천 알고리즘은 구현하지 않고 경험 기반으로 선별됐다고 가정한 목 결과를 `RECOMMENDATION`에 저장합니다.
+- 맞춤 추천은 로그인 사용자가 저장한 경험이 있을 때만 Spring API가 요청할 수 있습니다.
+- Spring은 경험 키워드를 Mock 제공자에 전달하고 반환된 목 결과를 검증해 `RECOMMENDATION`에 저장합니다.
 - 공고 원본은 DB에 저장하지 않습니다. 지원서를 만들 때만 공고와 문항을 스냅샷으로 보존합니다.
 
-## 1. Mock Posting API Server
+## 1. Mock Recruitment Provider API
 
-Mock 서버의 기준 URL은 환경 변수 `MOCK_POSTING_API_BASE_URL`로 관리합니다. 다음 API는 인증 없이 호출합니다.
+Mock 서버의 기준 URL은 환경 변수 `RECRUITMENT_PROVIDER_BASE_URL`로 관리합니다. 다음 API는 인증 없이 호출합니다.
 
 ### 전체 공고 목록
 
 ```http
-GET {MOCK_POSTING_API_BASE_URL}/api/v1/postings?q=백엔드&jobCategory=BACKEND&region=SEOUL&sort=DEADLINE&page=0&size=20
+GET {RECRUITMENT_PROVIDER_BASE_URL}/api/v1/postings?q=백엔드&jobCategory=BACKEND&region=SEOUL&sort=DEADLINE&page=0&size=20
 ```
 
 | 쿼리 | 필수 | 용도 |
@@ -40,17 +40,20 @@ GET {MOCK_POSTING_API_BASE_URL}/api/v1/postings?q=백엔드&jobCategory=BACKEND&
 {
   "content": [
     {
-      "externalPostingId": "posting-1001",
-      "companyName": "예시기업",
-      "jobTitle": "백엔드 개발자",
-      "jobCategory": "BACKEND",
-      "region": "서울",
-      "experienceLevel": "신입",
-      "educationLevel": "학사",
-      "deadline": "2026-09-30",
+      "externalPostingId": "POSTING-EXT-0002-5794",
+      "externalCompanyId": "CSN-HYUNDAI-002",
+      "companyName": "현대자동차",
+      "jobTitle": "Mobile App Developer(Android/iOS)",
+      "jobCategory": "MOBILE",
+      "industry": "IT/웹/통신",
+      "region": "경기 수원시",
+      "experienceLevel": "경력무관",
+      "educationLevel": null,
+      "employmentType": "정규직",
+      "deadline": "2026-09-18",
       "active": true,
-      "keywords": ["Java", "Spring Boot"],
-      "sourceUrl": "https://example.com/postings/1001"
+      "keywords": ["AWS", "Data Analysis", "Git", "Spring Boot", "REST API"],
+      "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0002-5794"
     }
   ],
   "page": 0,
@@ -63,26 +66,29 @@ GET {MOCK_POSTING_API_BASE_URL}/api/v1/postings?q=백엔드&jobCategory=BACKEND&
 ### 공고 상세
 
 ```http
-GET {MOCK_POSTING_API_BASE_URL}/api/v1/postings/{externalPostingId}
+GET {RECRUITMENT_PROVIDER_BASE_URL}/api/v1/postings/{externalPostingId}
 ```
 
 ```json
 {
-  "externalPostingId": "posting-1001",
-  "externalCompanyId": "company-1001",
-  "companyName": "예시기업",
-  "jobTitle": "백엔드 개발자",
-  "industry": "IT·소프트웨어",
-  "region": "서울",
-  "experienceLevel": "신입",
-  "educationLevel": "학사",
-  "responsibilities": ["백엔드 REST API 개발"],
-  "requirements": ["Java 활용 역량", "RDBMS 이해"],
-  "preferredQualifications": ["Spring Boot 프로젝트 경험"],
-  "keywords": ["Java", "Spring Boot", "협업"],
-  "deadline": "2026-09-30",
+  "externalPostingId": "POSTING-EXT-0002-5794",
+  "externalCompanyId": "CSN-HYUNDAI-002",
+  "companyName": "현대자동차",
+  "jobTitle": "Mobile App Developer(Android/iOS)",
+  "jobCategory": "MOBILE",
+  "industry": "IT/웹/통신",
+  "region": "경기 수원시",
+  "experienceLevel": "경력무관",
+  "educationLevel": null,
+  "employmentType": "정규직",
+  "responsibilities": [],
+  "requirements": ["AWS 활용 역량", "Data Analysis 활용 역량", "Git 활용 역량", "Spring Boot 활용 역량", "REST API 활용 역량"],
+  "preferredQualifications": [],
+  "keywords": ["AWS", "Data Analysis", "Git", "Spring Boot", "REST API"],
+  "openingDate": "2026-08-29",
+  "deadline": "2026-09-18",
   "active": true,
-  "sourceUrl": "https://example.com/postings/1001",
+  "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0002-5794",
   "questions": [
     {
       "questionOrder": 1,
@@ -93,7 +99,44 @@ GET {MOCK_POSTING_API_BASE_URL}/api/v1/postings/{externalPostingId}
 }
 ```
 
-공고에 자기소개서 문항이 없으면 `questions`는 빈 배열입니다. 기업·직무·업종·키워드는 화면에서 조회만 가능하며 수정 API를 제공하지 않습니다.
+현재 목데이터 30건은 원본 제약상 `educationLevel`이 `null`이고 `responsibilities`, `preferredQualifications`가 빈 배열입니다. `requirements`는 키워드로 만든 데모 문구입니다. 공고에 자기소개서 문항이 없으면 `questions`는 빈 배열입니다. 기업·직무·업종·키워드는 화면에서 조회만 가능하며 수정 API를 제공하지 않습니다.
+
+### 맞춤 추천 후보
+
+이 API는 Spring이 호출합니다. 사용자 ID나 Spring 내부 PK는 전달하지 않습니다.
+
+```http
+POST {RECRUITMENT_PROVIDER_BASE_URL}/api/v1/recommendations
+```
+
+```json
+{
+  "experiences": [
+    {
+      "experienceId": 11,
+      "keywords": ["Java", "Spring Boot", "협업"]
+    }
+  ],
+  "limit": 10
+}
+```
+
+```json
+{
+  "recommendations": [
+    {
+      "externalPostingId": "POSTING-EXT-0024-3244",
+      "externalCompanyId": "CSN-LGCNS-024",
+      "jobTitle": "Frontend Developer",
+      "score": 97.47,
+      "rank": 1,
+      "matchedKeywords": ["Java", "Problem Solving", "AWS", "Data Analysis", "MySQL"]
+    }
+  ]
+}
+```
+
+추천 결과는 `rank ASC`로 정렬합니다. 현재는 경험 키워드와 무관하게 고정 결과를 반환하며, 입력 필드는 향후 실제 추천 제공자로 교체할 때 계약을 유지하기 위해 받습니다. Mock 제공자는 `userId`, `companyId`, `recommendationId`를 알지 못합니다.
 
 ## 2. Spring Boot API
 
@@ -138,12 +181,13 @@ POST /api/v1/recommendations
 ```text
 저장된 경험 존재 확인
 → 경험 키워드 조회
-→ 경험 기반으로 선별됐다고 가정한 목 추천 결과 생성
+→ Mock Recruitment Provider에 경험 키워드 전달
+→ 외부 공고·기업 식별자와 응답 형식 검증
 → 기존 사용자 추천 결과 교체
 → RECOMMENDATION 저장
 ```
 
-실제 점수 계산과 외부 추천 서비스 호출은 구현 범위 밖입니다. 응답의 점수·순위·일치 키워드는 목데이터입니다.
+실제 점수 계산은 구현 범위 밖입니다. Mock 제공자 응답의 점수·순위·일치 키워드를 사용합니다.
 
 응답 `200 OK`:
 
@@ -191,7 +235,7 @@ GET /api/v1/recommendations?page=0&size=20
 GET /api/v1/recommendations/{recommendationId}
 ```
 
-Spring은 현재 사용자 소유의 `RECOMMENDATION`, `COMPANY`, `COMPANY_INFO`와 Mock Posting API의 공고 상세를 조합합니다.
+Spring은 현재 사용자 소유의 `RECOMMENDATION`, `COMPANY`, `COMPANY_INFO`와 Mock 제공자의 공고 상세를 조합합니다.
 
 ```json
 {
@@ -254,7 +298,7 @@ POST /api/v1/job-applications
 처리 규칙:
 
 ```text
-Mock Posting API에서 externalPostingId 상세 조회
+Mock Recruitment Provider에서 externalPostingId 상세 조회
 → 외부 기업 식별자로 COMPANY 연결
 → 공고의 questions 확인
 → 문항이 있으면 공고 문항 사용
@@ -297,7 +341,7 @@ Mock Posting API에서 externalPostingId 상세 조회
 | `409` | `APPLICATION_ALREADY_EXISTS` | 같은 사용자가 같은 공고로 이미 지원서를 생성함 |
 | `422` | `QUESTIONS_ALREADY_PROVIDED` | 공고 문항이 있는데 직접 입력 문항도 전달함 |
 | `422` | `MANUAL_QUESTION_REQUIRED` | 공고 문항과 직접 입력 문항이 모두 없음 |
-| `502` | `MOCK_POSTING_API_UNAVAILABLE` | Mock Posting API 호출 실패 |
+| `502` | `RECRUITMENT_PROVIDER_UNAVAILABLE` | Mock Recruitment Provider 호출 실패 |
 
 ### 지원서 목록
 
