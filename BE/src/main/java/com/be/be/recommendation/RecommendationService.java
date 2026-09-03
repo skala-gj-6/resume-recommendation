@@ -70,7 +70,7 @@ public class RecommendationService {
         UserAccount user = demoUserService.currentUser();
         List<Experience> experiences = experienceRepository.findAllByUserIdOrderByUpdatedAtDesc(user.getId());
         if (experiences.isEmpty()) {
-            throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY, "EXPERIENCE_REQUIRED", "맞춤 추천을 받으려면 경험을 한 건 이상 저장해야 합니다.");
+            throw new ApiException(HttpStatus.UNPROCESSABLE_CONTENT, "EXPERIENCE_REQUIRED", "맞춤 추천을 받으려면 경험을 한 건 이상 저장해야 합니다.");
         }
         RecommendationRequest request = new RecommendationRequest(
                 experiences.stream()

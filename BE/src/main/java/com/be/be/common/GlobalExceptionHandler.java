@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
                 .map(error -> error.getField() + " " + error.getDefaultMessage())
                 .orElse("요청값이 올바르지 않습니다.")
                 : exception.getMessage();
-        return response(HttpStatus.UNPROCESSABLE_ENTITY, "VALIDATION_FAILED", message);
+        return response(HttpStatus.UNPROCESSABLE_CONTENT, "VALIDATION_FAILED", message);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ApiErrorResponse> handleIllegalArgument(IllegalArgumentException exception) {
-        return response(HttpStatus.UNPROCESSABLE_ENTITY, "VALIDATION_FAILED", exception.getMessage());
+        return response(HttpStatus.UNPROCESSABLE_CONTENT, "VALIDATION_FAILED", exception.getMessage());
     }
 
     private static ResponseEntity<ApiErrorResponse> response(HttpStatus status, String code, String message) {
