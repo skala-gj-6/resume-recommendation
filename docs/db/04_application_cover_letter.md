@@ -1,6 +1,6 @@
 # 지원서·자기소개서 도메인
 
-선택한 공고의 전체 문항을 하나의 지원서로 묶고, 문항 요구사항·AI 초안·사용자 수정본·생성 근거를 관리합니다.
+선택한 공고의 자기소개서 문항을 하나의 지원서로 묶고, 문항 요구사항·AI 초안·사용자 수정본·생성 근거를 관리합니다. 공고에 문항이 없을 때만 사용자가 직접 입력한 문항을 사용합니다.
 
 ## ERD
 
@@ -129,6 +129,8 @@ erDiagram
 
 고유 제약: `UNIQUE(user_id, external_posting_id)`
 
+`posting_snapshot`에는 Mock Posting API에서 조회한 기업명·직무·업종·키워드·담당 업무·자격요건·마감일·원문 URL을 저장합니다. 이 정보는 화면에서 조회만 가능하며 사용자 수정값으로 덮어쓰지 않습니다.
+
 ## COVER_LETTER_ITEM — 자기소개서 문항
 
 | 컬럼 | 타입 | 제약 | 용도 |
@@ -146,6 +148,15 @@ erDiagram
 고유 제약: `UNIQUE(application_id, question_order)`
 
 `selected_draft_id`는 초안 삭제 시 SET NULL로 처리하며, 해당 초안이 동일 문항 소속이고 `COMPLETED`인지 서비스에서 검증합니다.
+
+문항 저장 규칙:
+
+```text
+Mock 공고에 questions가 존재 → 공고 문항을 스냅샷 저장
+Mock 공고에 questions가 없음   → 사용자가 직접 입력한 문항을 스냅샷 저장
+```
+
+지원서 생성 시 문항이 최소 한 건 존재하도록 검증하므로 `JOB_APPLICATION`과 `COVER_LETTER_ITEM`의 1:N 관계를 유지합니다.
 
 ## COVER_LETTER_REQUIREMENT — 문항 분석 결과
 

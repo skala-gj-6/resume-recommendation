@@ -1,57 +1,38 @@
 # 인증·프로필 API
 
-## 회원가입
+## 인증 범위
+
+이번 미니프로젝트에서는 실제 회원가입, 비밀번호 검증, Google OAuth를 구현하지 않습니다. 로그인 버튼을 누르면 시드로 등록된 고정 데모 사용자 세션을 반환합니다.
+
+`USERS`와 사용자 소유 관계는 실제 서비스 확장을 위해 ERD에 유지합니다. 데모 인증은 운영 인증 방식이 아니며 외부 배포 환경에서 사용하지 않습니다.
+
+## 데모 로그인
 
 ```http
-POST /api/v1/auth/signup
+POST /api/v1/auth/demo-login
 ```
 
-```json
-{
-  "email": "user@example.com",
-  "password": "password123!",
-  "name": "김지원"
-}
-```
-
-응답 `201 Created`:
-
-```json
-{
-  "userId": 1,
-  "email": "user@example.com",
-  "name": "김지원",
-  "createdAt": "2026-09-03T09:00:00Z"
-}
-```
-
-- 이메일 중복: `409 EMAIL_ALREADY_EXISTS`
-- 비밀번호 검증 실패: `422 INVALID_PASSWORD`
-
-## 로그인
-
-```http
-POST /api/v1/auth/login
-```
-
-```json
-{
-  "email": "user@example.com",
-  "password": "password123!"
-}
-```
+요청 본문은 없습니다.
 
 응답 `200 OK`:
 
 ```json
 {
-  "accessToken": "eyJhbGciOi...",
+  "accessToken": "demo-user-token",
   "tokenType": "Bearer",
-  "expiresIn": 3600
+  "user": {
+    "userId": 1,
+    "email": "demo@example.com",
+    "name": "데모 사용자"
+  }
 }
 ```
 
-현재 ERD에는 리프레시 토큰 저장 구조가 없으므로 MVP는 액세스 토큰만 사용합니다.
+- 프론트엔드는 로그인 버튼 클릭 시 이 API를 호출합니다.
+- 서버는 항상 동일한 시드 사용자를 반환합니다.
+- 이후 보호 API에는 `Authorization: Bearer demo-user-token`을 전달합니다.
+- 비밀번호 해시 검증과 토큰 갱신은 하지 않습니다.
+- 비로그인 공고 목록·상세는 별도 Mock Posting API Server를 직접 호출하므로 토큰이 필요하지 않습니다.
 
 ## 내 프로필 조회
 
@@ -62,8 +43,8 @@ GET /api/v1/users/me
 ```json
 {
   "userId": 1,
-  "email": "user@example.com",
-  "name": "김지원",
+  "email": "demo@example.com",
+  "name": "데모 사용자",
   "industries": [
     {"industryId": 1, "industryName": "IT·소프트웨어"}
   ],
@@ -82,11 +63,11 @@ PATCH /api/v1/users/me
 
 ```json
 {
-  "name": "김지원"
+  "name": "데모 사용자"
 }
 ```
 
-이메일·비밀번호 변경은 현재 범위에서 제외합니다.
+이메일과 인증 정보 변경은 현재 범위에서 제외합니다.
 
 ## 선호 정보 교체
 
@@ -124,10 +105,14 @@ GET /api/v1/job-categories
 
 직무 API는 같은 형식으로 `jobCategories` 배열을 반환합니다. 목록이 작으므로 페이지네이션하지 않습니다.
 
-## 회원 탈퇴 — 선택
+## 향후 실제 인증 전환
 
-```http
-DELETE /api/v1/users/me
+실제 인증을 도입할 때 다음 API를 별도 설계합니다.
+
+```text
+POST /auth/signup
+POST /auth/login
+POST /auth/refresh
 ```
 
-응답: `204 No Content`
+현재 API 명세와 구현 범위에는 포함하지 않습니다.
