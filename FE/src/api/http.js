@@ -81,7 +81,8 @@ export function createClient({ baseURL, withAuth = false }) {
     get: (path, opts) => request(baseURL, path, { ...opts, method: 'GET', withAuth }),
     post: (path, body, opts) => request(baseURL, path, { ...opts, method: 'POST', body, withAuth }),
     put: (path, body, opts) => request(baseURL, path, { ...opts, method: 'PUT', body, withAuth }),
-    patch: (path, body, opts) => request(baseURL, path, { ...opts, method: 'PATCH', body, withAuth }),
+    patch: (path, body, opts) =>
+      request(baseURL, path, { ...opts, method: 'PATCH', body, withAuth }),
     delete: (path, opts) => request(baseURL, path, { ...opts, method: 'DELETE', withAuth }),
   }
 }

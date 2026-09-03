@@ -12,8 +12,12 @@ const overLimit = computed(() => props.limit != null && count.value > props.limi
 </script>
 
 <template>
-  <span class="text-xs tabular-nums" :class="overLimit ? 'text-danger font-semibold' : 'text-ink-muted'">
-    {{ count.toLocaleString() }}<template v-if="limit != null">/{{ limit.toLocaleString() }}자</template>
+  <span
+    class="text-xs tabular-nums"
+    :class="overLimit ? 'text-danger font-semibold' : 'text-ink-muted'"
+  >
+    {{ count.toLocaleString()
+    }}<template v-if="limit != null">/{{ limit.toLocaleString() }}자</template>
     <template v-else>자</template>
   </span>
 </template>

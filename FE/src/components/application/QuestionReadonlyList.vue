@@ -7,7 +7,9 @@ defineProps({
 <template>
   <div>
     <div class="flex items-center gap-2 mb-3">
-      <span class="text-xs px-2 py-0.5 rounded-full bg-hover text-ink-sub">공고에서 가져온 문항</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-hover text-ink-sub"
+        >공고에서 가져온 문항</span
+      >
       <span class="text-xs text-ink-muted">{{ questions.length }}개</span>
     </div>
     <div class="flex flex-col gap-4">

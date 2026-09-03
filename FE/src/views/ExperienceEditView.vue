@@ -42,7 +42,11 @@ const STAR_FIELDS = [
   { key: 'task', label: 'Task · 과제', placeholder: '무엇을 해결해야 했나요?' },
   { key: 'action', label: 'Action · 행동', placeholder: '무엇을 했나요?' },
   { key: 'result', label: 'Result · 결과', placeholder: '결과가 어땠나요?' },
-  { key: 'quantitativeResult', label: '정량적 결과', placeholder: '숫자로 표현할 수 있다면 적어주세요 (선택)' },
+  {
+    key: 'quantitativeResult',
+    label: '정량적 결과',
+    placeholder: '숫자로 표현할 수 있다면 적어주세요 (선택)',
+  },
   { key: 'learning', label: '배운 점', placeholder: '무엇을 배웠나요? (선택)' },
 ]
 
@@ -162,17 +166,31 @@ function cancel() {
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <div class="text-xs text-ink-muted mb-1">제목 <span class="text-danger">필수</span></div>
-            <InputText v-model="form.title" class="w-full" placeholder="예: 교내 창업동아리 마케팅 팀장" />
+            <div class="text-xs text-ink-muted mb-1">
+              제목 <span class="text-danger">필수</span>
+            </div>
+            <InputText
+              v-model="form.title"
+              class="w-full"
+              placeholder="예: 교내 창업동아리 마케팅 팀장"
+            />
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
               <div class="text-xs text-ink-muted mb-1">시작일</div>
-              <input v-model="form.startDate" type="date" class="w-full border border-line rounded-md px-3 py-2 text-sm" />
+              <input
+                v-model="form.startDate"
+                type="date"
+                class="w-full border border-line rounded-md px-3 py-2 text-sm"
+              />
             </div>
             <div>
               <div class="text-xs text-ink-muted mb-1">종료일</div>
-              <input v-model="form.endDate" type="date" class="w-full border border-line rounded-md px-3 py-2 text-sm" />
+              <input
+                v-model="form.endDate"
+                type="date"
+                class="w-full border border-line rounded-md px-3 py-2 text-sm"
+              />
             </div>
           </div>
         </div>
@@ -201,7 +219,8 @@ function cancel() {
             </span>
           </div>
           <p v-if="store.structureError" class="text-xs text-danger mt-2 mb-0">
-            {{ describeApiError(store.structureError) }} 원문은 그대로 남아 있으니 다시 시도해 주세요.
+            {{ describeApiError(store.structureError) }} 원문은 그대로 남아 있으니 다시 시도해
+            주세요.
           </p>
         </div>
 
@@ -223,7 +242,9 @@ function cancel() {
         <div class="flex items-center gap-3">
           <Button label="저장" :disabled="!canSave" :loading="saving" @click="save" />
           <Button label="취소" severity="secondary" text @click="cancel" />
-          <span v-if="!canSave" class="text-xs text-ink-muted">제목을 입력하면 저장할 수 있습니다</span>
+          <span v-if="!canSave" class="text-xs text-ink-muted"
+            >제목을 입력하면 저장할 수 있습니다</span
+          >
         </div>
       </div>
 
@@ -249,7 +270,9 @@ function cancel() {
             </button>
           </span>
         </div>
-        <div v-else class="text-xs text-ink-muted mb-4">아직 태그가 없습니다. AI로 구조화하거나 직접 추가하세요.</div>
+        <div v-else class="text-xs text-ink-muted mb-4">
+          아직 태그가 없습니다. AI로 구조화하거나 직접 추가하세요.
+        </div>
 
         <div class="flex gap-2">
           <Select
@@ -259,7 +282,12 @@ function cancel() {
             option-value="value"
             class="w-28"
           />
-          <InputText v-model="newKeywordText" placeholder="키워드" class="flex-1" @keyup.enter="addKeyword" />
+          <InputText
+            v-model="newKeywordText"
+            placeholder="키워드"
+            class="flex-1"
+            @keyup.enter="addKeyword"
+          />
           <Button label="추가" severity="secondary" @click="addKeyword" />
         </div>
       </div>

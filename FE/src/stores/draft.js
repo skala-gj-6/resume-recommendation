@@ -80,7 +80,12 @@ export const useDraftStore = defineStore('draft', () => {
 
     // 30초 클라이언트 타임아웃은 화면 안내용일 뿐 서버 작업 취소를 의미하지 않습니다.
     if (elapsedSec >= POLL_TIMEOUT_SEC) {
-      byItem.value.set(coverLetterId, { ...runtime, status: detail.generationStatus, elapsedSec, timedOut: true })
+      byItem.value.set(coverLetterId, {
+        ...runtime,
+        status: detail.generationStatus,
+        elapsedSec,
+        timedOut: true,
+      })
       clearTimer(coverLetterId)
       return
     }

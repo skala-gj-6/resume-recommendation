@@ -11,8 +11,10 @@ const CODE_MESSAGES = {
   DRAFT_NOT_COMPLETED: '아직 완료되지 않은 초안입니다.',
   DRAFT_GENERATION_IN_PROGRESS: '이미 생성이 진행 중입니다. 잠시만 기다려 주세요.',
   INVALID_STATUS_TRANSITION: '지금 상태에서는 변경할 수 없습니다.',
-  RECRUITMENT_PROVIDER_UNAVAILABLE: '채용정보 서비스에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.',
-  RECOMMENDATION_PROVIDER_UNAVAILABLE: '추천 서비스에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.',
+  RECRUITMENT_PROVIDER_UNAVAILABLE:
+    '채용정보 서비스에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.',
+  RECOMMENDATION_PROVIDER_UNAVAILABLE:
+    '추천 서비스에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.',
   MANUAL_QUESTION_REQUIRED: '문항을 1개 이상 입력해 주세요.',
   QUESTIONS_ALREADY_PROVIDED: '공고에 이미 문항이 있어 직접 입력한 문항은 사용하지 않습니다.',
   LLM_GENERATION_FAILED: '초안 생성에 실패했습니다. 다시 시도해 주세요.',

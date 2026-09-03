@@ -19,8 +19,7 @@
   --color-danger-soft: #feeee5;
   --color-success: #1ed45a;
 
-  --font-sans:
-    'Pretendard JP', 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  --font-sans: 'Pretendard JP', 'Pretendard Variable', Pretendard, system-ui, sans-serif;
   --font-display: 'Gowun Batang', serif;
 
   --layout-max-width: 1440px;

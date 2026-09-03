@@ -38,7 +38,9 @@ function logout() {
   <header class="sticky top-0 z-40 bg-surface border-b border-ink">
     <div class="container-page flex items-end gap-8 h-16">
       <RouterLink :to="{ name: 'posting-list' }" class="pb-3 no-underline">
-        <span class="font-display text-[28px] font-bold tracking-tight text-ink leading-none">초안</span>
+        <span class="font-display text-[28px] font-bold tracking-tight text-ink leading-none"
+          >초안</span
+        >
       </RouterLink>
 
       <nav class="flex gap-6 pb-4">

@@ -53,7 +53,11 @@ function openEdit(experienceId) {
       description="공고를 보다가 초안을 만들 때 그 자리에서 추가하는 것이 기본 경로입니다."
     >
       <template #action>
-        <Button label="공고 보러 가기" severity="secondary" @click="router.push({ name: 'posting-list' })" />
+        <Button
+          label="공고 보러 가기"
+          severity="secondary"
+          @click="router.push({ name: 'posting-list' })"
+        />
       </template>
     </EmptyState>
 
