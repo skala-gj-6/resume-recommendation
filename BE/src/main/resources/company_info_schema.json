@@ -1,0 +1,602 @@
+[
+    {
+        "company_info_id": 1,
+        "company_id": 1,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "열정과 몰입으로 미래에 도전하는 인재, 창조적 시너지로 새로운 가치를 창출하는 인재",
+        "source_url": "https://www.samsung.com/sec/about-us/",
+        "reference_date": "2026-09-01",
+        "collected_at": "2026-09-03 10:00:00"
+    },
+    {
+        "company_info_id": 2,
+        "company_id": 1,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "AI 반도체 수요 증가에 따른 HBM 시장 점유율 확대 및 차세대 파운드리 공정 개발",
+        "source_url": "https://www.samsung.com/sec/about-us/",
+        "reference_date": "2026-09-01",
+        "collected_at": "2026-09-03 10:00:00"
+    },
+    {
+        "company_info_id": 3,
+        "company_id": 2,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "고객 최우선, 도전적 실행, 소통과 협력, 인재 존중, 글로벌 지향",
+        "source_url": "https://www.hyundai.com/kr/ko/company-intro",
+        "reference_date": "2026-09-01",
+        "collected_at": "2026-09-03 10:05:00"
+    },
+    {
+        "company_info_id": 4,
+        "company_id": 2,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "전기차(EV) 라인업 확대 및 자율주행 기술 고도화, SDV(Software Defined Vehicle) 전환 가속화",
+        "source_url": "https://www.hyundai.com/kr/ko/company-intro",
+        "reference_date": "2026-09-01",
+        "collected_at": "2026-09-03 10:05:00"
+    },
+    {
+        "company_info_id": 5,
+        "company_id": 3,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "변화를 주도하고 끊임없이 혁신하며, 사용자 중심의 가치를 창출하는 인재",
+        "source_url": "https://www.navercorp.com/",
+        "reference_date": "2026-08-15",
+        "collected_at": "2026-09-03 10:10:00"
+    },
+    {
+        "company_info_id": 6,
+        "company_id": 3,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "하이퍼클로바X를 활용한 B2B AI 서비스 확장 및 글로벌 웹툰/콘텐츠 사업 수익성 강화",
+        "source_url": "https://www.navercorp.com/",
+        "reference_date": "2026-08-15",
+        "collected_at": "2026-09-03 10:10:00"
+    },
+    {
+        "company_info_id": 7,
+        "company_id": 4,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "가보지 않은 길을 두려워하지 않고, 자기 주도적으로 일하며, 동료와 함께 성장하는 크루",
+        "source_url": "https://www.kakaocorp.com/page/",
+        "reference_date": "2026-08-20",
+        "collected_at": "2026-09-03 10:15:00"
+    },
+    {
+        "company_info_id": 8,
+        "company_id": 4,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "카카오톡 오픈채팅 기반 커뮤니티 비즈니스 강화 및 헬스케어/모빌리티 신사업 안정화",
+        "source_url": "https://www.kakaocorp.com/page/",
+        "reference_date": "2026-08-20",
+        "collected_at": "2026-09-03 10:15:00"
+    },
+    {
+        "company_info_id": 9,
+        "company_id": 5,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "스스로 동기부여하여 높은 목표를 도전하고, 기존의 틀을 깨는 패기를 가진 인재",
+        "source_url": "https://www.skhynix.com/",
+        "reference_date": "2026-08-25",
+        "collected_at": "2026-09-03 10:20:00"
+    },
+    {
+        "company_info_id": 10,
+        "company_id": 5,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "고대역폭메모리(HBM) 주도권 유지 및 AI 서버용 낸드플래시 솔루션(eSSD) 수요 적극 대응",
+        "source_url": "https://www.skhynix.com/",
+        "reference_date": "2026-08-25",
+        "collected_at": "2026-09-03 10:20:00"
+    },
+    {
+        "company_info_id": 11,
+        "company_id": 6,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "꿈을 향해 도전하고, 고객을 최우선으로 생각하며, 혁신을 주도하는 인재",
+        "source_url": "https://www.lge.co.kr/company",
+        "reference_date": "2026-09-02",
+        "collected_at": "2026-09-03 10:25:00"
+    },
+    {
+        "company_info_id": 12,
+        "company_id": 6,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "가전 구독 서비스 확대 및 전장(VS) 사업부 흑자 규모 확대, 스마트홈 생태계 구축",
+        "source_url": "https://www.lge.co.kr/company",
+        "reference_date": "2026-09-02",
+        "collected_at": "2026-09-03 10:25:00"
+    },
+    {
+        "company_info_id": 13,
+        "company_id": 7,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "고객 경험을 혁신하고, 데이터를 기반으로 빠르고 정확하게 실행하는 인재 (Leadership Principles)",
+        "source_url": "https://www.coupang.com/",
+        "reference_date": "2026-09-01",
+        "collected_at": "2026-09-03 10:30:00"
+    },
+    {
+        "company_info_id": 14,
+        "company_id": 7,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "로켓배송 물류 인프라 효율화 및 대만 등 글로벌 시장 진출 가속화, 쿠팡이츠 점유율 확대",
+        "source_url": "https://www.coupang.com/",
+        "reference_date": "2026-09-01",
+        "collected_at": "2026-09-03 10:30:00"
+    },
+    {
+        "company_info_id": 15,
+        "company_id": 8,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "자율과 책임을 바탕으로 몰입하며, 고객 중심의 미친 만족감을 만들어내는 인재",
+        "source_url": "https://toss.im/",
+        "reference_date": "2026-08-30",
+        "collected_at": "2026-09-03 10:35:00"
+    },
+    {
+        "company_info_id": 16,
+        "company_id": 8,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "토스뱅크 및 토스증권 등 금융 계열사 흑자 기조 유지, 슈퍼앱 전략을 통한 월간 활성 사용자(MAU) 증대",
+        "source_url": "https://toss.im/",
+        "reference_date": "2026-08-30",
+        "collected_at": "2026-09-03 10:35:00"
+    },
+    {
+        "company_info_id": 17,
+        "company_id": 9,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "근면성실, 새롭고 혁신적인 시도, 규율 위의 자율을 실천하는 배민다움의 내재화",
+        "source_url": "https://www.woowahan.com/",
+        "reference_date": "2026-08-28",
+        "collected_at": "2026-09-03 10:40:00"
+    },
+    {
+        "company_info_id": 18,
+        "company_id": 9,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "배민B마트 물류 효율성 개선 및 AI 기반 개인화 추천 알고리즘 고도화, 커머스 영역 확장",
+        "source_url": "https://www.woowahan.com/",
+        "reference_date": "2026-08-28",
+        "collected_at": "2026-09-03 10:40:00"
+    },
+    {
+        "company_info_id": 19,
+        "company_id": 10,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "진지한 호기심을 가지고, 헌신적인 열정으로, 끊임없이 변화를 시도하는 인재",
+        "source_url": "https://kr.ncsoft.com/",
+        "reference_date": "2026-09-03",
+        "collected_at": "2026-09-03 10:45:00"
+    },
+    {
+        "company_info_id": 20,
+        "company_id": 10,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "다중접속역할수행게임(MMORPG) 외 장르 다변화 및 글로벌 콘솔 시장 타겟 신작 론칭 준비",
+        "source_url": "https://kr.ncsoft.com/",
+        "reference_date": "2026-09-03",
+        "collected_at": "2026-09-03 10:45:00"
+    },
+    {
+        "company_info_id": 21,
+        "company_id": 11,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "실천의식과 배려를 갖춘 창의적 인재",
+        "source_url": "https://www.posco.co.kr/homepage/docs/kor6/jsp/company/posco/s91a1000000m.jsp",
+        "reference_date": "2026-08-10",
+        "collected_at": "2026-09-03 16:21:00"
+    },
+    {
+        "company_info_id": 22,
+        "company_id": 11,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "친환경 수소환원제철(HyREX) 공정 도입 가속화 및 이차전지 풀 밸류체인 구축",
+        "source_url": "https://www.posco.co.kr/homepage/docs/kor6/jsp/company/posco/s91a1000000m.jsp",
+        "reference_date": "2026-08-10",
+        "collected_at": "2026-09-03 16:21:00"
+    },
+    {
+        "company_info_id": 23,
+        "company_id": 12,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "진취적 성향의 소유자, 국제적인 감각과 훌륭한 서비스 정신을 갖춘 인재",
+        "source_url": "https://www.koreanair.com/kr/ko/about/who-we-are/talent",
+        "reference_date": "2026-08-20",
+        "collected_at": "2026-09-03 16:22:00"
+    },
+    {
+        "company_info_id": 24,
+        "company_id": 12,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "아시아나항공 인수합병 시너지 극대화 및 차세대 친환경 항공기 도입을 통한 노선 경쟁력 강화",
+        "source_url": "https://www.koreanair.com/kr/ko/about/who-we-are/talent",
+        "reference_date": "2026-08-20",
+        "collected_at": "2026-09-03 16:22:00"
+    },
+    {
+        "company_info_id": 25,
+        "company_id": 13,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "바르게, 빠르게, 다르게 일하며 고객에게 새로운 가치를 창출하는 혁신 인재",
+        "source_url": "https://www.shinhan.com/hpe/index.jsp",
+        "reference_date": "2026-08-15",
+        "collected_at": "2026-09-03 16:23:00"
+    },
+    {
+        "company_info_id": 26,
+        "company_id": 13,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "AI 뱅커 고도화 및 비대면 채널(슈퍼쏠) 개편, 글로벌 리테일 뱅킹 부문 수익성 대폭 확대",
+        "source_url": "https://www.shinhan.com/hpe/index.jsp",
+        "reference_date": "2026-08-15",
+        "collected_at": "2026-09-03 16:23:00"
+    },
+    {
+        "company_info_id": 27,
+        "company_id": 14,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "원칙을 준수하고 도전정신과 창의성을 바탕으로 글로벌 바이오 산업을 선도할 인재",
+        "source_url": "https://www.celltrion.com/ko-kr/company/talent",
+        "reference_date": "2026-08-28",
+        "collected_at": "2026-09-03 16:24:00"
+    },
+    {
+        "company_info_id": 28,
+        "company_id": 14,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "신규 자가면역질환 치료제 바이오시밀러 미국/유럽 점유율 확대 및 항체-약물 접합체(ADC) 신약 개발",
+        "source_url": "https://www.celltrion.com/ko-kr/company/talent",
+        "reference_date": "2026-08-28",
+        "collected_at": "2026-09-03 16:24:00"
+    },
+    {
+        "company_info_id": 29,
+        "company_id": 15,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "개방성, 혁신, 친밀감, 정직의 가치를 바탕으로 아시안 뷰티를 세계에 전파할 인재",
+        "source_url": "https://www.apgroup.com/int/ko/about-us/careers/talent.html",
+        "reference_date": "2026-08-25",
+        "collected_at": "2026-09-03 16:25:00"
+    },
+    {
+        "company_info_id": 30,
+        "company_id": 15,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "북미 및 유럽 중심의 글로벌 포트폴리오 다변화, AI 맞춤형 스킨케어 뷰티 테크 솔루션 고도화",
+        "source_url": "https://www.apgroup.com/int/ko/about-us/careers/talent.html",
+        "reference_date": "2026-08-25",
+        "collected_at": "2026-09-03 16:25:00"
+    },
+    {
+        "company_info_id": 31,
+        "company_id": 16,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "새로움을 창출하는 인재, 협력하며 함께 성장하는 인재",
+        "source_url": "https://company.nexon.com/kr/careers/talent/",
+        "reference_date": "2026-09-01",
+        "collected_at": "2026-09-03 16:26:00"
+    },
+    {
+        "company_info_id": 32,
+        "company_id": 16,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "대형 글로벌 프랜차이즈 IP 육성 및 차세대 루트슈터/서브컬처 신작 라인업 강화",
+        "source_url": "https://company.nexon.com/kr/careers/talent/",
+        "reference_date": "2026-09-01",
+        "collected_at": "2026-09-03 16:26:00"
+    },
+    {
+        "company_info_id": 33,
+        "company_id": 17,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "사용자 중심의 따뜻함, 강한 책임감, 그리고 문제 해결에 있어 뛰어난 탁월함을 추구하는 팀원",
+        "source_url": "https://about.daangn.com/culture",
+        "reference_date": "2026-09-02",
+        "collected_at": "2026-09-03 16:27:00"
+    },
+    {
+        "company_info_id": 34,
+        "company_id": 17,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "하이퍼로컬 커뮤니티 기반 지역 광고 비즈니스 고도화 및 캐나다/영국 등 글로벌 앱(Karrot) 확장",
+        "source_url": "https://about.daangn.com/culture",
+        "reference_date": "2026-09-02",
+        "collected_at": "2026-09-03 16:27:00"
+    },
+    {
+        "company_info_id": 35,
+        "company_id": 18,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "정직, 열정, 창의를 바탕으로 글로벌 문화를 이끌어갈 온리원(ONLYONE) 인재",
+        "source_url": "https://www.cjenm.com/careers/talent",
+        "reference_date": "2026-08-30",
+        "collected_at": "2026-09-03 16:28:00"
+    },
+    {
+        "company_info_id": 36,
+        "company_id": 18,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "글로벌 K-콘텐츠 멀티 스튜디오 체제 구축 및 티빙(TVING) 오리지널 콘텐츠 경쟁력을 통한 유료 가입자 증대",
+        "source_url": "https://www.cjenm.com/careers/talent",
+        "reference_date": "2026-08-30",
+        "collected_at": "2026-09-03 16:28:00"
+    },
+    {
+        "company_info_id": 37,
+        "company_id": 19,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "끊임없이 도전하고 고객을 존중하며, 기본과 원칙을 지키는 인재",
+        "source_url": "https://corp.kt.com/html/recruit/talent.html",
+        "reference_date": "2026-08-27",
+        "collected_at": "2026-09-03 16:29:00"
+    },
+    {
+        "company_info_id": 38,
+        "company_id": 19,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "초거대 AI(믿음) 기반 B2B 디지털 전환(DX) 사업 수주 확대 및 클라우드/IDC 인프라 확충",
+        "source_url": "https://corp.kt.com/html/recruit/talent.html",
+        "reference_date": "2026-08-27",
+        "collected_at": "2026-09-03 16:29:00"
+    },
+    {
+        "company_info_id": 39,
+        "company_id": 20,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "도전, 헌신, 정도의 핵심 가치를 바탕으로 한계에 타협하지 않는 인재",
+        "source_url": "https://www.hanwhasolutions.com/kr/careers/ideal-candidate/",
+        "reference_date": "2026-08-29",
+        "collected_at": "2026-09-03 16:30:00"
+    },
+    {
+        "company_info_id": 40,
+        "company_id": 20,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "미국 중심의 태양광 모듈 밸류체인 통합(솔라 허브) 완공 및 친환경 플라스틱 화학 소재 R&D 가속화",
+        "source_url": "https://www.hanwhasolutions.com/kr/careers/ideal-candidate/",
+        "reference_date": "2026-08-29",
+        "collected_at": "2026-09-03 16:30:00"
+    },
+    {
+        "company_info_id": 41,
+        "company_id": 21,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "고객가치를 최우선으로 하며 끊임없이 혁신하고 전문성을 갖춘 신뢰받는 금융인",
+        "source_url": "https://www.kbstar.com/",
+        "reference_date": "2026-08-10",
+        "collected_at": "2026-09-03 17:00:00"
+    },
+    {
+        "company_info_id": 42,
+        "company_id": 21,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "AI 뱅킹 고도화 및 플랫폼 경쟁력 강화, 인도네시아 등 글로벌 리테일 비즈니스 확장",
+        "source_url": "https://www.kbstar.com/",
+        "reference_date": "2026-08-10",
+        "collected_at": "2026-09-03 17:00:00"
+    },
+    {
+        "company_info_id": 43,
+        "company_id": 22,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "자기주도적으로 일하며 수평적 소통을 통해 고객에게 몰입하는 혁신가",
+        "source_url": "https://kakaobank.com/Corp/Recruit/Talent",
+        "reference_date": "2026-08-20",
+        "collected_at": "2026-09-03 17:05:00"
+    },
+    {
+        "company_info_id": 44,
+        "company_id": 22,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "주택담보대출 중심의 여신 포트폴리오 다각화 및 대안신용평가모형(CSS) 고도화",
+        "source_url": "https://kakaobank.com/Corp/Recruit/Talent",
+        "reference_date": "2026-08-20",
+        "collected_at": "2026-09-03 17:05:00"
+    },
+    {
+        "company_info_id": 45,
+        "company_id": 23,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "끊임없는 도전과 혁신으로 미래를 개척하는 글로벌 IT 리더",
+        "source_url": "https://www.samsungsds.com/",
+        "reference_date": "2026-08-15",
+        "collected_at": "2026-09-03 17:10:00"
+    },
+    {
+        "company_info_id": 46,
+        "company_id": 23,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "클라우드 서비스(CSP/MSP) 역량 강화 및 기업 맞춤형 생성형 AI 서비스(FabriX) 사업 확대",
+        "source_url": "https://www.samsungsds.com/",
+        "reference_date": "2026-08-15",
+        "collected_at": "2026-09-03 17:10:00"
+    },
+    {
+        "company_info_id": 47,
+        "company_id": 24,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "최고를 향해 도전하고 고객의 비즈니스 혁신을 리딩하는 DX 전문가",
+        "source_url": "https://www.lgcns.com/",
+        "reference_date": "2026-08-28",
+        "collected_at": "2026-09-03 17:15:00"
+    },
+    {
+        "company_info_id": 48,
+        "company_id": 24,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "스마트 물류 및 스마트 팩토리 구축 수주 확대, 금융권 클라우드 네이티브 전환 사업 주도",
+        "source_url": "https://www.lgcns.com/",
+        "reference_date": "2026-08-28",
+        "collected_at": "2026-09-03 17:15:00"
+    },
+    {
+        "company_info_id": 49,
+        "company_id": 25,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "패기와 지성을 바탕으로 틀을 깨는 혁신을 만들며 자발적으로 몰입하는 인재",
+        "source_url": "https://www.sktelecom.com/",
+        "reference_date": "2026-08-25",
+        "collected_at": "2026-09-03 17:20:00"
+    },
+    {
+        "company_info_id": 50,
+        "company_id": 25,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "글로벌 AI 컴퍼니 전환 가속화, 에이닷(A.) 서비스 고도화 및 도심항공교통(UAM) 상용화 추진",
+        "source_url": "https://www.sktelecom.com/",
+        "reference_date": "2026-08-25",
+        "collected_at": "2026-09-03 17:20:00"
+    },
+    {
+        "company_info_id": 51,
+        "company_id": 26,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "인화와 헌신을 바탕으로 끝없이 비상하며 글로벌 역량을 갖춘 인재",
+        "source_url": "https://www.doosanenerbility.com/",
+        "reference_date": "2026-09-01",
+        "collected_at": "2026-09-03 17:25:00"
+    },
+    {
+        "company_info_id": 52,
+        "company_id": 26,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "소형모듈원전(SMR) 파운드리 핵심 플레이어 도약 및 대형 해상풍력 터빈 상용화",
+        "source_url": "https://www.doosanenerbility.com/",
+        "reference_date": "2026-09-01",
+        "collected_at": "2026-09-03 17:25:00"
+    },
+    {
+        "company_info_id": 53,
+        "company_id": 27,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "고객가치 창출을 최우선으로 강한 실행력을 발휘하며 상호 존중하는 인재",
+        "source_url": "https://www.lgchem.com/",
+        "reference_date": "2026-09-02",
+        "collected_at": "2026-09-03 17:30:00"
+    },
+    {
+        "company_info_id": 54,
+        "company_id": 27,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "3대 신성장 동력(친 변경 소재, 전지 소재, 글로벌 신약) 중심의 포트폴리오 전환",
+        "source_url": "https://www.lgchem.com/",
+        "reference_date": "2026-09-02",
+        "collected_at": "2026-09-03 17:30:00"
+    },
+    {
+        "company_info_id": 55,
+        "company_id": 28,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "글로벌 마인드와 창의적 사고로 변화를 주도하며 끝없이 도전하는 인재",
+        "source_url": "https://www.mobis.co.kr/",
+        "reference_date": "2026-08-30",
+        "collected_at": "2026-09-03 17:35:00"
+    },
+    {
+        "company_info_id": 56,
+        "company_id": 28,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "전동화 핵심 부품 생산 거점 글로벌 확대 및 소프트웨어 중심 자동차(SDV) 솔루션 내재화",
+        "source_url": "https://www.mobis.co.kr/",
+        "reference_date": "2026-08-30",
+        "collected_at": "2026-09-03 17:35:00"
+    },
+    {
+        "company_info_id": 57,
+        "company_id": 29,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "정도영업을 실천하고 혁신적 사고와 전문성으로 새로운 금융 가치를 창출하는 인재",
+        "source_url": "https://spot.wooribank.com/",
+        "reference_date": "2026-08-27",
+        "collected_at": "2026-09-03 17:40:00"
+    },
+    {
+        "company_info_id": 58,
+        "company_id": 29,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "기업금융 명가 재건 및 뉴원(New WON) 뱅킹 구축을 통한 디지털 유니버설 뱅크 도약",
+        "source_url": "https://spot.wooribank.com/",
+        "reference_date": "2026-08-27",
+        "collected_at": "2026-09-03 17:40:00"
+    },
+    {
+        "company_info_id": 59,
+        "company_id": 30,
+        "info_type": "TALENT_PROFILE",
+        "title": "인재상",
+        "content": "상호 존중과 신뢰를 바탕으로 팬덤 중심의 끈기 있는 도전을 이어가는 인재",
+        "source_url": "https://www.krafton.com/",
+        "reference_date": "2026-08-29",
+        "collected_at": "2026-09-03 17:45:00"
+    },
+    {
+        "company_info_id": 60,
+        "company_id": 30,
+        "info_type": "BUSINESS_TREND",
+        "title": "최근 사업 동향",
+        "content": "배틀그라운드(PUBG) IP 인도 시장 점유율 확대 및 딥러닝 기반 신규 스튜디오 프로젝트 론칭",
+        "source_url": "https://www.krafton.com/",
+        "reference_date": "2026-08-29",
+        "collected_at": "2026-09-03 17:45:00"
+    }
+]
