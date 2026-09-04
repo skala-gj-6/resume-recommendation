@@ -1,6 +1,6 @@
 # LLM 연동 설정과 프롬프트
 
-경험 구조화와 자기소개서 생성은 Spring Boot 내부의 Spring AI `ChatClient`가 OpenAI를 직접 호출합니다. 런타임 Mock 전환은 두지 않으며 모델 기본값은 `gpt-4o`입니다.
+경험 구조화는 Spring Boot 내부의 Spring AI `ChatClient`가 OpenAI를 직접 호출하며 런타임 Mock 전환을 두지 않습니다. 자기소개서 생성은 `COVER_LETTER_PROVIDER` 환경변수로 구현체를 전환합니다. 기본값 `mock`에서는 [MOCK](../../MOCK) 서버의 `POST /api/v1/cover-letters`가 반환하는 고정 응답을 그대로 저장하며 OpenAI를 호출하지 않습니다. `llm`로 바꾸면 기존과 동일하게 Spring AI `ChatClient`가 OpenAI를 직접 호출합니다. 이하 이 문서의 프롬프트·호출 정책·서버 검증 설명은 `COVER_LETTER_PROVIDER=llm`일 때에만 적용됩니다. 모델 기본값은 `gpt-4o`입니다.
 
 ## 실행 설정
 
@@ -25,7 +25,7 @@ DEMO_DATA_ENABLED=true
 - `OPENAI_API_KEY`는 필수이며 저장소나 로그에 기록하지 않습니다.
 - OpenAI SDK와 Spring AI 내부 재시도는 끄고 `LLM_MAX_ATTEMPTS`만 최초 호출 포함 1~2회로 적용합니다.
 - `OPENAI_TIMEOUT`은 호출 1회의 제한입니다. 최대 2회이면 전체 비동기 처리 시간은 타임아웃보다 길 수 있습니다.
-- `DEMO_DATA_ENABLED=true`이면 시작 시 데모 사용자의 구조화 경험 4건과 당근마켓 지원 프로젝트 및 문항 3건을 반복 안전하게 준비합니다. 초안, 수정본, 선택 상태, LLM 호출 로그는 시드하지 않습니다.
+- `DEMO_DATA_ENABLED=true`이면 시작 시 데모 사용자의 구조화 경험 3건과 LG CNS DX Engineer 지원 프로젝트 및 문항 1건을 반복 안전하게 준비합니다. 초안, 수정본, 선택 상태, LLM 호출 로그는 시드하지 않습니다.
 
 ## 프롬프트와 응답 스키마
 
@@ -68,13 +68,13 @@ BE/src/main/resources/schemas/cover-letter-generation.json
 
 ## 사용량과 실제 모델 확인
 
-각 시도는 `LLM_CALL_LOG`에 공급자, 요청 모델, OpenAI가 반환한 실제 모델, 프롬프트 버전, 공급자 요청 ID, 입력·출력·전체 토큰, 종료 사유, 지연 시간, 성공 여부와 오류 코드를 저장합니다. 프롬프트 원문, 사용자 입력, 응답 본문과 API 키는 저장하지 않습니다.
+각 LLM 호출 시도는 `LLM_CALL_LOG`에 공급자, 요청 모델, OpenAI가 반환한 실제 모델, 프롬프트 버전, 공급자 요청 ID, 입력·출력·전체 토큰, 종료 사유, 지연 시간, 성공 여부와 오류 코드를 저장합니다. 프롬프트 원문, 사용자 입력, 응답 본문과 API 키는 저장하지 않습니다.
 
-완료된 초안은 `GET /api/v1/cover-letter-drafts/{draftId}`의 `llmCall`에서 최신 성공 호출 메타데이터를 함께 반환합니다. 따라서 고정 Mock 본문인지 알 수 없던 기존 문제와 달리 실제 OpenAI 호출 및 모델을 응답에서 확인할 수 있습니다.
+완료된 초안은 `GET /api/v1/cover-letter-drafts/{draftId}`의 `llmCall`에서 최신 성공 호출 메타데이터를 함께 반환합니다. 실제 OpenAI 호출 및 모델을 응답에서 확인할 수 있습니다. `COVER_LETTER_PROVIDER=mock`으로 생성한 초안은 OpenAI를 호출하지 않으므로 `LLM_CALL_LOG`에 기록이 남지 않고 `llmCall`은 `null`로 반환됩니다.
 
 ## Swagger 데모 순서
 
-1. `GET /api/v1/job-applications?externalPostingId=DEMO-DAANGN-BACKEND-001`에서 시드 프로젝트 ID를 찾습니다.
+1. `GET /api/v1/job-applications?externalPostingId=DEMO-LGCNS-DX-001`에서 시드 프로젝트 ID를 찾습니다.
 2. `GET /api/v1/job-applications/{applicationId}`에서 문항별 `coverLetterId`를 확인합니다.
 3. `POST /api/v1/cover-letter-items/{coverLetterId}/drafts`를 호출합니다.
 4. 응답의 `statusUrl`을 약 1초 간격으로 조회해 `COMPLETED` 또는 `FAILED`를 확인합니다.

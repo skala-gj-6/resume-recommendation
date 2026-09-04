@@ -1,10 +1,22 @@
 [
   {
+    "externalPostingId": "POSTING-EXT-0024-3244",
+    "externalCompanyId": "CSN-LGCNS-024",
+    "jobTitle": "DX Engineer",
+    "score": 99.5,
+    "rank": 1,
+    "matchedKeywords": [
+      "Spring Boot",
+      "AI/ML",
+      "Redis"
+    ]
+  },
+  {
     "externalPostingId": "POSTING-EXT-0017-2946",
     "externalCompanyId": "CSN-DAANGN-017",
     "jobTitle": "Backend Developer",
     "score": 99.34,
-    "rank": 1,
+    "rank": 2,
     "matchedKeywords": [
       "Spring Boot",
       "JPA",
@@ -17,7 +29,7 @@
     "externalCompanyId": "CSN-KRAFTON-030",
     "jobTitle": "DevOps Engineer",
     "score": 97.47,
-    "rank": 2,
+    "rank": 3,
     "matchedKeywords": [
       "Docker",
       "GitHub Actions",
@@ -31,7 +43,7 @@
     "externalCompanyId": "CSN-NCSOFT-010",
     "jobTitle": "Backend Developer",
     "score": 97.32,
-    "rank": 3,
+    "rank": 4,
     "matchedKeywords": [
       "Spring Boot",
       "JPA",
@@ -44,7 +56,7 @@
     "externalCompanyId": "CSN-TOSS-008",
     "jobTitle": "DevOps Engineer",
     "score": 93.88,
-    "rank": 4,
+    "rank": 5,
     "matchedKeywords": [
       "Docker",
       "GitHub Actions",
@@ -58,7 +70,7 @@
     "externalCompanyId": "CSN-SKT-025",
     "jobTitle": "Cloud Architect",
     "score": 93.06,
-    "rank": 5,
+    "rank": 6,
     "matchedKeywords": [
       "Docker",
       "GitHub Actions",
@@ -72,7 +84,7 @@
     "externalCompanyId": "CSN-POSCO-011",
     "jobTitle": "Full Stack Developer",
     "score": 91.14,
-    "rank": 6,
+    "rank": 7,
     "matchedKeywords": [
       "Java",
       "MySQL",
@@ -84,7 +96,7 @@
     "externalCompanyId": "CSN-DOOSAN-026",
     "jobTitle": "Cloud Architect",
     "score": 91.09,
-    "rank": 7,
+    "rank": 8,
     "matchedKeywords": [
       "Docker",
       "Redis",
@@ -96,7 +108,7 @@
     "externalCompanyId": "CSN-SAMSUNG-001",
     "jobTitle": "Python Developer",
     "score": 90.14,
-    "rank": 8,
+    "rank": 9,
     "matchedKeywords": [
       "Kubernetes",
       "Docker",
@@ -104,20 +116,6 @@
       "AI/ML",
       "C++",
       "Java"
-    ]
-  },
-  {
-    "externalPostingId": "POSTING-EXT-0024-3244",
-    "externalCompanyId": "CSN-LGCNS-024",
-    "jobTitle": "Frontend Developer",
-    "score": 88.86,
-    "rank": 9,
-    "matchedKeywords": [
-      "Java",
-      "Problem Solving",
-      "AWS",
-      "Data Analysis",
-      "MySQL"
     ]
   },
   {
