@@ -52,6 +52,7 @@ src/main/java/com/be/be/
 | `SERVER_PORT` | `8080` | 서버 포트 |
 | `RECRUITMENT_PROVIDER_BASE_URL` | `http://localhost:8000` | Mock Recruitment Provider 주소 |
 | `RECOMMENDATION_PROVIDER` | `mock` | 추천 제공자 구현체 |
+| `COVER_LETTER_PROVIDER` | `mock` | 자기소개서 초안 생성 제공자 구현체 (`mock`: Mock Recruitment Provider의 고정 자소서, `llm`: OpenAI 기반 LLM 생성) |
 | `COMPANY_SEED_ENABLED` | `true` | 시작 시 기업 시드 적재 여부 |
 
 서버가 뜨면 아래 주소로 확인합니다.

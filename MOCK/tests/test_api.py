@@ -138,3 +138,81 @@ def test_recommendation_request_requires_experience_keywords() -> None:
 
     assert no_experiences.status_code == 422
     assert blank_keywords.status_code == 422
+
+
+def _cover_letter_request(**overrides: object) -> dict:
+    payload = {
+        "companyName": "예시 기업",
+        "jobTitle": "Backend Developer",
+        "questionText": "지원 동기를 작성해 주세요.",
+        "charLimit": 700,
+        "additionalInstruction": None,
+        "experienceCandidates": [
+            {
+                "experienceId": 11,
+                "title": "교내 장학금 신청 자동화",
+                "situation": "상황",
+                "task": "과제",
+                "action": "행동",
+                "result": "결과",
+                "quantitativeResult": "5일 -> 8시간",
+                "learning": "배운 점",
+                "keywords": ["Spring Boot", "LLM"],
+            },
+            {
+                "experienceId": 12,
+                "title": "다른 경험",
+                "situation": "상황",
+                "task": "과제",
+                "action": "행동",
+                "result": "결과",
+                "quantitativeResult": None,
+                "learning": None,
+                "keywords": [],
+            },
+        ],
+        "companyInfoCandidates": [],
+    }
+    payload.update(overrides)
+    return payload
+
+
+def test_cover_letter_returns_fixed_content_and_selects_first_experience() -> None:
+    response = client.post(
+        "/api/v1/cover-letters", json=_cover_letter_request()
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["content"].startswith("사람이 하던 판단을 AI가 대신하는 시스템")
+    assert body["selectedExperiences"] == [
+        {
+            "experienceId": 11,
+            "matchReason": "'교내 장학금 신청 자동화' 경험이 자기소개서 내용과 가장 부합합니다.",
+        }
+    ]
+    assert body["selectedCompanyInfoIds"] == []
+
+
+def test_cover_letter_content_is_identical_regardless_of_question() -> None:
+    first = client.post(
+        "/api/v1/cover-letters",
+        json=_cover_letter_request(questionText="첫 번째 질문"),
+    )
+    second = client.post(
+        "/api/v1/cover-letters",
+        json=_cover_letter_request(questionText="완전히 다른 질문", charLimit=None),
+    )
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert first.json()["content"] == second.json()["content"]
+
+
+def test_cover_letter_request_requires_at_least_one_experience_candidate() -> None:
+    response = client.post(
+        "/api/v1/cover-letters",
+        json=_cover_letter_request(experienceCandidates=[]),
+    )
+
+    assert response.status_code == 422

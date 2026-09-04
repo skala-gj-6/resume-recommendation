@@ -1,5 +1,8 @@
 package com.be.be.recruitment;
 
+import com.be.be.recruitment.dto.CoverLetterGenerationRequest;
+import com.be.be.recruitment.dto.CoverLetterGenerationResponse;
+import com.be.be.recruitment.dto.ExperienceCandidateSummary;
 import com.be.be.recruitment.dto.ExperienceKeywordSummary;
 import com.be.be.recruitment.dto.PostingDetail;
 import com.be.be.recruitment.dto.RecommendationRequest;
@@ -157,6 +160,58 @@ class RestClientRecruitmentProviderClientTests {
         assertThrows(
                 RecruitmentProviderInvalidResponseException.class,
                 () -> client.getPosting("invalid")
+        );
+        server.verify();
+    }
+
+    @Test
+    void postsGenerationContextAndReadsCoverLetter() {
+        server.expect(once(), requestTo(BASE_URL + "/api/v1/cover-letters"))
+                .andExpect(method(HttpMethod.POST))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andRespond(withSuccess("""
+                        {
+                          "content": "고정된 자기소개서 본문입니다.",
+                          "selectedExperiences": [
+                            {"experienceId": 11, "matchReason": "가장 관련 있는 경험입니다."}
+                          ],
+                          "selectedCompanyInfoIds": []
+                        }
+                        """, MediaType.APPLICATION_JSON));
+
+        CoverLetterGenerationResponse response = client.generateCoverLetter(new CoverLetterGenerationRequest(
+                "Example Company",
+                "Backend Developer",
+                "지원 동기를 작성해 주세요.",
+                700,
+                null,
+                List.of(new ExperienceCandidateSummary(
+                        11L, "제목", "상황", "과제", "행동", "결과", null, null, List.of("Java")
+                )),
+                List.of()
+        ));
+
+        assertEquals("고정된 자기소개서 본문입니다.", response.content());
+        assertEquals(1, response.selectedExperiences().size());
+        assertEquals(11L, response.selectedExperiences().getFirst().experienceId());
+        server.verify();
+    }
+
+    @Test
+    void rejectsInvalidCoverLetterRequestBeforeCallingProvider() {
+        CoverLetterGenerationRequest request = new CoverLetterGenerationRequest(
+                "Example Company",
+                "Backend Developer",
+                "지원 동기를 작성해 주세요.",
+                700,
+                null,
+                List.of(),
+                List.of()
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> client.generateCoverLetter(request)
         );
         server.verify();
     }

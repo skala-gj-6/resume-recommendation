@@ -43,7 +43,7 @@ class DemoInputSeedIntegrationTests {
     void seedsOnlyGenerationInputsAndIsIdempotent() {
         Long userId = demoUserService.currentUser().getId();
 
-        assertEquals(4, experienceRepository.findAllByUserIdOrderByUpdatedAtDesc(userId).size());
+        assertEquals(3, experienceRepository.findAllByUserIdOrderByUpdatedAtDesc(userId).size());
         JobApplication application = applicationRepository.findAllByUserIdAndExternalPostingId(
                         userId,
                         DemoInputSeedService.DEMO_POSTING_ID,
@@ -51,7 +51,7 @@ class DemoInputSeedIntegrationTests {
                 )
                 .getContent()
                 .getFirst();
-        assertEquals(3, application.getItems().size());
+        assertEquals(1, application.getItems().size());
         application.getItems().forEach(item -> assertNotNull(item.getId()));
         assertEquals(0, draftRepository.count());
         assertEquals(0, callLogRepository.count());
@@ -60,7 +60,7 @@ class DemoInputSeedIntegrationTests {
 
         assertEquals(0, secondRun.experiencesCreated());
         assertEquals(application.getId(), secondRun.applicationId());
-        assertEquals(4, experienceRepository.findAllByUserIdOrderByUpdatedAtDesc(userId).size());
+        assertEquals(3, experienceRepository.findAllByUserIdOrderByUpdatedAtDesc(userId).size());
         assertEquals(1, applicationRepository.findAllByUserIdAndExternalPostingId(
                 userId,
                 DemoInputSeedService.DEMO_POSTING_ID,

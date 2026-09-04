@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 from app.models import (
+    CoverLetterGenerationRequest,
+    CoverLetterGenerationResponse,
     Posting,
     PostingListItem,
     PostingPage,
     Recommendation,
+    SelectedExperience,
     SortOption,
 )
 from app.repository import MockRecruitmentRepository
@@ -130,6 +133,24 @@ class RecruitmentService:
                 )
             )
         return results
+
+    def generate_cover_letter(
+        self, request: CoverLetterGenerationRequest
+    ) -> CoverLetterGenerationResponse:
+        # This provider intentionally returns a fixed fixture instead of calling an LLM.
+        # Request fields beyond the first experience candidate are accepted to preserve
+        # the future provider contract but are not used to tailor the content.
+        selected = request.experience_candidates[0]
+        return CoverLetterGenerationResponse(
+            content=self._repository.cover_letter_content(),
+            selected_experiences=[
+                SelectedExperience(
+                    experience_id=selected.experience_id,
+                    match_reason=f"'{selected.title}' 경험이 자기소개서 내용과 가장 부합합니다.",
+                )
+            ],
+            selected_company_info_ids=[],
+        )
 
     @staticmethod
     def _search_text(posting: Posting) -> str:

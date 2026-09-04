@@ -177,3 +177,43 @@ class Recommendation(ApiModel):
 class RecommendationResponse(ApiModel):
     algorithm_version: str = Field(min_length=1)
     recommendations: list[Recommendation]
+
+
+class ExperienceCandidate(ApiModel):
+    experience_id: int = Field(ge=1)
+    title: str = Field(min_length=1)
+    situation: str = Field(min_length=1)
+    task: str = Field(min_length=1)
+    action: str = Field(min_length=1)
+    result: str = Field(min_length=1)
+    quantitative_result: str | None = None
+    learning: str | None = None
+    keywords: list[str] = Field(default_factory=list)
+
+
+class CompanyInfoCandidate(ApiModel):
+    company_info_id: int = Field(ge=1)
+    info_type: str = Field(min_length=1)
+    title: str = Field(min_length=1)
+    content: str = Field(min_length=1)
+
+
+class CoverLetterGenerationRequest(ApiModel):
+    company_name: str = Field(min_length=1)
+    job_title: str = Field(min_length=1)
+    question_text: str = Field(min_length=1)
+    char_limit: int | None = Field(default=None, ge=1)
+    additional_instruction: str | None = None
+    experience_candidates: list[ExperienceCandidate] = Field(min_length=1)
+    company_info_candidates: list[CompanyInfoCandidate] = Field(default_factory=list)
+
+
+class SelectedExperience(ApiModel):
+    experience_id: int = Field(ge=1)
+    match_reason: str = Field(min_length=1)
+
+
+class CoverLetterGenerationResponse(ApiModel):
+    content: str = Field(min_length=1)
+    selected_experiences: list[SelectedExperience] = Field(min_length=1)
+    selected_company_info_ids: list[int] = Field(default_factory=list)

@@ -20,6 +20,8 @@ class MockRecruitmentRepository:
         if len(self._postings_by_id) != len(self._postings):
             raise ValueError("mock_postings.json contains duplicate externalPostingId values")
 
+        self._cover_letter_content = self._load_cover_letter_content()
+
         self._recommendations = self._load_recommendations()
         recommendation_posting_ids = [
             item.external_posting_id for item in self._recommendations
@@ -74,6 +76,13 @@ class MockRecruitmentRepository:
             adapter.validate_python(self._read_json("mock_recommendations.json"))
         )
 
+    def _load_cover_letter_content(self) -> str:
+        data = self._read_json("mock_cover_letter.json")
+        content = data["content"] if isinstance(data, dict) else None
+        if not isinstance(content, str) or not content.strip():
+            raise ValueError("mock_cover_letter.json must contain a non-blank 'content' string")
+        return content
+
     def list_postings(self) -> tuple[Posting, ...]:
         return self._postings
 
@@ -82,3 +91,6 @@ class MockRecruitmentRepository:
 
     def list_recommendations(self) -> tuple[RecommendationFixture, ...]:
         return self._recommendations
+
+    def cover_letter_content(self) -> str:
+        return self._cover_letter_content

@@ -1,7 +1,7 @@
 package com.be.be.ai;
 
 import com.be.be.coverletter.CoverLetterGenerator;
-import com.be.be.coverletter.LlmCoverLetterGenerator;
+import com.be.be.coverletter.MockCoverLetterGenerator;
 import com.be.be.experience.ExperienceStructurer;
 import com.be.be.experience.LlmExperienceStructurer;
 import org.junit.jupiter.api.Test;
@@ -22,8 +22,12 @@ class LlmModeConfigurationTests {
     private CoverLetterGenerator coverLetterGenerator;
 
     @Test
-    void alwaysSelectsLlmImplementations() {
+    void experienceStructuringAlwaysUsesTheLlmImplementation() {
         assertInstanceOf(LlmExperienceStructurer.class, experienceStructurer);
-        assertInstanceOf(LlmCoverLetterGenerator.class, coverLetterGenerator);
+    }
+
+    @Test
+    void coverLetterGenerationDefaultsToTheMockProvider() {
+        assertInstanceOf(MockCoverLetterGenerator.class, coverLetterGenerator);
     }
 }

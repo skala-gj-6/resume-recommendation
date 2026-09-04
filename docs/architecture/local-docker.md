@@ -52,8 +52,8 @@ Vue proxy → Spring  : backend:8080
 - 기존 데이터가 있으면 중복 삽입하지 않습니다.
 - 공고·추천 목데이터는 `MOCK/data`에서 읽으며 PostgreSQL에 공고 마스터로 저장하지 않습니다.
 - Spring은 지원 프로젝트 생성 시 공고 상세를 조회하고, 추천 요청 시 Mock 후보를 받아 추천 실행·입력·결과를 PostgreSQL에 저장합니다.
-- `DEMO_DATA_ENABLED=true`이면 구조화 경험 4건과 데모 공고 스냅샷·문항 3건을 적재합니다. 초안·수정본·선택값은 만들지 않습니다.
-- 경험 구조화와 자기소개서 초안은 Spring AI를 통해 OpenAI를 직접 호출합니다.
+- `DEMO_DATA_ENABLED=true`이면 구조화 경험 3건과 데모 공고 스냅샷·문항 3건을 적재합니다. 초안·수정본·선택값은 만들지 않습니다.
+- 경험 구조화는 Spring AI를 통해 OpenAI를 직접 호출합니다. 자기소개서 초안은 `COVER_LETTER_PROVIDER` 설정에 따라 기본값(`mock`)에서는 Mock Recruitment Provider의 고정 응답을, `llm`에서는 Spring AI를 통해 OpenAI를 호출합니다.
 
 ## 현재 구현 범위
 

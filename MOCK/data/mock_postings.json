@@ -973,25 +973,33 @@
     "externalPostingId": "POSTING-EXT-0024-3244",
     "externalCompanyId": "CSN-LGCNS-024",
     "companyName": "LG CNS",
-    "jobTitle": "Frontend Developer",
-    "jobCategory": "FRONTEND",
+    "jobTitle": "DX Engineer",
+    "jobCategory": "FULL_STACK",
     "industry": "IT/웹/통신",
     "region": "서울 강남구",
     "experienceLevel": "신입",
     "employmentType": "정규직",
+    "responsibilities": [
+      "금융·공공 도메인의 서류 검증, 자격 심사 등 사람이 판단하던 업무를 AI 에이전트로 자동화하는 백엔드 시스템을 개발합니다.",
+      "React 기반 프론트엔드와 Spring Boot 기반 API를 함께 설계해 신규 디지털 전환(DX) 플랫폼을 구축합니다.",
+      "LLM을 연동한 자동 심사·매칭 로직을 운영하고 변경되는 업무 규칙에 유연하게 대응하도록 개선합니다."
+    ],
     "requirements": [
-      "Java 활용 역량",
-      "Problem Solving 활용 역량",
-      "AWS 활용 역량",
-      "Data Analysis 활용 역량",
-      "MySQL 활용 역량"
+      "React 또는 Vue와 Spring Boot 기반 풀스택 개발 경험",
+      "LLM 등 AI 모델을 백엔드 시스템에 연동한 경험",
+      "변화하는 요구사항에 대응하는 설정 기반 설계 역량"
+    ],
+    "preferredQualifications": [
+      "Redis 등을 활용해 대량 요청을 안정적으로 처리한 경험",
+      "금융 또는 공공 도메인 서비스 개발 경험",
+      "제한된 시간 안에서 우선순위를 판단해 문제를 해결한 경험"
     ],
     "keywords": [
-      "Java",
+      "Spring Boot",
+      "AI/ML",
+      "Redis",
       "Problem Solving",
-      "AWS",
-      "Data Analysis",
-      "MySQL"
+      "REST API"
     ],
     "openingDate": "2026-08-29",
     "deadline": "2026-09-23",
@@ -1000,13 +1008,8 @@
     "questions": [
       {
         "questionOrder": 1,
-        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
-        "charLimit": 700
-      },
-      {
-        "questionOrder": 2,
-        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
-        "charLimit": 1000
+        "questionText": "LG CNS에 지원한 동기와 입사 이후 꿈꾸는 것은 무엇인가요?",
+        "charLimit": 500
       }
     ]
   },
