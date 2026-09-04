@@ -1,6 +1,6 @@
 # API 명세 개요
 
-> 이 문서는 목표 API 계약을 정의합니다. 현재 Spring에는 데모 로그인, 경험, 추천 저장, 지원 프로젝트, 문항별 목 AI 초안·Polling·수정본 API가 구현되어 있습니다. 실제 인증·실제 LLM·프로필 선호 정보 API는 후속 범위입니다. 실행 상태는 [백엔드 구현 범위](../architecture/backend-implementation-scope.md)를 기준으로 확인합니다.
+> 이 문서는 목표 API 계약을 정의합니다. 현재 Spring에는 데모 로그인, 경험, 추천 저장, 지원 프로젝트, OpenAI 기반 문항별 초안·Polling·수정본 API가 구현되어 있습니다. 실제 인증과 프로필 선호 정보 API는 후속 범위입니다. 실행 상태는 [백엔드 구현 범위](../architecture/backend-implementation-scope.md)를 기준으로 확인합니다.
 
 ## 공통 규칙
 

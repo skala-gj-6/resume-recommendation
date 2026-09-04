@@ -17,7 +17,7 @@ public final class RecommendationDtos {
     public record CompanySummary(Long companyId, String externalCompanyId, String companyName) {
     }
 
-    @Schema(description = "추천 목록 화면에 표시하는 저장된 공고 카드")
+    @Schema(name = "RecommendationItemResponse", description = "추천 목록 화면에 표시하는 저장된 공고 카드")
     public record ItemResponse(
             Long recommendationItemId,
             int rank,
@@ -73,7 +73,7 @@ public final class RecommendationDtos {
         }
     }
 
-    @Schema(description = "추천 근거, 현재 공고 상세와 기업 정보를 결합한 응답")
+    @Schema(name = "RecommendationItemDetailResponse", description = "추천 근거, 현재 공고 상세와 기업 정보를 결합한 응답")
     public record ItemDetailResponse(
             Long recommendationItemId,
             Long recommendationRunId,
@@ -82,7 +82,7 @@ public final class RecommendationDtos {
             List<String> matchedKeywords,
             String recommendationReason,
             @Schema(description = "Mock 제공자에서 현재 공고 상세를 조회할 수 있었는지 여부") boolean postingDetailAvailable,
-            @Schema(description = "현재 공고 상세. 조회 실패 시 null", nullable = true) PostingDetail posting,
+            @Schema(description = "현재 공고 상세. 조회 실패 시 null", types = {"object", "null"}) PostingDetail posting,
             List<CompanyInfoResponse> companyInformation
     ) {
     }

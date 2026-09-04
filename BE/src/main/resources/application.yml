@@ -1,6 +1,23 @@
 spring:
   application:
     name: be
+  ai:
+    model:
+      chat: openai
+    retry:
+      # 재시도 횟수는 app.ai.max-attempts 한 곳에서만 제어합니다.
+      max-attempts: 1
+    openai:
+      api-key: "${OPENAI_API_KEY}"
+      base-url: "${OPENAI_BASE_URL:https://api.openai.com/v1}"
+      timeout: "${OPENAI_TIMEOUT:45s}"
+      max-retries: 0
+      chat:
+        model: "${LLM_MODEL:gpt-4o}"
+        temperature: "${LLM_TEMPERATURE:0.2}"
+        max-tokens: "${LLM_MAX_TOKENS:8000}"
+        n: 1
+        store: false
   datasource:
     url: "${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/resume_service}"
     username: "${SPRING_DATASOURCE_USERNAME:resume_user}"
@@ -30,11 +47,28 @@ app:
     enabled: "${COMPANY_SEED_ENABLED:true}"
     companies: classpath:company_seed.json
     company-infos: classpath:company_info_seed.json
+  demo-data:
+    enabled: "${DEMO_DATA_ENABLED:true}"
   recommendation:
     provider: "${RECOMMENDATION_PROVIDER:mock}"
     result-limit: "${RECOMMENDATION_RESULT_LIMIT:10}"
   ai:
+    model: "${LLM_MODEL:gpt-4o}"
+    temperature: "${LLM_TEMPERATURE:0.2}"
+    max-tokens: "${LLM_MAX_TOKENS:8000}"
+    max-attempts: "${LLM_MAX_ATTEMPTS:2}"
+    default-target-chars: "${LLM_DEFAULT_TARGET_CHARS:700}"
+    target-ratio: "${LLM_TARGET_RATIO:0.9}"
+    minimum-ratio: "${LLM_MINIMUM_RATIO:0.7}"
+    experience-prompt-location: "${LLM_EXPERIENCE_PROMPT_LOCATION:classpath:prompts/experience-structure.st}"
+    cover-letter-prompt-location: "${LLM_COVER_LETTER_PROMPT_LOCATION:classpath:prompts/cover-letter-generation.st}"
+    experience-schema-location: "${LLM_EXPERIENCE_SCHEMA_LOCATION:classpath:schemas/experience-structure.json}"
+    cover-letter-schema-location: "${LLM_COVER_LETTER_SCHEMA_LOCATION:classpath:schemas/cover-letter-generation.json}"
     draft-executor:
       core-size: "${DRAFT_EXECUTOR_CORE_SIZE:2}"
       max-size: "${DRAFT_EXECUTOR_MAX_SIZE:4}"
       queue-capacity: "${DRAFT_EXECUTOR_QUEUE_CAPACITY:20}"
+    draft-recovery:
+      pending-stale-after: "${DRAFT_PENDING_STALE_AFTER:30m}"
+      generating-stale-after: "${DRAFT_GENERATING_STALE_AFTER:3m}"
+      scan-interval: "${DRAFT_RECOVERY_SCAN_INTERVAL:1m}"

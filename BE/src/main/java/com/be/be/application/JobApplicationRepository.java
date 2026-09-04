@@ -13,6 +13,8 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 
     Page<JobApplication> findAllByUserIdAndExternalPostingId(Long userId, String externalPostingId, Pageable pageable);
 
+    boolean existsByUserIdAndExternalPostingId(Long userId, String externalPostingId);
+
     @EntityGraph(attributePaths = {"company", "sourceRecommendationItem", "items", "items.selectedDraft"})
     Optional<JobApplication> findByIdAndUserId(Long id, Long userId);
 }

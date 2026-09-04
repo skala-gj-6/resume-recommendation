@@ -1,5 +1,6 @@
 package com.be.be.common;
 
+import com.be.be.ai.LlmException;
 import com.be.be.recruitment.exception.PostingNotFoundException;
 import com.be.be.recruitment.exception.RecruitmentProviderInvalidResponseException;
 import com.be.be.recruitment.exception.RecruitmentProviderUnavailableException;
@@ -34,6 +35,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RecruitmentProviderInvalidResponseException.class)
     ResponseEntity<ApiErrorResponse> handleProviderInvalid(RecruitmentProviderInvalidResponseException exception) {
         return response(HttpStatus.BAD_GATEWAY, "RECRUITMENT_PROVIDER_INVALID_RESPONSE", "채용 정보 제공자의 응답 형식이 올바르지 않습니다.");
+    }
+
+    @ExceptionHandler(LlmException.class)
+    ResponseEntity<ApiErrorResponse> handleLlmException(LlmException exception) {
+        return response(exception.getStatus(), exception.getCode(), exception.getSafeMessage());
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})

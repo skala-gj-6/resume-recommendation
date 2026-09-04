@@ -100,6 +100,7 @@ public final class ExperienceDtos {
         }
     }
 
+    @Schema(name = "ExperienceDetailResponse")
     public record DetailResponse(
             Long experienceId,
             String title,
@@ -127,6 +128,7 @@ public final class ExperienceDtos {
         }
     }
 
+    @Schema(name = "ExperienceListItemResponse")
     public record ListItemResponse(
             Long experienceId,
             String title,

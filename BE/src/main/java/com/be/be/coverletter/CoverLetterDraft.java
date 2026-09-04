@@ -63,6 +63,9 @@ public class CoverLetterDraft {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "started_at")
+    private LocalDateTime startedAt;
+
     @Column(name = "finished_at")
     private LocalDateTime finishedAt;
 
@@ -97,9 +100,13 @@ public class CoverLetterDraft {
             throw new IllegalStateException("only a pending draft can start generation");
         }
         generationStatus = DraftGenerationStatus.GENERATING;
+        startedAt = LocalDateTime.now();
     }
 
     public void complete(String content) {
+        if (generationStatus != DraftGenerationStatus.GENERATING) {
+            throw new IllegalStateException("only a generating draft can complete");
+        }
         String normalized = normalize(content, 10000, "content");
         if (normalized == null) {
             throw new IllegalArgumentException("content must not be blank");
@@ -161,6 +168,7 @@ public class CoverLetterDraft {
     public String getErrorCode() { return errorCode; }
     public String getErrorMessage() { return errorMessage; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getStartedAt() { return startedAt; }
     public LocalDateTime getFinishedAt() { return finishedAt; }
     public CoverLetterEdit getEdit() { return edit; }
     public List<DraftExperience> getExperiences() { return List.copyOf(experiences); }

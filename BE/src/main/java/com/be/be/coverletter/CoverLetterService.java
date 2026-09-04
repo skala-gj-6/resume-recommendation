@@ -1,5 +1,7 @@
 package com.be.be.coverletter;
 
+import com.be.be.ai.LlmCallLog;
+import com.be.be.ai.LlmCallLogService;
 import com.be.be.application.CoverLetterItem;
 import com.be.be.application.CoverLetterItemRepository;
 import com.be.be.application.JobApplicationStatus;
@@ -24,6 +26,7 @@ public class CoverLetterService {
     private final CoverLetterEditRepository editRepository;
     private final DraftExperienceRepository draftExperienceRepository;
     private final DraftCompanyInfoSnapshotRepository companySnapshotRepository;
+    private final LlmCallLogService llmCallLogService;
 
     public CoverLetterService(
             DemoUserService demoUserService,
@@ -32,7 +35,8 @@ public class CoverLetterService {
             CoverLetterDraftRepository draftRepository,
             CoverLetterEditRepository editRepository,
             DraftExperienceRepository draftExperienceRepository,
-            DraftCompanyInfoSnapshotRepository companySnapshotRepository
+            DraftCompanyInfoSnapshotRepository companySnapshotRepository,
+            LlmCallLogService llmCallLogService
     ) {
         this.demoUserService = demoUserService;
         this.generationService = generationService;
@@ -41,6 +45,7 @@ public class CoverLetterService {
         this.editRepository = editRepository;
         this.draftExperienceRepository = draftExperienceRepository;
         this.companySnapshotRepository = companySnapshotRepository;
+        this.llmCallLogService = llmCallLogService;
     }
 
     public CoverLetterDtos.GenerationAcceptedResponse requestDraft(
@@ -99,12 +104,15 @@ public class CoverLetterService {
         String displayContent = draft.isCompleted() ? draft.displayContent() : null;
         Integer charCount = displayContent == null ? null : codePointCount(displayContent);
         Integer charLimit = draft.getItem().getCharLimit();
+        CoverLetterDtos.LlmCallMetadataResponse llmCall = llmCallLogService.latestSuccessfulDraftCall(draftId)
+                .map(CoverLetterService::toLlmCallMetadata)
+                .orElse(null);
         return new CoverLetterDtos.DraftDetailResponse(
                 draft.getId(), draft.getItem().getId(), draft.getDraftNo(), draft.getGenerationStatus().name(),
                 isSelected(draft, draft.getItem()), draft.getContent(),
                 draft.getEdit() == null ? null : draft.getEdit().getContent(), displayContent,
                 charCount, charLimit, isOverLimit(charCount, charLimit), draft.getErrorCode(), draft.getErrorMessage(),
-                experiences, companyInformation, draft.getCreatedAt(), draft.getFinishedAt()
+                experiences, companyInformation, llmCall, draft.getCreatedAt(), draft.getFinishedAt()
         );
     }
 
@@ -215,5 +223,13 @@ public class CoverLetterService {
 
     private static boolean isOverLimit(Integer count, Integer limit) {
         return count != null && limit != null && count > limit;
+    }
+
+    private static CoverLetterDtos.LlmCallMetadataResponse toLlmCallMetadata(LlmCallLog call) {
+        return new CoverLetterDtos.LlmCallMetadataResponse(
+                call.getProvider(), call.getRequestedModel(), call.getActualModel(), call.getPromptVersion(),
+                call.getProviderRequestId(), call.getPromptTokens(), call.getCompletionTokens(),
+                call.getTotalTokens(), call.getFinishReason(), call.getLatencyMs(), call.getCreatedAt()
+        );
     }
 }

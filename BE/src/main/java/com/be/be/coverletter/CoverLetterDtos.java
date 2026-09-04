@@ -48,6 +48,7 @@ public final class CoverLetterDtos {
     ) {
     }
 
+    @Schema(name = "CoverLetterItemDetailResponse")
     public record ItemDetailResponse(
             Long coverLetterId,
             Long applicationId,
@@ -80,6 +81,22 @@ public final class CoverLetterDtos {
     ) {
     }
 
+    @Schema(description = "실제 OpenAI 호출에서 확인된 모델 및 사용량. 생성 완료 전에는 null입니다.")
+    public record LlmCallMetadataResponse(
+            String provider,
+            String requestedModel,
+            @Schema(nullable = true) String actualModel,
+            String promptVersion,
+            @Schema(nullable = true) String providerRequestId,
+            @Schema(nullable = true) Integer promptTokens,
+            @Schema(nullable = true) Integer completionTokens,
+            @Schema(nullable = true) Integer totalTokens,
+            @Schema(nullable = true) String finishReason,
+            long latencyMs,
+            LocalDateTime calledAt
+    ) {
+    }
+
     @Schema(description = "초안 생성 상태와 최종 표시 본문 및 생성 근거")
     public record DraftDetailResponse(
             Long draftId,
@@ -97,6 +114,7 @@ public final class CoverLetterDtos {
             @Schema(description = "FAILED일 때 사용자에게 표시할 오류 메시지", nullable = true) String errorMessage,
             List<UsedExperienceResponse> usedExperiences,
             List<UsedCompanyInfoResponse> usedCompanyInformation,
+            @Schema(types = {"object", "null"}) LlmCallMetadataResponse llmCall,
             LocalDateTime createdAt,
             LocalDateTime finishedAt
     ) {

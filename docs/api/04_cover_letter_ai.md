@@ -8,10 +8,11 @@
 - 새 초안 요청마다 새로운 `COVER_LETTER_DRAFT`를 만들고 기존 초안과 수정본을 덮어쓰지 않습니다.
 - 생성 완료 후 어떤 경험과 기업 정보를 실제로 사용했는지 초안별 스냅샷으로 저장합니다.
 - AI가 반환한 경험·기업 정보 ID는 서버가 소유권과 대상 기업을 재검증합니다.
+- 응답 구조는 OpenAI Structured Outputs의 JSON Schema로 강제하고 Java record로 변환합니다.
 - 기업명·직무·업종·공고 키워드는 `JOB_APPLICATION.posting_snapshot`의 읽기 전용 값입니다.
 - SSE 스트리밍은 사용하지 않고 `202 Accepted` 후 상태 조회 Polling으로 완료 여부를 확인합니다.
 
-경험 후보를 LLM에 전달하는 구체적인 방식은 아직 합의 전입니다. API는 서버가 경험 후보를 선택하는 구조로 유지하고, 전략은 서버 내부 구현으로 교체할 수 있게 합니다.
+MVP는 현재 사용자의 저장 경험 전체를 후보로 전달합니다. 정상 LLM 호출 한 번에서 문항·공고와 가장 적합한 핵심 경험 1개를 선택하고, 문항에 꼭 필요할 때만 보조 경험 1개를 추가합니다. 외부 API에는 이 내부 선택 전략을 노출하지 않습니다.
 
 ## Polling 규칙
 
@@ -101,7 +102,6 @@ PENDING 초안 저장
   "selectedExperiences": [
     {
       "experienceId": 11,
-      "priority": 1,
       "matchReason": "문제 해결 과정과 정량 성과가 문항 의도와 일치함"
     }
   ],
@@ -121,9 +121,10 @@ PENDING 초안 저장
 | `422` | `EXPERIENCE_REQUIRED` | 저장된 경험이 한 건도 없음 |
 | `503` | `LLM_UNAVAILABLE` | 생성 작업을 접수할 수 없음 |
 
-`202`를 반환한 뒤 발생한 모델 오류·응답 검증 오류는 HTTP 오류로 다시 전달하지 않고 Polling 응답의 `FAILED` 상태와 안전한 오류 코드로 제공합니다. 현재 목 생성기 단계에는 별도 `429` 제한을 두지 않습니다.
+`202`를 반환한 뒤 발생한 모델 오류·응답 검증 오류는 HTTP 오류로 다시 전달하지 않고 Polling 응답의 `FAILED` 상태와 안전한 오류 코드로 제공합니다. OpenAI 호출은 정상 1회이며 일시 오류나 검증 실패일 때만 최대 1회 더 시도합니다.
 
 비동기 처리 중 발생한 LLM 실패는 초안 행의 `FAILED` 상태로 기록합니다.
+기본 30분 이상 대기한 `PENDING` 또는 3분 이상 실행한 `GENERATING` 작업은 `DRAFT_TIMED_OUT`으로 종료됩니다.
 
 ## 문항별 초안 목록
 
@@ -191,6 +192,19 @@ GET /api/v1/cover-letter-drafts/{draftId}
       "referenceDate": "2026-08-01"
     }
   ],
+  "llmCall": {
+    "provider": "OPENAI",
+    "requestedModel": "gpt-4o",
+    "actualModel": "gpt-4o-2024-08-06",
+    "promptVersion": "cover-letter-generation-v1",
+    "providerRequestId": "chatcmpl-example",
+    "promptTokens": 2450,
+    "completionTokens": 720,
+    "totalTokens": 3170,
+    "finishReason": "stop",
+    "latencyMs": 5320,
+    "calledAt": "2026-09-03T12:00:08"
+  },
   "createdAt": "2026-09-03T12:00:00Z",
   "finishedAt": "2026-09-03T12:00:08Z"
 }

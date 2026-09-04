@@ -58,3 +58,6 @@ Thumbs.db
 # ==============================
 *.log
 logs/
+
+*.pdf
+prompt_md/

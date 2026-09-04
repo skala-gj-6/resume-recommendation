@@ -1,4 +1,10 @@
 spring:
+  ai:
+    retry:
+      max-attempts: 1
+    openai:
+      api-key: test-key
+      max-retries: 0
   datasource:
     url: jdbc:h2:mem:resume_service_test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
@@ -14,3 +20,5 @@ app:
     enabled: true
     companies: classpath:company_seed.json
     company-infos: classpath:company_info_seed.json
+  demo-data:
+    enabled: true

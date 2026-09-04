@@ -5,7 +5,7 @@
 ## 문서를 읽을 때 알아둘 점
 
 - 현재 스키마는 마이그레이션 파일이 아니라 `spring.jpa.hibernate.ddl-auto=update`로 생성·갱신됩니다.
-- 실제 구현 테이블은 총 14개입니다.
+- 실제 구현 테이블은 총 15개입니다.
 - 컬럼명이 `_json` 또는 `_snapshot`으로 끝나더라도 현재 JSON 스냅샷은 PostgreSQL `JSON/JSONB`가 아닌 `TEXT`에 문자열로 저장됩니다.
 - JPA의 `cascade`와 데이터베이스의 `ON DELETE`는 다릅니다. 현재 모든 물리 FK 삭제 규칙은 `NO ACTION`입니다.
 - 희망 산업·희망 직무·보유 기술 프로필 테이블은 아직 구현되지 않았습니다.
@@ -79,6 +79,7 @@ erDiagram
 | 초안 | `COVER_LETTER_EDIT` | AI 초안별 사용자 최신 수정본 |
 | 초안 | `DRAFT_EXPERIENCE` | 초안에 실제 사용된 경험과 스냅샷 |
 | 초안 | `DRAFT_COMPANY_INFO_SNAPSHOT` | 초안에 실제 사용된 기업 정보 스냅샷 |
+| AI 운영 | `LLM_CALL_LOG` | 호출 시도별 모델·토큰·지연·오류 메타데이터 |
 
 ## 실제 FK 관계와 삭제 규칙
 
@@ -133,11 +134,12 @@ INDEX idx_experience_user_updated(user_id, updated_at)
 INDEX idx_company_info_company_id(company_id)
 INDEX idx_recommendation_run_user_requested(user_id, requested_at)
 INDEX idx_job_application_user_posting_updated(user_id, external_posting_id, updated_at)
+INDEX idx_llm_call_log_reference(operation_type, reference_id, created_at)
 ```
 
 ## dbdiagram.io 가져오기
 
-[`schema.sql`](schema.sql)은 현재 구현된 14개 JPA 엔티티를 기준으로 작성한 PostgreSQL DDL입니다. dbdiagram.io의 `Import → PostgreSQL`에서 사용할 수 있습니다.
+현재 물리 스키마는 15개 JPA 엔티티와 `ddl-auto` 설정으로 생성합니다. 별도의 수동 DDL 파일은 아직 제공하지 않습니다.
 
 ## 선택 초안 무결성
 
