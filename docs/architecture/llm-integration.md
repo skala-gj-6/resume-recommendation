@@ -6,7 +6,7 @@
 
 ```text
 OPENAI_API_KEY=<필수>
-OPENAI_BASE_URL=https://api.openai.com
+OPENAI_BASE_URL=https://api.openai.com/v1
 OPENAI_TIMEOUT=45s
 LLM_MODEL=gpt-4o
 LLM_TEMPERATURE=0.2
@@ -64,6 +64,7 @@ BE/src/main/resources/schemas/cover-letter-generation.json
 - 숫자 검증은 명백한 정량 환각을 차단하는 안전망이며, 문장 의미의 진실성을 완전히 증명하지는 못합니다.
 - 실패는 API 키나 공급자 원문을 노출하지 않고 `LLM_TIMEOUT`, `LLM_RATE_LIMITED`, `LLM_UNAVAILABLE`, `LLM_RESPONSE_INVALID`, `LLM_CONFIGURATION_ERROR` 등의 안전한 코드로 변환합니다.
 - 비동기 초안 오류는 Polling 응답에 `generationStatus=FAILED`로 저장합니다.
+- 오래 대기하거나 실행 제한 시간을 넘긴 초안은 `DRAFT_TIMED_OUT`으로 종료해 같은 문항의 다음 요청이 가능하게 합니다.
 
 ## 사용량과 실제 모델 확인
 

@@ -48,6 +48,7 @@ public final class CoverLetterDtos {
     ) {
     }
 
+    @Schema(name = "CoverLetterItemDetailResponse")
     public record ItemDetailResponse(
             Long coverLetterId,
             Long applicationId,
@@ -113,7 +114,7 @@ public final class CoverLetterDtos {
             @Schema(description = "FAILED일 때 사용자에게 표시할 오류 메시지", nullable = true) String errorMessage,
             List<UsedExperienceResponse> usedExperiences,
             List<UsedCompanyInfoResponse> usedCompanyInformation,
-            @Schema(nullable = true) LlmCallMetadataResponse llmCall,
+            @Schema(types = {"object", "null"}) LlmCallMetadataResponse llmCall,
             LocalDateTime createdAt,
             LocalDateTime finishedAt
     ) {

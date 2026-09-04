@@ -9,7 +9,7 @@ spring:
       max-attempts: 1
     openai:
       api-key: "${OPENAI_API_KEY}"
-      base-url: "${OPENAI_BASE_URL:https://api.openai.com}"
+      base-url: "${OPENAI_BASE_URL:https://api.openai.com/v1}"
       timeout: "${OPENAI_TIMEOUT:45s}"
       max-retries: 0
       chat:
@@ -68,3 +68,7 @@ app:
       core-size: "${DRAFT_EXECUTOR_CORE_SIZE:2}"
       max-size: "${DRAFT_EXECUTOR_MAX_SIZE:4}"
       queue-capacity: "${DRAFT_EXECUTOR_QUEUE_CAPACITY:20}"
+    draft-recovery:
+      pending-stale-after: "${DRAFT_PENDING_STALE_AFTER:30m}"
+      generating-stale-after: "${DRAFT_GENERATING_STALE_AFTER:3m}"
+      scan-interval: "${DRAFT_RECOVERY_SCAN_INTERVAL:1m}"

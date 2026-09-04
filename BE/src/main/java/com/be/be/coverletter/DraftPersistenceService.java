@@ -77,7 +77,7 @@ public class DraftPersistenceService {
 
     @Transactional
     public CoverLetterGenerator.GenerationContext startAndLoadContext(Long draftId) {
-        CoverLetterDraft draft = draftRepository.findById(draftId)
+        CoverLetterDraft draft = draftRepository.findLockedById(draftId)
                 .orElseThrow(() -> new IllegalStateException("draft not found: " + draftId));
         draft.startGenerating();
         CoverLetterItem item = draft.getItem();
@@ -116,7 +116,7 @@ public class DraftPersistenceService {
             CoverLetterGenerator.GenerationContext context,
             CoverLetterGenerator.GenerationResult result
     ) {
-        CoverLetterDraft draft = draftRepository.findById(draftId)
+        CoverLetterDraft draft = draftRepository.findLockedById(draftId)
                 .orElseThrow(() -> new IllegalStateException("draft not found: " + draftId));
         if (context == null || !draftId.equals(context.draftId())) {
             throw new IllegalStateException("generation context does not match draft");
@@ -167,7 +167,7 @@ public class DraftPersistenceService {
 
     @Transactional
     public void fail(Long draftId, String code, String message) {
-        draftRepository.findById(draftId).ifPresent(draft -> {
+        draftRepository.findLockedById(draftId).ifPresent(draft -> {
             if (!draft.isCompleted() && draft.getGenerationStatus() != DraftGenerationStatus.FAILED) {
                 draft.fail(code, message);
             }

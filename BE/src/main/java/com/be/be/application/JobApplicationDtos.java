@@ -46,6 +46,7 @@ public final class JobApplicationDtos {
         }
     }
 
+    @Schema(name = "JobApplicationItemResponse")
     public record ItemResponse(
             Long coverLetterId,
             int questionOrder,
@@ -58,7 +59,7 @@ public final class JobApplicationDtos {
     ) {
     }
 
-    @Schema(description = "지원 프로젝트와 포함 문항의 상세 응답")
+    @Schema(name = "JobApplicationDetailResponse", description = "지원 프로젝트와 포함 문항의 상세 응답")
     public record DetailResponse(
             Long applicationId,
             Long sourceRecommendationItemId,
@@ -74,6 +75,7 @@ public final class JobApplicationDtos {
     ) {
     }
 
+    @Schema(name = "JobApplicationListItemResponse")
     public record ListItemResponse(
             Long applicationId,
             String externalPostingId,

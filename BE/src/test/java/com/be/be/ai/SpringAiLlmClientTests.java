@@ -1,5 +1,7 @@
 package com.be.be.ai;
 
+import com.openai.core.http.Headers;
+import com.openai.errors.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.AssistantMessage;
@@ -18,6 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SpringAiLlmClientTests {
 
@@ -57,6 +60,35 @@ class SpringAiLlmClientTests {
         assertEquals("{\"input\":true}", model.prompt.getUserMessage().getText());
     }
 
+    @Test
+    void mapsOpenAiNotFoundToConfigurationFailure() {
+        ChatModel model = new NotFoundChatModel();
+        SpringAiLlmClient client = new SpringAiLlmClient(
+                ChatClient.builder(model).build(),
+                new AiProperties()
+        );
+
+        LlmException exception = assertThrows(
+                LlmException.class,
+                () -> client.generateEntity(
+                        "system prompt",
+                        "{\"input\":true}",
+                        """
+                                {
+                                  "type":"object",
+                                  "properties":{"content":{"type":"string"}},
+                                  "required":["content"],
+                                  "additionalProperties":false
+                                }
+                                """,
+                        TestResponse.class
+                )
+        );
+
+        assertEquals("LLM_CONFIGURATION_ERROR", exception.getCode());
+        assertFalse(exception.isRetryable());
+    }
+
     private record TestResponse(String content) {
     }
 
@@ -78,6 +110,21 @@ class SpringAiLlmClientTests {
                             .usage(new DefaultUsage(100, 25, 125))
                             .build()
             );
+        }
+
+        @Override
+        public ChatOptions getOptions() {
+            return OpenAiChatOptions.builder().build();
+        }
+    }
+
+    private static final class NotFoundChatModel implements ChatModel {
+
+        @Override
+        public ChatResponse call(Prompt prompt) {
+            throw NotFoundException.builder()
+                    .headers(Headers.builder().build())
+                    .build();
         }
 
         @Override

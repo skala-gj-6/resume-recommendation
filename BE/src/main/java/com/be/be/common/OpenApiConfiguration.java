@@ -2,12 +2,17 @@ package com.be.be.common;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.ComposedSchema;
+import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.tags.Tag;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Configuration
 public class OpenApiConfiguration {
@@ -39,5 +44,39 @@ public class OpenApiConfiguration {
                         new Tag().name("5. 지원 프로젝트").description("공고별 지원 프로젝트와 자기소개서 문항 생성·조회"),
                         new Tag().name("6. 자기소개서 초안").description("문항별 비동기 초안 생성, Polling, 선택, 수정 및 검토")
                 ));
+    }
+
+    @Bean
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public OpenApiCustomizer nullableReferenceCustomizer() {
+        return openApi -> {
+            if (openApi.getComponents() == null || openApi.getComponents().getSchemas() == null) {
+                return;
+            }
+            openApi.getComponents().getSchemas().values().forEach(schema -> {
+                Map<String, Schema> properties = schema.getProperties();
+                if (properties != null) {
+                    properties.replaceAll((name, property) -> nullableReference(property));
+                }
+            });
+        };
+    }
+
+    private static Schema<?> nullableReference(Schema<?> property) {
+        Set<String> types = property.getTypes();
+        boolean nullable = types != null && types.contains("null");
+        if (property.get$ref() == null || !nullable) {
+            return property;
+        }
+
+        Schema<Object> reference = new Schema<>();
+        reference.set$ref(property.get$ref());
+        Schema<Object> nullValue = new Schema<>();
+        nullValue.setTypes(Set.of("null"));
+
+        ComposedSchema replacement = new ComposedSchema();
+        replacement.setOneOf(List.of(reference, nullValue));
+        replacement.setDescription(property.getDescription());
+        return replacement;
     }
 }

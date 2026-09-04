@@ -2,6 +2,7 @@ package com.be.be.ai;
 
 import com.openai.errors.BadRequestException;
 import com.openai.errors.InternalServerException;
+import com.openai.errors.NotFoundException;
 import com.openai.errors.OpenAIIoException;
 import com.openai.errors.OpenAIRetryableException;
 import com.openai.errors.PermissionDeniedException;
@@ -82,6 +83,7 @@ public class SpringAiLlmClient implements LlmClient {
             }
             if (hasCause(exception, UnauthorizedException.class)
                     || hasCause(exception, PermissionDeniedException.class)
+                    || hasCause(exception, NotFoundException.class)
                     || hasCause(exception, BadRequestException.class)
                     || hasCause(exception, UnprocessableEntityException.class)) {
                 throw configurationFailure(exception);

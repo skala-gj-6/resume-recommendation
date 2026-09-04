@@ -232,7 +232,18 @@
     "deadline": "2026-09-13",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0006-5970",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0007-8932",
@@ -260,7 +271,18 @@
     "deadline": "2026-09-13",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0007-8932",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0008-7828",
@@ -292,7 +314,18 @@
     "deadline": "2026-09-14",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0008-7828",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0009-9338",
@@ -322,7 +355,18 @@
     "deadline": "2026-09-17",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0009-9338",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0010-1020",
@@ -352,7 +396,18 @@
     "deadline": "2026-09-24",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0010-1020",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0011-4331",
@@ -378,7 +433,18 @@
     "deadline": "2026-10-02",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0011-4331",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0012-7206",
@@ -410,7 +476,18 @@
     "deadline": "2026-09-13",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0012-7206",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0013-7776",
@@ -436,7 +513,18 @@
     "deadline": "2026-10-03",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0013-7776",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0014-5126",
@@ -464,7 +552,18 @@
     "deadline": "2026-10-02",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0014-5126",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0015-1487",
@@ -494,7 +593,18 @@
     "deadline": "2026-10-03",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0015-1487",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0016-5891",
@@ -520,7 +630,18 @@
     "deadline": "2026-10-03",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0016-5891",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0017-2946",
@@ -548,7 +669,18 @@
     "deadline": "2026-09-20",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0017-2946",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0018-2665",
@@ -578,7 +710,18 @@
     "deadline": "2026-09-23",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0018-2665",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0019-4252",
@@ -608,7 +751,18 @@
     "deadline": "2026-09-16",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0019-4252",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0020-6068",
@@ -640,7 +794,18 @@
     "deadline": "2026-09-24",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0020-6068",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0021-6638",
@@ -672,7 +837,18 @@
     "deadline": "2026-09-22",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0021-6638",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0022-9985",
@@ -704,7 +880,18 @@
     "deadline": "2026-09-17",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0022-9985",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0023-8085",
@@ -734,7 +921,18 @@
     "deadline": "2026-09-15",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0023-8085",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0024-3244",
@@ -764,7 +962,18 @@
     "deadline": "2026-09-23",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0024-3244",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0025-3930",
@@ -794,7 +1003,18 @@
     "deadline": "2026-09-29",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0025-3930",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0026-3490",
@@ -820,7 +1040,18 @@
     "deadline": "2026-09-16",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0026-3490",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0027-6828",
@@ -848,7 +1079,18 @@
     "deadline": "2026-09-20",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0027-6828",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0028-9194",
@@ -880,7 +1122,18 @@
     "deadline": "2026-10-03",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0028-9194",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0029-6120",
@@ -908,7 +1161,18 @@
     "deadline": "2026-10-01",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0029-6120",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   },
   {
     "externalPostingId": "POSTING-EXT-0030-5701",
@@ -938,6 +1202,17 @@
     "deadline": "2026-09-26",
     "active": true,
     "sourceUrl": "https://mock-job-board.com/jobs/POSTING-EXT-0030-5701",
-    "questions": []
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "지원 동기와 입사 후 이루고 싶은 목표를 작성해 주세요.",
+        "charLimit": 700
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "지원 직무와 관련된 경험과 본인의 강점을 작성해 주세요.",
+        "charLimit": 1000
+      }
+    ]
   }
 ]

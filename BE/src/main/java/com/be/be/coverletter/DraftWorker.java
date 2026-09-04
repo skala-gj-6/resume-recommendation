@@ -24,7 +24,7 @@ public class DraftWorker {
             CoverLetterGenerator.GenerationResult result = generator.generate(context);
             persistence.complete(draftId, context, result);
         } catch (LlmException exception) {
-            log.warn("Draft generation failed: draftId={}, code={}", draftId, exception.getCode());
+            log.warn("Draft generation failed: draftId={}, code={}", draftId, exception.getCode(), exception);
             persistence.fail(draftId, exception.getCode(), exception.getSafeMessage());
         } catch (RuntimeException exception) {
             log.error("Unexpected draft generation failure: draftId={}", draftId, exception);

@@ -154,4 +154,4 @@ COVER_LETTER_EDIT → COVER_LETTER_DRAFT → JOB_APPLICATION.user_id
 
 ## 11. 미니프로젝트 운영 한계
 
-Spring 애플리케이션 내부 비동기 처리만 사용하면 서버 재시작 순간의 작업을 이어서 실행할 수 없습니다. 현재 구현은 시작 시 남아 있는 `PENDING` 또는 `GENERATING` 초안을 `FAILED(DRAFT_INTERRUPTED)`로 전환해 무한 Polling을 막고, 사용자가 새 초안을 요청하도록 안내합니다. 운영 서비스로 확장할 때 재개 가능한 작업 큐와 별도 작업 관리 구조를 검토합니다.
+Spring 애플리케이션 내부 비동기 처리만 사용하면 서버 재시작 순간의 작업을 이어서 실행할 수 없습니다. 현재 구현은 시작 시 남아 있는 `PENDING` 또는 `GENERATING` 초안을 `FAILED(DRAFT_INTERRUPTED)`로 전환합니다. 실행 중에도 1분마다 확인하여 기본 30분 이상 대기한 `PENDING`과 3분 이상 실행한 `GENERATING` 초안을 `FAILED(DRAFT_TIMED_OUT)`로 전환해 무한 Polling과 후속 요청의 영구 차단을 막습니다. 운영 서비스로 확장할 때 재개 가능한 작업 큐와 별도 작업 관리 구조를 검토합니다.

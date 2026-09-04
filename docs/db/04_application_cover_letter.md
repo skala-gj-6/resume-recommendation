@@ -207,11 +207,14 @@ Mock 공고에 questions가 없음   → 사용자가 직접 입력한 문항을
 | `error_code` | VARCHAR(100) | NULL 허용 | 안전한 실패 코드 |
 | `error_message` | TEXT | NULL 허용 | 사용자 노출용 실패 메시지 |
 | `created_at` | TIMESTAMP | NOT NULL | 생성 요청 시각 |
+| `started_at` | TIMESTAMP | NULL 허용 | 실제 생성 작업 시작 시각 |
 | `finished_at` | TIMESTAMP | NULL 허용 | 성공 또는 실패 종료 시각 |
 
 고유 제약: `UNIQUE(cover_letter_id, draft_no)`
 
 같은 문항에 `PENDING` 또는 `GENERATING` 초안이 있으면 새 요청을 거절합니다. 서로 다른 문항은 동시에 생성할 수 있습니다. 이 경쟁 조건은 문항 잠금과 서비스 로직으로 제어하며 별도의 DB 고유 제약은 없습니다.
+
+서버는 1분마다 오래된 작업을 확인합니다. 기본적으로 30분 이상 대기한 `PENDING` 또는 3분 이상 실행 중인 `GENERATING` 초안은 `FAILED(DRAFT_TIMED_OUT)`로 전환합니다.
 
 ## COVER_LETTER_EDIT — 사용자 최신 수정본
 
