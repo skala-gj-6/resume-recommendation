@@ -59,7 +59,7 @@ BE/src/main/resources/schemas/cover-letter-generation.json
 ## 서버 검증과 오류
 
 - 경험 구조화는 STAR 필드 길이, 키워드 유형과 중복, `missingFields` 일치 여부, 원문에 없던 숫자 추가 여부를 검사합니다.
-- 초안은 본문이 제한의 70% 이상이고 상한을 넘지 않는지, 중간점이 없는지, 경험과 기업 정보 ID가 후보에 포함되는지 검사합니다.
+- 목표 분량과 최소 분량은 LLM 작성 지침으로만 사용합니다. 서버는 빈 본문과 글자 수 상한 초과, 중간점 사용, 경험과 기업 정보 ID가 후보에 포함되는지를 검사합니다.
 - 본문 숫자는 실제 선택 경험, 실제 선택 기업 정보, 공고 스냅샷 또는 문항에 존재하는 숫자만 허용합니다.
 - 숫자 검증은 명백한 정량 환각을 차단하는 안전망이며, 문장 의미의 진실성을 완전히 증명하지는 못합니다.
 - 실패는 API 키나 공급자 원문을 노출하지 않고 `LLM_TIMEOUT`, `LLM_RATE_LIMITED`, `LLM_UNAVAILABLE`, `LLM_RESPONSE_INVALID`, `LLM_CONFIGURATION_ERROR` 등의 안전한 코드로 변환합니다.
