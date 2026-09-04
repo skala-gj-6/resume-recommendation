@@ -1,6 +1,5 @@
 package com.be.be.coverletter;
 
-import com.be.be.ai.AiProperties;
 import com.be.be.ai.LlmException;
 import com.be.be.coverletter.CoverLetterGenerator.CompanyInfoCandidate;
 import com.be.be.coverletter.CoverLetterGenerator.ExperienceCandidate;
@@ -23,11 +22,9 @@ public class CoverLetterGenerationValidator {
 
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+(?:[.,]\\d+)*");
 
-    private final AiProperties properties;
     private final ObjectMapper objectMapper;
 
-    public CoverLetterGenerationValidator(AiProperties properties, ObjectMapper objectMapper) {
-        this.properties = properties;
+    public CoverLetterGenerationValidator(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
@@ -40,13 +37,6 @@ public class CoverLetterGenerationValidator {
             int characterCount = content.codePointCount(0, content.length());
             if (context.charLimit() != null && characterCount > context.charLimit()) {
                 throw new IllegalArgumentException("content exceeds charLimit");
-            }
-            int baseLength = context.charLimit() == null
-                    ? properties.getDefaultTargetChars()
-                    : context.charLimit();
-            int minimumLength = Math.max(1, (int) Math.ceil(baseLength * properties.getMinimumRatio()));
-            if (characterCount < minimumLength) {
-                throw new IllegalArgumentException("content is shorter than minimumChars");
             }
             if (content.indexOf('·') >= 0) {
                 throw new IllegalArgumentException("content must not contain a middle dot");

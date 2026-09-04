@@ -1,6 +1,5 @@
 package com.be.be.coverletter;
 
-import com.be.be.ai.AiProperties;
 import com.be.be.ai.LlmException;
 import com.be.be.coverletter.CoverLetterGenerator.CompanyInfoCandidate;
 import com.be.be.coverletter.CoverLetterGenerator.ExperienceCandidate;
@@ -17,10 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CoverLetterGenerationValidatorTests {
 
-    private final CoverLetterGenerationValidator validator = new CoverLetterGenerationValidator(
-            new AiProperties(),
-            new ObjectMapper()
-    );
+    private final CoverLetterGenerationValidator validator = new CoverLetterGenerationValidator(new ObjectMapper());
 
     @Test
     void acceptsOneCallResultThatSelectsCandidateIds() {
@@ -70,7 +66,7 @@ class CoverLetterGenerationValidatorTests {
     }
 
     @Test
-    void rejectsTooShortContentAndUnsupportedNumericClaim() {
+    void acceptsShortContentButRejectsUnsupportedNumericClaim() {
         GenerationResult tooShort = new GenerationResult(
                 "짧은 본문입니다.",
                 List.of(new SelectedExperience(11L, "적합한 경험")),
@@ -82,7 +78,9 @@ class CoverLetterGenerationValidatorTests {
                 List.of()
         );
 
-        assertThrows(LlmException.class, () -> validator.validate(context(120), tooShort));
+        GenerationResult validated = validator.validate(context(120), tooShort);
+
+        assertEquals("짧은 본문입니다.", validated.content());
         assertThrows(LlmException.class, () -> validator.validate(context(120), unsupportedNumber));
     }
 
