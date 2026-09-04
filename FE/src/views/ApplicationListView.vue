@@ -179,7 +179,7 @@ function statusChipClass(status) {
               <div
                 v-for="item in detailCache.get(app.applicationId).items"
                 :key="item.coverLetterId"
-                class="grid grid-cols-1 md:grid-cols-[64px_1fr_90px_70px] gap-4 items-start py-4 border-b border-line-soft"
+                class="grid grid-cols-1 md:grid-cols-[64px_1fr_90px_78px_70px] gap-4 items-start py-4 border-b border-line-soft"
               >
                 <span
                   class="text-[11.5px] font-extrabold font-mono text-ink-sub bg-hover rounded px-2 py-1 text-center justify-self-start md:justify-self-auto"
@@ -196,6 +196,12 @@ function statusChipClass(status) {
                 </div>
                 <span class="text-xs text-ink-muted font-mono">
                   {{ item.charCount == null ? '—' : `${item.charCount}자` }}
+                </span>
+                <span
+                  class="text-[11px] font-semibold border rounded px-2 py-0.5 whitespace-nowrap justify-self-start text-center"
+                  :class="statusChipClass(item.status)"
+                >
+                  {{ ITEM_STATUS_LABELS[item.status] ?? item.status }}
                 </span>
                 <button
                   type="button"
