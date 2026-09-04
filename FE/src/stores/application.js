@@ -58,8 +58,22 @@ export const useApplicationStore = defineStore('application', () => {
     if (current.value) {
       const item = current.value.items?.find((it) => it.coverLetterId === coverLetterId)
       if (item) item.status = res.status ?? status
+      // 서버는 모든 문항이 REVIEWED가 되면 프로젝트도 REVIEWED로 올린다. 응답이 알려주는
+      // 프로젝트 상태를 그대로 반영해야 화면이 서버와 어긋나지 않는다.
+      if (res.applicationStatus) current.value.status = res.applicationStatus
     }
     return res
+  }
+
+  // 선택된 초안의 본문을 저장하면 서버가 해당 문항을 DRAFTING으로 되돌린다(CoverLetterService.saveEdit).
+  // 저장 응답에는 상태가 없으므로 호출부가 이 함수로 화면 상태를 맞춘다.
+  function markItemDrafting(coverLetterId) {
+    if (!current.value) return false
+    const item = current.value.items?.find((it) => it.coverLetterId === coverLetterId)
+    if (!item || item.status !== 'REVIEWED') return false
+    item.status = 'DRAFTING'
+    current.value.status = 'DRAFTING'
+    return true
   }
 
   function resetQuestionDraft() {
@@ -79,6 +93,7 @@ export const useApplicationStore = defineStore('application', () => {
     fetchDetail,
     fetchList,
     patchItemStatus,
+    markItemDrafting,
     resetQuestionDraft,
   }
 })
