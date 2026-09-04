@@ -1,6 +1,6 @@
-# FE
+# FE — 써드림 프론트엔드
 
-This template should help get you started developing with Vue 3 in Vite.
+Vue 3 + Vite 기반 프론트엔드입니다.
 
 ## Recommended IDE Setup
 

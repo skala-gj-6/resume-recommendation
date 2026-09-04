@@ -4,7 +4,7 @@
 
 `docs/`에 DB·API·사용자 흐름 설계가 확정되어 있고 BE(Spring)와 MOCK(공고·추천 제공자)은 데모 로그인, 경험, 추천 저장, 지원 프로젝트, 문항별 OpenAI 초안·Polling·수정본까지 구현된 상태다. 반면 `FE/`는 `create-vue` 스캐폴딩 그대로이고 라우트가 비어 있다(`FE/src/router/index.js`의 `routes: []`).
 
-이 계획의 목표는 [user-flow.md](docs/architecture/user-flow.md)의 **F-A(신규 사용자: 전체 공고 탐색 → 로그인 → 경험 등록 → 초안 생성)**와 **F-B(재방문 사용자: 맞춤 추천 → 초안 생성)**를 끝까지 돌릴 수 있는 Vue 3 프론트엔드를 만드는 것이다. 화면 디자인은 `FE/design/디자인2/자소서 프로토타입.dc.html` 프로토타입(list / detail / login / create / result / docs / expList / expEdit)을 기준으로 한다.
+이 계획의 목표는 [user-flow.md](docs/architecture/user-flow.md)의 **F-A(신규 사용자: 전체 공고 탐색 → 로그인 → 경험 등록 → 초안 생성)**와 **F-B(재방문 사용자: 맞춤 추천 → 초안 생성)**를 끝까지 돌릴 수 있는 Vue 3 프론트엔드를 만드는 것이다. 화면 디자인은 `FE/design/디자인2/자소서 프로토타입.dc.html` 프로토타입(list / detail / login / create / result / docs / expList / expEdit)을 기준으로 한다. **2026-09-04 개정본**이 최신이며, 이 개정에서 서비스명(`초안`→`써드림`), 공고 상세의 기업 부가정보 2개 섹션, 결과 화면의 문장별 근거 밑줄이 추가됐다(1절 참조).
 
 이번 문서는 **계획만** 다루며 코드는 작성하지 않는다.
 
@@ -20,6 +20,7 @@
 | 경험 등록 UX | **문서 기준 엄격 적용** — 빠른 추가 모달·인라인 저장 폼 제거, 항상 `구조화 → 확인 → 저장` 전체 페이지 흐름 |
 | 맞춤 추천(F-B) | **별도 페이지 신규 설계** (`/recommendations`), 헤더 nav에 항목 추가 |
 | 스타일링 | **PrimeVue(가능한 컴포넌트 최대 활용) + Tailwind**, 디자인 레퍼런스의 시각 언어는 최대한 보존 |
+| 서비스명 | **써드림** (프로토타입 2026-09-04 개정에서 `초안`→`써드림`). 헤더 로고·`index.html` title·README 반영 완료 |
 
 ---
 
@@ -38,6 +39,25 @@
 | "채용정보 제공: 사람인 / 자체 DB 배치 수집 09/03 06:10" | 공고 마스터·수집 배치 없음, Mock Recruitment Provider | **"목 채용 데이터(Mock Recruitment Provider) 제공"**으로 문구 교체. 허위 출처 표기 금지 |
 | nav 3개(공고 찾기 / 내 자소서 / 내 경험) | F-B 맞춤 추천 진입점 필요 | nav에 **"맞춤 추천"** 추가(로그인 시에만 노출) |
 | 역량 태그 "AI로 뽑기" 별도 버튼 | 키워드는 `POST /experiences/structure` 응답에 함께 옴 | 구조화 실행 결과의 `keywords`를 태그 패널에 채우고, 태그만 재추출하는 별도 API는 만들지 않음(수동 추가/삭제는 허용) |
+| **본문 문장별 근거 밑줄**(2색 점선 + 카드 클릭 시 포커스) | `usedExperiences[]`는 **문항 단위**(`experienceId`/`title`/`priority`/`matchReason`). 문장↔경험 매핑 없음 | **미결정 — 추후 논의**(§1-1). BE 미완료 상태이므로 이번 계획에서 방침을 확정하지 않는다 |
+| 공고 상세 **「최근 이슈 및 채용 동향」**(분기별 지원 추이 막대차트 + 뉴스 3건) | Mock 공고 응답에 해당 필드 없음(`MOCK/data/mock_postings.json` 16개 필드) | **비로그인 공고 상세에서는 미구현**. 백엔드·MOCK을 수정하지 않는다. 추후 논의 |
+| 공고 상세 **「기업 정보」 카드**(설립·사원수·매출액·홈페이지) | Mock 공고 응답에 없음. 단 **로그인 경로**에는 `GET /companies/{companyId}`가 이미 존재 | 공고 상세(비로그인)에서는 **미구현**. `RecommendationItemView`에서는 기존 `GET /companies/{companyId}`의 `information[]`(`infoType`/`title`/`content`/`sourceUrl`/`referenceDate`)으로 **백엔드 변경 없이** 렌더 |
+
+
+### 1-1. 미결정 — 본문 문장별 근거 밑줄
+
+2026-09-04 개정 프로토타입의 결과 화면(`isResult`)에 추가된 인터랙션이며, **이번 계획에서는 방침을 확정하지 않는다**(백엔드 미완료).
+
+프로토타입 동작:
+
+- 초안 본문을 문장 단위로 쪼개 렌더하고, 근거가 된 경험의 인덱스에 따라 `EV_COLORS = ['#0066ff', '#00997a']` 점선 밑줄(`text-decoration: underline dotted`, 두께 2px, offset 5px)을 칠한다.
+- 우측 근거 카드 또는 문장을 클릭하면 `focusExp`가 잡히고, 해당 경험의 문장만 진하게 남고 나머지 문장은 `rgba(55,56,60,.42)`로 흐려진다. 카드도 같은 색 좌측 3px 보더로 대응된다.
+- 근거 패널은 접을 수 있고(`evidenceClosed`), 접히면 3열 그리드의 마지막 열이 `300px → 44px`("근거 열기" 세로 버튼)로 줄어든다.
+- 카드는 `공고`(이 경험이 답하는 공고 요구), `경험`(본문에서 뽑은 근거 문장 발췌), 사유, `본문 N문장이 이 경험에서 나왔습니다` 라벨을 보여준다.
+
+**막히는 지점**: 문장↔경험 매핑을 `docs/api/04_cover_letter_ai.md`의 어떤 응답도 제공하지 않는다. 결정이 필요한 선택지는 (a) LLM 응답·API에 인용 문장 배열 추가, (b) 밑줄을 빼고 근거 카드만 구현, (c) FE 문자열 매칭으로 근사(이 경우 "AI 매칭 근거" 라벨은 사실과 달라 문구 교체 필요).
+
+**그때까지의 구현 기준**: 4-7절의 `UsedExperiencePanel`은 `usedExperiences[]`의 `title`·`priority`·`matchReason`만 카드로 렌더한다. 근거 패널 접기/펼치기(`evidenceClosed`)와 3열 그리드 폭 변화는 데이터와 무관하므로 그대로 구현해도 된다.
 
 ---
 
@@ -169,6 +189,7 @@ VITE_MOCK_API_BASE_URL=/mock-api/api/v1   # Vite proxy → mock-api:8000
 | 상태 | `postingStore.detailCache`(Map). `questions.length`로 이후 분기 판단 |
 | 핵심 액션 | **[자소서 초안 생성]** → `useApplicationEntry()` 실행 |
 | 예외 | 404 `POSTING_NOT_FOUND` → 목록으로 안내, 502 → 재시도 |
+| 미구현 | 프로토타입의 「최근 이슈 및 채용 동향」·「기업 정보」 카드는 Mock 공고 응답에 데이터가 없어 **렌더하지 않는다**(1절). 백엔드·MOCK 수정 금지 |
 
 `useApplicationEntry(externalPostingId, recommendationItemId?)` 동작:
 
@@ -205,7 +226,7 @@ VITE_MOCK_API_BASE_URL=/mock-api/api/v1   # Vite proxy → mock-api:8000
 | API | `GET /recommendations/items/{recommendationItemId}` |
 | 상태 | `postingDetailAvailable === false`면 스냅샷만 렌더하고 "최신 공고 상세를 불러오지 못했습니다" 배너 |
 | 액션 | [지원하기] → `/applications/new?externalPostingId=...&recommendationItemId=...` |
-| 추가 | `companyInformation`을 사이드 패널에 렌더(프로토타입의 "기업 정보" 블록 재사용) |
+| 추가 | `GET /companies/{companyId}`의 `information[]`(`infoType`/`title`/`content`/`sourceUrl`/`referenceDate`)을 사이드 패널에 렌더(프로토타입의 "기업 정보"·"최근 이슈" 블록 재사용). **이 경로만 백엔드 변경 없이 기업 부가정보를 보여줄 수 있다** |
 
 ### 4-6. `ApplicationCreateView` — 가장 복잡한 화면
 
@@ -255,7 +276,7 @@ POST /api/v1/job-applications
 ```
 ┌ 좌: 문항 내비 (번호 · 상태 배지 · 문항 요약) + [전체 복사] [검토 완료]
 ├ 중: 문항 헤더(글자수/목표) · 초안 Textarea · [이 문항 재생성] [복사] [다음 문항] [저장]
-└ 우: 이 문항에 쓴 경험(usedExperiences) · 사용 기업 정보 · 초안 이력
+└ 우: 이 문항에 쓴 경험(usedExperiences) · 사용 기업 정보 · 초안 이력   ※ 문장별 근거 밑줄은 미결정(1-1절)
 ```
 
 | 액션 | API |
@@ -587,6 +608,7 @@ FE/src/
 ### Phase 5 — 초안 생성·Polling·편집 (F-A 14–15) ★ 핵심
 `draftStore` 폴링 엔진, `ApplicationWorkspaceView`(split), `DraftEditor`, 초안 이력·선택, 수정본 저장, 복사, 30초 타임아웃·`FAILED`·409 복구
 → **완료 기준**: 생성 → 1초 폴링 → 완료 본문 표시 → 수정 저장 → 재생성 시 새 초안 행 추가. 새로고침 후 진행 중 초안 폴링 복구
+→ **제외**: 문장별 근거 밑줄(1-1절 미결정). 근거 카드와 패널 접기까지만 구현한다
 
 ### Phase 6 — 내 자소서와 검토 상태
 `ApplicationListView`(Accordion), 문항 검토 완료 토글, 전체 복사

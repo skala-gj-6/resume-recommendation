@@ -20,7 +20,7 @@
   --color-success: #1ed45a;
 
   --font-sans: 'Pretendard JP', 'Pretendard Variable', Pretendard, system-ui, sans-serif;
-  --font-display: 'Gowun Batang', serif;
+  --font-display: Georgia, 'Gowun Batang', serif;
 
   --layout-max-width: 1440px;
   --layout-padding-x: 40px;

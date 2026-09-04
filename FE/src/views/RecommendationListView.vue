@@ -6,10 +6,11 @@ import PageContainer from '@/components/layout/PageContainer.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
-import DDayBadge from '@/components/common/DDayBadge.vue'
 import { useRecommendationStore } from '@/stores/recommendation'
 import { useExperienceStore } from '@/stores/experience'
 import { useApiError } from '@/composables/useApiError'
+import { dDayLabel, isDeadlineHot } from '@/utils/dday'
+import { formatMonthDay } from '@/utils/date'
 
 const router = useRouter()
 const recStore = useRecommendationStore()
@@ -65,10 +66,10 @@ function goExperiences() {
         class="container-page py-10 flex flex-col md:flex-row md:items-end justify-between gap-6"
       >
         <div>
-          <h1 class="font-display text-3xl font-bold m-0 mb-2">
+          <h1 class="font-display text-[36px] lg:text-[44px] font-bold tracking-[-0.04em] leading-[1.16] m-0 mb-3 text-pretty">
             저장한 경험으로 맞는 공고를 찾아드립니다
           </h1>
-          <p class="text-sm text-ink-muted m-0 max-w-[480px]">
+          <p class="text-[15px] text-ink-muted leading-[1.72] m-0 max-w-[520px]">
             저장된 경험의 키워드를 바탕으로 공고를 추천합니다. 버튼을 눌러야만 새로 추천을 받습니다.
           </p>
         </div>
@@ -110,46 +111,84 @@ function goExperiences() {
       />
 
       <template v-else>
+        <div class="flex items-baseline gap-4 mb-6 pb-2 border-b border-line">
+          <span class="text-[11px] tracking-[0.12em] uppercase text-ink-muted">
+            저장한 경험 기준 · 일치도순
+          </span>
+        </div>
+
         <div
           v-if="featured"
-          class="cursor-pointer bg-surface border border-line rounded-lg p-6 mb-4 hover:border-ink transition-colors"
+          class="grid grid-cols-1 lg:grid-cols-[8fr_4fr] gap-10 items-end pb-8 mb-8 border-b border-ink cursor-pointer"
           @click="openItem(featured.recommendationItemId)"
         >
-          <div class="flex items-center gap-2 text-xs text-ink-muted mb-2">
-            <span class="px-2 py-0.5 rounded-full bg-accent text-white font-semibold"
-              >추천 1순위</span
+          <div>
+            <div class="flex items-baseline gap-3 mb-3 flex-wrap">
+              <span class="text-[11px] tracking-[0.12em] uppercase text-accent font-bold">
+                추천 1순위
+              </span>
+              <span class="text-[13px] font-bold text-ink-sub">
+                {{ featured.company?.companyName }}
+              </span>
+              <span class="text-xs text-ink-muted">{{ featured.industry }}</span>
+              <span class="text-xs text-ink-muted font-mono">일치도 {{ featured.score }}</span>
+            </div>
+            <h2
+              class="m-0 mb-3 font-display text-[40px] font-bold leading-[1.24] tracking-[-0.04em] text-pretty"
             >
-            <span>{{ featured.company?.companyName }}</span>
-            <span>·</span>
-            <span>{{ featured.industry }}</span>
-            <span>·</span>
-            <span>일치도 {{ featured.score }}</span>
+              {{ featured.jobTitle }}
+            </h2>
+            <p class="m-0 text-[13px] text-ink-muted leading-[1.6] max-w-[640px] text-pretty">
+              {{ featured.recommendationReason }}
+            </p>
           </div>
-          <h2 class="text-xl font-semibold m-0 mb-2">{{ featured.jobTitle }}</h2>
-          <p class="text-sm text-ink-sub m-0 mb-3">{{ featured.recommendationReason }}</p>
-          <div class="flex items-center gap-3 text-sm text-ink-muted">
-            <DDayBadge :deadline="featured.deadline" />
-            <span class="truncate">{{ (featured.matchedKeywords || []).join(', ') }}</span>
+          <div class="text-left lg:text-right">
+            <div
+              class="font-display text-[36px] font-bold leading-none tracking-[-0.04em]"
+              :class="isDeadlineHot(featured.deadline) ? 'text-danger' : 'text-ink'"
+            >
+              {{ dDayLabel(featured.deadline) }}
+            </div>
+            <div class="text-xs text-ink-muted mt-2 font-mono">
+              ~{{ formatMonthDay(featured.deadline) }} · {{ featured.region }}
+            </div>
+            <div class="text-xs text-ink-muted mt-1">
+              {{ (featured.matchedKeywords || []).slice(0, 4).join(' · ') }}
+            </div>
           </div>
         </div>
 
-        <div class="divide-y divide-line border border-line rounded-lg overflow-hidden bg-surface">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12">
           <div
             v-for="item in restItems"
             :key="item.recommendationItemId"
-            class="p-5 cursor-pointer hover:bg-hover transition-colors"
+            class="cursor-pointer pt-5 pb-5 pr-4 border-t border-line-soft hover:bg-hover transition-colors"
             @click="openItem(item.recommendationItemId)"
           >
-            <div class="flex items-center gap-2 text-xs text-ink-muted mb-1">
-              <span>{{ item.company?.companyName }}</span>
-              <span>{{ item.region }}</span>
-              <span class="w-1 h-1 rounded-full bg-ink-faint" />
-              <DDayBadge :deadline="item.deadline" />
-              <span class="w-1 h-1 rounded-full bg-ink-faint" />
-              <span>일치도 {{ item.score }}</span>
+            <div class="flex items-baseline gap-2 mb-1">
+              <span class="text-[13.5px] font-bold text-ink-sub whitespace-nowrap">
+                {{ item.company?.companyName }}
+              </span>
+              <span class="text-[12.5px] text-ink-muted whitespace-nowrap">{{ item.region }}</span>
+              <div class="flex-1" />
+              <span class="text-[12px] text-ink-muted font-mono whitespace-nowrap">
+                일치도 {{ item.score }}
+              </span>
+              <span
+                class="text-[12.5px] font-mono whitespace-nowrap"
+                :class="isDeadlineHot(item.deadline) ? 'text-danger' : 'text-ink-muted'"
+              >
+                {{ dDayLabel(item.deadline) }}
+              </span>
             </div>
-            <div class="text-base font-medium text-ink mb-1">{{ item.jobTitle }}</div>
-            <div class="text-xs text-ink-muted truncate">{{ item.recommendationReason }}</div>
+            <div
+              class="font-display text-[23px] font-bold tracking-[-0.03em] leading-[1.34] text-pretty"
+            >
+              {{ item.jobTitle }}
+            </div>
+            <div class="text-[13px] text-ink-muted mt-2 leading-[1.6] line-clamp-2">
+              {{ item.recommendationReason }}
+            </div>
           </div>
         </div>
       </template>

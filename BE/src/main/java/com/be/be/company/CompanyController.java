@@ -32,6 +32,26 @@ public class CompanyController {
         this.companyInfoRepository = companyInfoRepository;
     }
 
+    @GetMapping
+    @Operation(
+            summary = "외부 기업 ID로 기업과 유형별 정보 조회",
+            description = "공고가 제공하는 externalCompanyId로 기업 정보를 조회합니다. 응답 형태는 내부 ID 조회와 동일합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "기업과 정보 목록 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "기업을 찾을 수 없음", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    })
+    public CompanyResponse getByExternalId(
+            @Parameter(description = "외부 기업 ID", example = "CSN-SAMSUNG-001")
+            @RequestParam String externalCompanyId,
+            @Parameter(description = "선택 정보 유형", example = "BUSINESS_TREND")
+            @RequestParam(required = false) CompanyInfoType infoType
+    ) {
+        Company company = companyRepository.findByExternalCompanyId(externalCompanyId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "COMPANY_NOT_FOUND", "기업을 찾을 수 없습니다."));
+        return toResponse(company, infoType);
+    }
+
     @GetMapping("/{companyId}")
     @Operation(
             summary = "기업과 유형별 정보 조회",
@@ -48,8 +68,12 @@ public class CompanyController {
     ) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "COMPANY_NOT_FOUND", "기업을 찾을 수 없습니다."));
+        return toResponse(company, infoType);
+    }
+
+    private CompanyResponse toResponse(Company company, CompanyInfoType infoType) {
         List<CompanyInfoResponse> information = companyInfoRepository
-                .findAllByCompanyIdOrderByReferenceDateDesc(companyId)
+                .findAllByCompanyIdOrderByReferenceDateDesc(company.getId())
                 .stream()
                 .filter(info -> infoType == null || info.getInfoType() == infoType)
                 .map(CompanyInfoResponse::from)
