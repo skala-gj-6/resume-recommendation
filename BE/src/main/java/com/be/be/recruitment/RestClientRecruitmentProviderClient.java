@@ -1,5 +1,7 @@
 package com.be.be.recruitment;
 
+import com.be.be.recruitment.dto.CoverLetterGenerationRequest;
+import com.be.be.recruitment.dto.CoverLetterGenerationResponse;
 import com.be.be.recruitment.dto.PostingDetail;
 import com.be.be.recruitment.dto.RecommendationRequest;
 import com.be.be.recruitment.dto.RecommendationResponse;
@@ -81,6 +83,30 @@ public final class RestClientRecruitmentProviderClient implements RecruitmentPro
         );
     }
 
+    @Override
+    public CoverLetterGenerationResponse generateCoverLetter(CoverLetterGenerationRequest request) {
+        validateRequest(request);
+        return execute(
+                () -> restClient.post()
+                        .uri("/api/v1/cover-letters")
+                        .body(request)
+                        .retrieve()
+                        .onStatus(HttpStatusCode::is5xxServerError, (httpRequest, response) -> {
+                            throw new RecruitmentProviderUnavailableException(
+                                    "Recruitment provider returned " + response.getStatusCode()
+                            );
+                        })
+                        .onStatus(HttpStatusCode::isError, (httpRequest, response) -> {
+                            throw new RecruitmentProviderInvalidResponseException(
+                                    "Recruitment provider returned unexpected status "
+                                            + response.getStatusCode()
+                            );
+                        })
+                        .body(CoverLetterGenerationResponse.class),
+                "cover letter generation response"
+        );
+    }
+
     private <T> T execute(Supplier<T> invocation, String responseName) {
         try {
             T response = invocation.get();
@@ -110,14 +136,14 @@ public final class RestClientRecruitmentProviderClient implements RecruitmentPro
         }
     }
 
-    private void validateRequest(RecommendationRequest request) {
+    private <T> void validateRequest(T request) {
         if (request == null) {
-            throw new IllegalArgumentException("recommendation request must not be null");
+            throw new IllegalArgumentException("request must not be null");
         }
-        Set<ConstraintViolation<RecommendationRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<T>> violations = validator.validate(request);
         if (!violations.isEmpty()) {
             throw new IllegalArgumentException(
-                    "Invalid recommendation request: " + summarize(violations)
+                    "Invalid request: " + summarize(violations)
             );
         }
     }

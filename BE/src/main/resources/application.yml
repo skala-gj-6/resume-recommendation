@@ -52,6 +52,8 @@ app:
   recommendation:
     provider: "${RECOMMENDATION_PROVIDER:mock}"
     result-limit: "${RECOMMENDATION_RESULT_LIMIT:10}"
+  cover-letter:
+    provider: "${COVER_LETTER_PROVIDER:mock}"
   ai:
     model: "${LLM_MODEL:gpt-4o}"
     temperature: "${LLM_TEMPERATURE:0.2}"

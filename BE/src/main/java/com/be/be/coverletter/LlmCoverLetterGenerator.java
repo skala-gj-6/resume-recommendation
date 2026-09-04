@@ -9,9 +9,11 @@ import com.be.be.ai.PromptTemplateLoader;
 import com.be.be.recruitment.dto.PostingDetail;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(name = "app.cover-letter.provider", havingValue = "llm")
 public class LlmCoverLetterGenerator implements CoverLetterGenerator {
 
     private static final String PROMPT_VERSION = "cover-letter-generation-v1";

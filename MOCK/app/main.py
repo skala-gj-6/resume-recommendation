@@ -7,6 +7,8 @@ from fastapi import FastAPI, HTTPException, Path, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.models import (
+    CoverLetterGenerationRequest,
+    CoverLetterGenerationResponse,
     HealthResponse,
     Posting,
     PostingPage,
@@ -98,3 +100,14 @@ def create_recommendations(
         algorithm_version="mock-fixture-v1",
         recommendations=service.recommend(limit=request.limit)
     )
+
+
+@app.post(
+    "/api/v1/cover-letters",
+    response_model=CoverLetterGenerationResponse,
+    tags=["cover-letters"],
+)
+def create_cover_letter(
+    request: CoverLetterGenerationRequest,
+) -> CoverLetterGenerationResponse:
+    return service.generate_cover_letter(request)
