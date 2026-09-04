@@ -162,7 +162,7 @@ function cancel() {
 
     <div v-else class="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-8">
       <div class="flex flex-col gap-6">
-        <h1 class="text-xl font-semibold m-0">{{ isEdit ? '경험 편집' : '경험 입력' }}</h1>
+        <h1 class="m-0 font-display text-[28px] font-bold tracking-[-0.04em]">{{ isEdit ? '경험 편집' : '경험 입력' }}</h1>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>

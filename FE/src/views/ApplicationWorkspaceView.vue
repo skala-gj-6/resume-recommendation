@@ -32,6 +32,8 @@ const isDirty = ref(false)
 const saving = ref(false)
 const showExperienceDialog = ref(false)
 const showHistory = ref(false)
+const evidenceClosed = ref(false)
+
 
 const application = computed(() => applicationStore.current)
 const items = computed(() => application.value?.items ?? [])
@@ -55,6 +57,20 @@ const activeDraftId = computed(() => {
 })
 const activeDraftDetail = computed(() =>
   activeDraftId.value ? draftStore.detailCache.get(activeDraftId.value) : null,
+)
+// 프로토타입이 근거별로 쓰는 2색. 서버가 문장↔경험 매핑을 주지 않아 본문 밑줄은 걸지 못하고,
+// 사이드바 카드의 좌측 보더 색으로만 근거를 구분한다.
+const EVIDENCE_COLORS = ['#0066ff', '#00997a']
+
+const usedExperiences = computed(() =>
+  (activeDraftDetail.value?.usedExperiences ?? []).map((e, i) => ({
+    ...e,
+    color: EVIDENCE_COLORS[i % EVIDENCE_COLORS.length],
+    roleLabel: e.priority === 1 ? '핵심 근거' : '보조 근거',
+  })),
+)
+const usedCompanyInformation = computed(
+  () => activeDraftDetail.value?.usedCompanyInformation ?? [],
 )
 const history = computed(() => draftStore.historyByItem.get(activeCoverLetterId.value) ?? [])
 
@@ -248,7 +264,14 @@ onBeforeRouteLeave(() => {
         </span>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr_300px] gap-6">
+      <div
+        class="grid grid-cols-1 gap-6"
+        :class="
+          evidenceClosed
+            ? 'lg:grid-cols-[280px_1fr_44px]'
+            : 'lg:grid-cols-[280px_1fr_300px]'
+        "
+      >
         <div class="flex flex-col gap-4">
           <div class="flex flex-col gap-2">
             <button
@@ -340,18 +363,97 @@ onBeforeRouteLeave(() => {
           </div>
         </div>
 
-        <div class="flex flex-col gap-4">
+        <button
+          v-if="evidenceClosed"
+          type="button"
+          class="hidden lg:block sticky top-[84px] w-11 h-[132px] border border-line rounded-2xl bg-surface cursor-pointer text-xs font-bold text-ink-sub p-0"
+          style="writing-mode: vertical-rl; letter-spacing: 0.08em"
+          @click="evidenceClosed = false"
+        >
+          근거 열기
+        </button>
+
+        <div v-else class="flex flex-col gap-4">
           <div
-            v-if="activeDraftDetail?.usedExperiences?.length"
-            class="bg-surface border border-line rounded-lg p-5"
+            v-if="usedExperiences.length || usedCompanyInformation.length"
+            class="bg-surface border border-line rounded-2xl px-6 py-5"
           >
-            <div class="text-xs font-semibold text-ink-muted mb-3">이 문항에 쓴 경험</div>
-            <div class="flex flex-col gap-3">
-              <div v-for="e in activeDraftDetail.usedExperiences" :key="e.experienceId">
-                <div class="text-sm font-medium text-ink">{{ e.title }}</div>
-                <div class="text-xs text-ink-muted">{{ e.matchReason }}</div>
+            <div class="flex items-center gap-2 mb-1">
+              <span
+                class="text-[10.5px] font-extrabold text-accent bg-hover rounded px-2 py-1 whitespace-nowrap"
+              >
+                AI 매칭 근거
+              </span>
+              <div class="flex-1" />
+              <button
+                type="button"
+                class="hidden lg:block border-0 bg-transparent text-xs text-ink-muted cursor-pointer px-1 py-0.5"
+                @click="evidenceClosed = true"
+              >
+                접기 →
+              </button>
+            </div>
+            <p class="m-0 mb-4 text-[11.5px] text-ink-muted leading-[1.6]">
+              이 초안을 쓸 때 AI가 고른 경험과 기업 정보입니다. 어느 문장이 어느 근거에서 나왔는지는
+              서버가 제공하지 않아 문장 단위로 표시하지 않습니다.
+            </p>
+
+            <div
+              v-for="e in usedExperiences"
+              :key="e.experienceId"
+              class="border border-line-soft rounded-xl px-4 py-3.5 mb-3"
+              :style="{ borderLeft: `3px solid ${e.color}` }"
+            >
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full shrink-0" :style="{ background: e.color }" />
+                <div class="text-[13px] font-bold flex-1 min-w-0">{{ e.title }}</div>
+              </div>
+              <div class="text-[11px] text-ink-muted mt-1.5 font-mono">{{ e.roleLabel }}</div>
+              <div class="mt-2.5 flex gap-2 items-start">
+                <span
+                  class="shrink-0 text-[10px] font-extrabold tracking-[0.04em] text-accent bg-accent/10 rounded px-1.5 py-0.5 mt-px"
+                >
+                  경험
+                </span>
+                <span class="text-xs leading-[1.55] text-ink-sub">{{ e.matchReason }}</span>
               </div>
             </div>
+
+            <div
+              v-for="c in usedCompanyInformation"
+              :key="c.snapshotId"
+              class="border border-line-soft rounded-xl px-4 py-3.5 mb-3"
+            >
+              <div class="flex items-center gap-2">
+                <div class="text-[13px] font-bold flex-1 min-w-0">{{ c.title }}</div>
+              </div>
+              <div class="text-[11px] text-ink-muted mt-1.5 font-mono">{{ c.infoType }}</div>
+              <div class="mt-2.5 flex gap-2 items-start">
+                <span
+                  class="shrink-0 text-[10px] font-extrabold tracking-[0.04em] text-ink-sub bg-hover rounded px-1.5 py-0.5 mt-px"
+                >
+                  공고
+                </span>
+                <span class="text-xs leading-[1.55] text-ink-sub">{{ c.content }}</span>
+              </div>
+              <a
+                v-if="c.sourceUrl"
+                :href="c.sourceUrl"
+                target="_blank"
+                rel="noopener"
+                class="text-[11px] mt-2 inline-block"
+              >
+                출처 ↗ {{ c.referenceDate }}
+              </a>
+            </div>
+
+            <button
+              type="button"
+              class="border-0 bg-transparent p-0 text-accent text-[12.5px] font-bold cursor-pointer"
+              @click="goExperiences"
+            >
+              내 경험 정리하기 →
+            </button>
           </div>
 
           <div class="bg-surface border border-line rounded-lg p-5">

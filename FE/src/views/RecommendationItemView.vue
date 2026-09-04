@@ -69,7 +69,7 @@ function startCreate() {
       <div class="flex flex-col gap-6">
         <div>
           <div class="text-sm text-ink-muted mb-1">{{ detail.posting?.companyName }}</div>
-          <h1 class="text-2xl font-semibold m-0 mb-3">{{ detail.posting?.jobTitle }}</h1>
+          <h1 class="m-0 mb-4 font-display text-[32px] font-bold tracking-[-0.04em] leading-[1.3] text-pretty">{{ detail.posting?.jobTitle }}</h1>
           <div class="flex items-center gap-2 text-sm text-ink-sub mb-3">
             <span class="px-2 py-0.5 rounded-full bg-accent-hover/10 text-accent font-semibold">
               일치도 {{ detail.score }}

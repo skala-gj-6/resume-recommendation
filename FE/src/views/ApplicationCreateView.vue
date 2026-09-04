@@ -163,7 +163,7 @@ async function handleCreateError(e) {
       </button>
 
       <div class="mb-6">
-        <h1 class="text-xl font-semibold m-0 mb-1">자소서 초안 생성</h1>
+        <h1 class="m-0 mb-1 font-display text-[28px] font-bold tracking-[-0.04em]">자소서 초안 생성</h1>
         <span class="text-sm text-ink-muted">
           {{ posting.companyName }} · {{ posting.jobTitle }}
         </span>

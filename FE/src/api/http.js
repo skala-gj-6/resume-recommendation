@@ -31,7 +31,16 @@ async function parseBody(res) {
 }
 
 async function request(baseURL, path, options = {}) {
-  const { method = 'GET', body, query, withAuth = false, signal } = options
+  // notifyServerError=false: 실패해도 화면을 막지 않는 선택적 호출(부가 정보 등)에서
+  // 전역 5xx 토스트를 띄우지 않도록 한다. 호출부가 직접 처리한다.
+  const {
+    method = 'GET',
+    body,
+    query,
+    withAuth = false,
+    signal,
+    notifyServerError = true,
+  } = options
   const headers = { 'Content-Type': 'application/json' }
 
   if (withAuth) {
@@ -62,7 +71,7 @@ async function request(baseURL, path, options = {}) {
       auth.logout()
       const redirect = router.currentRoute.value.fullPath
       router.push({ name: 'login', query: { redirect } })
-    } else if (res.status === 502 || res.status === 503) {
+    } else if ((res.status === 502 || res.status === 503) && notifyServerError) {
       useUiStore().notify({
         severity: 'error',
         summary: '일시적인 오류',

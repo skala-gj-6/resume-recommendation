@@ -39,7 +39,7 @@ function logout() {
     <div class="container-page flex items-end gap-8 h-16">
       <RouterLink :to="{ name: 'posting-list' }" class="pb-3 no-underline">
         <span class="font-display text-[28px] font-bold tracking-tight text-ink leading-none"
-          >초안</span
+          >써드림</span
         >
       </RouterLink>
 
