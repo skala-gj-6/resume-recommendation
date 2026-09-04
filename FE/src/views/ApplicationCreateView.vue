@@ -51,20 +51,44 @@ watch(
   { deep: true },
 )
 
+/**
+ * 이 화면은 기본적으로 눈에 보이지 않는 분기점입니다.
+ * 공고에 문항이 있으면(현재 Mock 공고는 전부 해당) 확인 단계 없이 바로 작성 화면으로 보내고,
+ * 문항이 없는 공고에서만 아래 문항 직접 입력 UI를 띄웁니다.
+ */
 async function load() {
   loading.value = true
   loadError.value = null
   try {
     const detail = await postingStore.fetchDetail(externalPostingId.value)
     const existing = await applicationStore.checkExisting(externalPostingId.value)
-    if (existing.length > 0) showExistingDialog.value = true
+
+    if (detail.questions?.length > 0) {
+      // 같은 공고의 프로젝트가 이미 있으면 새로 만들지 않고 가장 최근 것으로 보낸다.
+      // 워크스페이스 위에서 이어서 쓸지 새로 만들지 고르게 해야 중복이 쌓이지 않는다.
+      if (existing.length > 0) {
+        router.replace({
+          name: 'application-workspace',
+          params: { applicationId: existing[0].applicationId },
+          query: {
+            pickExisting: '1',
+            ...(recommendationItemId.value ? { rec: recommendationItemId.value } : {}),
+          },
+        })
+        return
+      }
+      await submit()
+      return
+    }
+
     await experienceStore.fetchList({ size: 50 })
 
     if (applicationStore.questionDraft.manualQuestions.length > 0) {
       manualQuestions.value = applicationStore.questionDraft.manualQuestions.map((q) => ({ ...q }))
-    } else if (!(detail.questions?.length > 0)) {
+    } else {
       manualQuestions.value = [{ questionText: '', charLimit: 700 }]
     }
+    if (existing.length > 0) showExistingDialog.value = true
   } catch (e) {
     loadError.value = e
   } finally {
@@ -118,7 +142,7 @@ async function submit() {
     router.replace({
       name: 'application-workspace',
       params: { applicationId: res.applicationId },
-      query: firstItem ? { item: firstItem.coverLetterId, autostart: '1' } : undefined,
+      query: firstItem ? { item: firstItem.coverLetterId } : undefined,
     })
   } catch (e) {
     handleCreateError(e)
@@ -240,7 +264,7 @@ async function handleCreateError(e) {
             <div class="text-sm font-semibold mb-3">문항별 준비 상태</div>
             <ReadyChecklist :items="checklistItems" />
             <Button
-              label="자소서 초안 생성"
+              label="자기소개서 쓰기"
               class="w-full mt-4"
               :disabled="!canSubmit"
               :loading="applicationStore.creating"

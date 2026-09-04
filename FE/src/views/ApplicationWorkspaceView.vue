@@ -4,10 +4,12 @@ import { useRoute, useRouter, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vu
 import Button from 'primevue/button'
 import Textarea from 'primevue/textarea'
 import Dialog from 'primevue/dialog'
+import { useToast } from 'primevue/usetoast'
 import PageContainer from '@/components/layout/PageContainer.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import CharCounter from '@/components/common/CharCounter.vue'
+import ExistingApplicationDialog from '@/components/application/ExistingApplicationDialog.vue'
 import { useApplicationStore } from '@/stores/application'
 import { useDraftStore } from '@/stores/draft'
 import { useApiError } from '@/composables/useApiError'
@@ -23,6 +25,7 @@ const applicationStore = useApplicationStore()
 const draftStore = useDraftStore()
 const { toastError, describeApiError } = useApiError()
 const { copyText } = useCopyToClipboard()
+const toast = useToast()
 
 const loading = ref(true)
 const loadError = ref(null)
@@ -31,6 +34,7 @@ const editText = ref('')
 const isDirty = ref(false)
 const saving = ref(false)
 const showExperienceDialog = ref(false)
+const showExistingDialog = ref(false)
 const showHistory = ref(false)
 const evidenceClosed = ref(false)
 
@@ -74,6 +78,9 @@ const usedCompanyInformation = computed(
 )
 const history = computed(() => draftStore.historyByItem.get(activeCoverLetterId.value) ?? [])
 
+const isReviewed = computed(() => activeItem.value?.status === 'REVIEWED')
+
+// 서버가 REVIEWED를 받아주는 조건(완료된 선택 초안 + 본문)과 같다. CoverLetterItem.review() 참고.
 const canReview = computed(
   () =>
     activeDraftDetail.value?.generationStatus === 'COMPLETED' &&
@@ -87,6 +94,22 @@ function itemStatusLabel(item) {
   if (item.status === 'REVIEWED') return '검토 완료'
   return '작성 중'
 }
+
+function itemGenerating(item) {
+  const status = draftStore.byItem.get(item.coverLetterId)?.status
+  return status === 'PENDING' || status === 'GENERATING'
+}
+
+// 완료된 초안이 있으면 좌측 카드의 생성 버튼을 감춘다. 재생성은 본문 영역에서 한다.
+function itemHasDraft(item) {
+  const rt = draftStore.byItem.get(item.coverLetterId)
+  if (rt) return rt.status === 'COMPLETED'
+  if (item.selectedDraftId) return true
+  return item.latestDraft?.generationStatus === 'COMPLETED'
+}
+
+// 한 번에 한 문항만 생성한다. 진행 중인 문항이 있으면 나머지 생성 버튼을 잠근다.
+const anyGenerating = computed(() => items.value.some(itemGenerating))
 
 watch(
   activeDraftDetail,
@@ -129,11 +152,10 @@ async function load() {
 
     if (activeCoverLetterId.value) draftStore.fetchHistory(activeCoverLetterId.value)
 
-    if (route.query.autostart === '1' && activeCoverLetterId.value) {
-      const active = items.value.find((it) => it.coverLetterId === activeCoverLetterId.value)
-      if (active && !active.latestDraft) {
-        generateActive()
-      }
+    // 같은 공고의 기존 프로젝트로 보내진 경우, 이 화면 위에서 이어서 쓸지 새로 만들지 고르게 한다.
+    if (route.query.pickExisting === '1') {
+      const existing = await applicationStore.checkExisting(application.value.externalPostingId)
+      if (existing.length > 0) showExistingDialog.value = true
     }
   } catch (e) {
     loadError.value = e
@@ -144,10 +166,13 @@ async function load() {
 
 onMounted(load)
 
+// 같은 라우트에서 applicationId만 바뀌면 컴포넌트가 재사용되므로 직접 다시 불러와야 한다.
+watch(() => props.applicationId, load)
+
 function selectItem(coverLetterId) {
   if (coverLetterId === activeCoverLetterId.value) return
   activeCoverLetterId.value = coverLetterId
-  router.replace({ query: { ...route.query, item: coverLetterId, autostart: undefined } })
+  router.replace({ query: { ...route.query, item: coverLetterId } })
   draftStore.fetchHistory(coverLetterId)
 }
 
@@ -156,10 +181,46 @@ function goNext() {
   selectItem(items.value[activeIndex.value + 1].coverLetterId)
 }
 
-async function generateActive() {
-  if (!activeCoverLetterId.value) return
+function clearPickExisting() {
+  const { pickExisting, rec, ...rest } = route.query
+  void pickExisting
+  void rec
+  router.replace({ query: rest })
+}
+
+// 팝업에서 기존 프로젝트를 고른 경우. 지금 보고 있는 것이면 닫기만 한다.
+function goExisting(applicationId) {
+  showExistingDialog.value = false
+  if (String(applicationId) === String(props.applicationId)) {
+    clearPickExisting()
+    return
+  }
+  router.replace({ name: 'application-workspace', params: { applicationId } })
+}
+
+// 팝업에서 [새로 만들기]를 고른 경우에만 실제로 생성한다.
+async function createNewApplication() {
+  showExistingDialog.value = false
+  const payload = { externalPostingId: application.value?.externalPostingId }
+  if (route.query.rec) payload.sourceRecommendationItemId = Number(route.query.rec)
   try {
-    await draftStore.generate(activeCoverLetterId.value)
+    const res = await applicationStore.create(payload)
+    router.replace({
+      name: 'application-workspace',
+      params: { applicationId: res.applicationId },
+      query: res.items?.[0] ? { item: res.items[0].coverLetterId } : {},
+    })
+  } catch (e) {
+    toastError(e, '지원 프로젝트를 만들지 못했습니다')
+  }
+}
+
+// 좌측 문항 카드에서 바로 생성할 수 있으므로, 활성 문항이 아니어도 호출될 수 있다.
+async function generateFor(coverLetterId) {
+  if (!coverLetterId) return
+  if (coverLetterId !== activeCoverLetterId.value) selectItem(coverLetterId)
+  try {
+    await draftStore.generate(coverLetterId)
   } catch (e) {
     if (e.code === 'EXPERIENCE_REQUIRED') {
       showExperienceDialog.value = true
@@ -169,12 +230,26 @@ async function generateActive() {
   }
 }
 
+function generateActive() {
+  return generateFor(activeCoverLetterId.value)
+}
+
 async function saveEdit() {
   if (!activeDraftId.value) return
   saving.value = true
   try {
     await draftStore.saveEdit(activeDraftId.value, editText.value)
     isDirty.value = false
+    // 선택된 초안을 수정하면 서버가 문항을 DRAFTING으로 되돌리므로(saveEdit) 화면도 맞추고 이유를 알린다.
+    const reviewReleased =
+      activeDraftDetail.value?.selected !== false &&
+      applicationStore.markItemDrafting(activeCoverLetterId.value)
+    toast.add({
+      severity: reviewReleased ? 'warn' : 'success',
+      summary: '저장했습니다',
+      detail: reviewReleased ? '본문이 수정되어 검토 완료가 해제되었습니다.' : undefined,
+      life: reviewReleased ? 4000 : 2000,
+    })
   } catch (e) {
     toastError(e, '저장하지 못했습니다')
   } finally {
@@ -194,11 +269,20 @@ async function selectHistoryDraft(draftId) {
   }
 }
 
-async function markReviewed() {
+async function toggleReviewed() {
+  const next = isReviewed.value ? 'DRAFTING' : 'REVIEWED'
   try {
-    await applicationStore.patchItemStatus(activeCoverLetterId.value, 'REVIEWED')
+    await applicationStore.patchItemStatus(activeCoverLetterId.value, next)
+    toast.add({
+      severity: next === 'REVIEWED' ? 'success' : 'info',
+      summary:
+        next === 'REVIEWED'
+          ? `문항 ${activeItem.value?.questionOrder}을(를) 검토 완료했습니다`
+          : `문항 ${activeItem.value?.questionOrder}의 검토 완료를 해제했습니다`,
+      life: 2000,
+    })
   } catch (e) {
-    toastError(e, '검토 완료로 변경하지 못했습니다')
+    toastError(e, next === 'REVIEWED' ? '검토 완료로 변경하지 못했습니다' : '검토 완료를 해제하지 못했습니다')
   }
 }
 
@@ -274,26 +358,40 @@ onBeforeRouteLeave(() => {
       >
         <div class="flex flex-col gap-4">
           <div class="flex flex-col gap-2">
-            <button
+            <div
               v-for="item in items"
               :key="item.coverLetterId"
-              type="button"
-              class="text-left border rounded-md p-3 cursor-pointer transition-colors bg-surface"
+              class="border rounded-md transition-colors bg-surface"
               :class="
                 item.coverLetterId === activeCoverLetterId
                   ? 'border-ink'
                   : 'border-line hover:border-ink-faint'
               "
-              @click="selectItem(item.coverLetterId)"
             >
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-xs font-semibold text-ink-muted"
-                  >문항 {{ item.questionOrder }}</span
-                >
-                <span class="text-[11px] text-ink-muted">{{ itemStatusLabel(item) }}</span>
+              <button
+                type="button"
+                class="w-full text-left border-0 bg-transparent p-3 cursor-pointer"
+                @click="selectItem(item.coverLetterId)"
+              >
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-semibold text-ink-muted"
+                    >문항 {{ item.questionOrder }}</span
+                  >
+                  <span class="text-[11px] text-ink-muted">{{ itemStatusLabel(item) }}</span>
+                </div>
+                <div class="text-xs text-ink-sub line-clamp-2">{{ item.questionText }}</div>
+              </button>
+              <div v-if="!itemHasDraft(item)" class="px-3 pb-3">
+                <Button
+                  :label="itemGenerating(item) ? '생성 중' : '초안 생성'"
+                  size="small"
+                  class="w-full"
+                  :loading="itemGenerating(item)"
+                  :disabled="anyGenerating"
+                  @click="generateFor(item.coverLetterId)"
+                />
               </div>
-              <div class="text-xs text-ink-sub line-clamp-2">{{ item.questionText }}</div>
-            </button>
+            </div>
           </div>
           <Button label="전체 복사" severity="secondary" size="small" @click="copyAll" />
         </div>
@@ -320,7 +418,12 @@ onBeforeRouteLeave(() => {
             <span class="text-sm text-danger">{{
               describeApiError({ code: runtime.errorCode, message: runtime.errorMessage })
             }}</span>
-            <Button label="새 초안으로 재시도" size="small" @click="generateActive" />
+            <Button
+              label="새 초안으로 재시도"
+              size="small"
+              :disabled="anyGenerating"
+              @click="generateActive"
+            />
           </div>
 
           <template v-else-if="activeDraftDetail">
@@ -335,6 +438,7 @@ onBeforeRouteLeave(() => {
                 label="이 문항 재생성"
                 severity="secondary"
                 size="small"
+                :disabled="anyGenerating"
                 @click="generateActive"
               />
               <Button label="복사" severity="secondary" size="small" @click="copyOne" />
@@ -346,11 +450,13 @@ onBeforeRouteLeave(() => {
                 @click="saveEdit"
               />
               <Button
-                label="검토 완료"
+                :label="isReviewed ? '검토 완료 취소' : '검토 완료'"
+                :icon="isReviewed ? 'pi pi-check-circle' : undefined"
                 size="small"
                 severity="success"
-                :disabled="!canReview"
-                @click="markReviewed"
+                :outlined="isReviewed"
+                :disabled="!isReviewed && !canReview"
+                @click="toggleReviewed"
               />
               <div class="flex-1" />
               <Button v-if="hasNext" label="다음 문항" text size="small" @click="goNext" />
@@ -359,7 +465,7 @@ onBeforeRouteLeave(() => {
 
           <div v-else class="flex flex-col items-center gap-3 py-16 text-center">
             <p class="text-sm text-ink-muted m-0">아직 생성된 초안이 없습니다.</p>
-            <Button label="초안 생성" @click="generateActive" />
+            <Button label="초안 생성" :disabled="anyGenerating" @click="generateActive" />
           </div>
         </div>
 
@@ -498,6 +604,13 @@ onBeforeRouteLeave(() => {
         </p>
         <Button label="경험 등록하러 가기" class="w-full" @click="goExperiences" />
       </Dialog>
+
+      <ExistingApplicationDialog
+        :visible="showExistingDialog"
+        :applications="applicationStore.existingApplications"
+        @select="goExisting"
+        @create-new="createNewApplication"
+      />
     </template>
   </PageContainer>
 </template>
